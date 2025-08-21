@@ -1217,7 +1217,7 @@
       try {
         console.log('📡 Sending request to /contact...');
 
-        const response = await fetch('/contact', {
+        const response = await fetch(this.action, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
