@@ -42,7 +42,7 @@ jobs:
         
         # List files to be deployed
         echo "Files to deploy:"
-        ls -la *.html *.css *.js *.jpg *.png *.svg 2>/dev/null || true
+        ls -la *.html *.css *.js *.jpg *.png *.svg *.ico *.webmanifest 2>/dev/null || true
 
     - name: Deploy static files to S3
       run: |
@@ -73,6 +73,12 @@ jobs:
         aws s3 cp laney.png s3://${{ env.S3_BUCKET }}/laney.png --content-type "image/png" || echo "laney.png not found"
         aws s3 cp "Noya Logo Vertical.png" s3://${{ env.S3_BUCKET }}/"Noya Logo Vertical.png" --content-type "image/png" || echo "Noya logo not found"
         aws s3 cp orbital.svg s3://${{ env.S3_BUCKET }}/orbital.svg --content-type "image/svg+xml" || echo "orbital.svg not found"
+        
+        # Upload favicon files
+        aws s3 cp favicon.ico s3://${{ env.S3_BUCKET }}/favicon.ico --content-type "image/x-icon" || echo "favicon.ico not found"
+        aws s3 cp favicon.svg s3://${{ env.S3_BUCKET }}/favicon.svg --content-type "image/svg+xml" || echo "favicon.svg not found"
+        aws s3 cp apple-touch-icon.svg s3://${{ env.S3_BUCKET }}/apple-touch-icon.svg --content-type "image/svg+xml" || echo "apple-touch-icon.svg not found"
+        aws s3 cp site.webmanifest s3://${{ env.S3_BUCKET }}/site.webmanifest --content-type "application/manifest+json" || echo "site.webmanifest not found"
         
         echo "✅ Static files deployed to S3"
 

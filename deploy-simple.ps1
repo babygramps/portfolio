@@ -45,6 +45,12 @@ aws s3 cp laney.png s3://$BucketName/laney.png --content-type "image/png"
 aws s3 cp "Noya Logo Vertical.png" s3://$BucketName/"Noya Logo Vertical.png" --content-type "image/png"
 aws s3 cp orbital.svg s3://$BucketName/orbital.svg --content-type "image/svg+xml"
 
+# Upload favicon files
+aws s3 cp favicon.ico s3://$BucketName/favicon.ico --content-type "image/x-icon"
+aws s3 cp favicon.svg s3://$BucketName/favicon.svg --content-type "image/svg+xml"
+aws s3 cp apple-touch-icon.svg s3://$BucketName/apple-touch-icon.svg --content-type "image/svg+xml"
+aws s3 cp site.webmanifest s3://$BucketName/site.webmanifest --content-type "application/manifest+json"
+
 Write-Host "Files uploaded successfully!" -ForegroundColor Green
 
 # Deploy Lambda function
