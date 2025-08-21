@@ -15,15 +15,10 @@ exports.handler = async (event) => {
     console.log('🔥 Lambda contact handler invoked');
     console.log('Event:', JSON.stringify(event, null, 2));
 
-    // Handle CORS preflight
+    // Handle CORS preflight - Lambda Function URL handles CORS, so we don't need headers
     if (event.httpMethod === 'OPTIONS') {
         return {
             statusCode: 200,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS'
-            },
             body: ''
         };
     }
@@ -38,7 +33,6 @@ exports.handler = async (event) => {
             return {
                 statusCode: 400,
                 headers: {
-                    'Access-Control-Allow-Origin': '*',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
@@ -57,7 +51,6 @@ exports.handler = async (event) => {
             return {
                 statusCode: 400,
                 headers: {
-                    'Access-Control-Allow-Origin': '*',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
@@ -75,7 +68,6 @@ exports.handler = async (event) => {
                 return {
                     statusCode: 400,
                     headers: {
-                        'Access-Control-Allow-Origin': '*',
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -138,7 +130,6 @@ exports.handler = async (event) => {
                 return {
                     statusCode: 400,
                     headers: {
-                        'Access-Control-Allow-Origin': '*',
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -189,7 +180,6 @@ exports.handler = async (event) => {
         return {
             statusCode: 200,
             headers: {
-                'Access-Control-Allow-Origin': '*',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -204,7 +194,6 @@ exports.handler = async (event) => {
         return {
             statusCode: 500,
             headers: {
-                'Access-Control-Allow-Origin': '*',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({

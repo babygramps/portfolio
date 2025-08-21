@@ -44,3 +44,11 @@ test-*.json
 # Build artifacts
 *.tgz
 *.tar.gz
+
+# Local development files (not needed in deployment)
+server.js
+package.json
+package-lock.json
+index-local.html
+LOCAL-DEVELOPMENT.md
+start-local.ps1
