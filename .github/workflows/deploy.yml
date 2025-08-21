@@ -11,6 +11,9 @@ env:
   AWS_REGION: us-west-1
   S3_BUCKET: rick-portfolio-2025
   LAMBDA_FUNCTION_NAME: rick-portfolio-contact
+  # Custom domain configuration
+  CUSTOM_DOMAIN: rickrothbart.com
+  CLOUDFRONT_DISTRIBUTION_ID: E3HT67NT39EUN4
 
 jobs:
   deploy:
@@ -183,11 +186,31 @@ jobs:
         
         echo "✅ HTML updated with Lambda endpoint"
 
+    - name: Invalidate CloudFront cache (if configured)
+      run: |
+        if [ ! -z "${{ env.CLOUDFRONT_DISTRIBUTION_ID }}" ]; then
+          echo "Invalidating CloudFront cache..."
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
+          echo "✅ CloudFront cache invalidated"
+        else
+          echo "No CloudFront distribution configured, skipping cache invalidation"
+        fi
+
     - name: Deployment summary
       run: |
         echo "🎉 Deployment Complete!"
         echo "======================"
-        echo "Website URL: http://${{ env.S3_BUCKET }}.s3-website-${{ env.AWS_REGION }}.amazonaws.com"
+        
+        if [ ! -z "${{ env.CUSTOM_DOMAIN }}" ]; then
+          echo "Website URL: https://${{ env.CUSTOM_DOMAIN }}"
+          echo "Alternate URL: http://${{ env.S3_BUCKET }}.s3-website-${{ env.AWS_REGION }}.amazonaws.com"
+        else
+          echo "Website URL: http://${{ env.S3_BUCKET }}.s3-website-${{ env.AWS_REGION }}.amazonaws.com"
+          echo "💡 Tip: Set CUSTOM_DOMAIN environment variable for custom domain support"
+        fi
+        
         echo "S3 Bucket: ${{ env.S3_BUCKET }}"
         echo "Lambda Function: ${{ env.LAMBDA_FUNCTION_NAME }}"
         echo "Region: ${{ env.AWS_REGION }}"
@@ -196,3 +219,7 @@ jobs:
         echo "✅ Lambda function updated"
         echo "✅ Environment variables configured"
         echo "✅ HTML updated with Lambda endpoint"
+        
+        if [ ! -z "${{ env.CLOUDFRONT_DISTRIBUTION_ID }}" ]; then
+          echo "✅ CloudFront cache invalidated"
+        fi
