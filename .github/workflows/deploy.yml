@@ -1,0 +1,123 @@
+name: Deploy Rick's Portfolio to AWS
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch: # Allow manual triggers
+
+env:
+  AWS_REGION: us-west-1
+  S3_BUCKET: rick-portfolio-2025
+  LAMBDA_FUNCTION_NAME: rick-portfolio-contact
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Prepare static files
+      run: |
+        # Copy main HTML file to index.html for deployment
+        cp rickrothbart.html index.html
+        
+        # List files to be deployed
+        echo "Files to deploy:"
+        ls -la *.html *.css *.js *.jpg *.png *.svg 2>/dev/null || true
+
+    - name: Deploy static files to S3
+      run: |
+        # Upload static files with proper content types
+        aws s3 cp index.html s3://${{ env.S3_BUCKET }}/index.html --content-type "text/html"
+        aws s3 cp styles.css s3://${{ env.S3_BUCKET }}/styles.css --content-type "text/css"
+        aws s3 cp script.js s3://${{ env.S3_BUCKET }}/script.js --content-type "application/javascript"
+        
+        # Upload images
+        aws s3 cp rick.jpg s3://${{ env.S3_BUCKET }}/rick.jpg --content-type "image/jpeg" || echo "rick.jpg not found"
+        aws s3 cp laney.png s3://${{ env.S3_BUCKET }}/laney.png --content-type "image/png" || echo "laney.png not found"
+        aws s3 cp "Noya Logo Vertical.png" s3://${{ env.S3_BUCKET }}/"Noya Logo Vertical.png" --content-type "image/png" || echo "Noya logo not found"
+        aws s3 cp orbital.svg s3://${{ env.S3_BUCKET }}/orbital.svg --content-type "image/svg+xml" || echo "orbital.svg not found"
+        
+        echo "✅ Static files deployed to S3"
+
+    - name: Build and deploy Lambda function
+      run: |
+        # Navigate to lambda directory
+        cd lambda
+        
+        # Install production dependencies
+        npm install --production
+        
+        # Create deployment package
+        zip -r deployment.zip contact.js package.json node_modules/
+        
+        # Update Lambda function code
+        aws lambda update-function-code \
+          --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
+          --zip-file fileb://deployment.zip \
+          --region ${{ env.AWS_REGION }}
+        
+        echo "✅ Lambda function updated"
+
+    - name: Update Lambda environment variables
+      run: |
+        # Update environment variables (secrets are handled by GitHub)
+        aws lambda update-function-configuration \
+          --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
+          --environment Variables="{
+            GMAIL_APP_PASSWORD=${{ secrets.GMAIL_APP_PASSWORD }},
+            RECAPTCHA_SITE_KEY=${{ secrets.RECAPTCHA_SITE_KEY }},
+            RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}
+          }" \
+          --region ${{ env.AWS_REGION }}
+        
+        echo "✅ Lambda environment variables updated"
+
+    - name: Get Lambda Function URL and update HTML
+      run: |
+        # Get the Lambda Function URL
+        LAMBDA_URL=$(aws lambda get-function-url-config \
+          --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
+          --region ${{ env.AWS_REGION }} \
+          --query 'FunctionUrl' \
+          --output text)
+        
+        echo "Lambda URL: $LAMBDA_URL"
+        
+        # Update HTML file with Lambda endpoint
+        sed -i "s|action=\"/contact\"|action=\"$LAMBDA_URL\"|g" index.html
+        
+        # Re-upload updated HTML
+        aws s3 cp index.html s3://${{ env.S3_BUCKET }}/index.html --content-type "text/html"
+        
+        echo "✅ HTML updated with Lambda endpoint"
+
+    - name: Deployment summary
+      run: |
+        echo "🎉 Deployment Complete!"
+        echo "======================"
+        echo "Website URL: http://${{ env.S3_BUCKET }}.s3-website-${{ env.AWS_REGION }}.amazonaws.com"
+        echo "S3 Bucket: ${{ env.S3_BUCKET }}"
+        echo "Lambda Function: ${{ env.LAMBDA_FUNCTION_NAME }}"
+        echo "Region: ${{ env.AWS_REGION }}"
+        echo ""
+        echo "✅ Static files deployed"
+        echo "✅ Lambda function updated"
+        echo "✅ Environment variables configured"
+        echo "✅ HTML updated with Lambda endpoint"
