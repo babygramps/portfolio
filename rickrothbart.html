@@ -243,7 +243,7 @@
         radial-gradient(35% 55% at 75% 70%, rgba(122, 168, 255, .25), transparent 60%);
       filter: blur(40px);
       pointer-events: none;
-      mix-blend: screen;
+      mix-blend-mode: screen;
     }
 
     .tag {
@@ -847,6 +847,174 @@
       }
     }
 
+    /* Hamburger Menu Styles */
+    .hamburger-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--outline);
+      border-radius: 10px;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 0;
+      gap: 3px;
+    }
+
+    .hamburger-btn:hover {
+      border-color: rgba(255, 255, 255, .35);
+      background: rgba(255, 255, 255, .05);
+    }
+
+    .hamburger-line {
+      width: 18px;
+      height: 2px;
+      background: var(--ink);
+      border-radius: 1px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: center;
+    }
+
+    /* Hamburger animation when active */
+    .hamburger-btn.active .hamburger-line:nth-child(1) {
+      transform: translateY(5px) rotate(45deg);
+    }
+
+    .hamburger-btn.active .hamburger-line:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    .hamburger-btn.active .hamburger-line:nth-child(3) {
+      transform: translateY(-5px) rotate(-45deg);
+    }
+
+    /* Mobile Menu Overlay */
+    .mobile-menu-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(11, 13, 18, 0.98);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .mobile-menu-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-menu-content {
+      position: relative;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      transform: translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .mobile-menu-overlay.active .mobile-menu-content {
+      transform: translateY(0);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: -20px;
+      right: 0;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--outline);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-btn:hover {
+      border-color: rgba(255, 255, 255, .35);
+      background: rgba(255, 255, 255, .1);
+      transform: rotate(90deg);
+    }
+
+    .mobile-menu-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .mobile-menu-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px 24px;
+      border: 1px solid var(--outline);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      transform: translateY(10px);
+      opacity: 0;
+    }
+
+    .mobile-menu-overlay.active .mobile-menu-link {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Staggered animation for menu links */
+    .mobile-menu-overlay.active .mobile-menu-link:nth-child(1) { transition-delay: 0.1s; }
+    .mobile-menu-overlay.active .mobile-menu-link:nth-child(2) { transition-delay: 0.15s; }
+    .mobile-menu-overlay.active .mobile-menu-link:nth-child(3) { transition-delay: 0.2s; }
+    .mobile-menu-overlay.active .mobile-menu-link:nth-child(4) { transition-delay: 0.25s; }
+
+    .mobile-menu-link:hover {
+      border-color: rgba(255, 255, 255, .35);
+      background: rgba(255, 255, 255, .1);
+      transform: translateY(-2px);
+    }
+
+    .mobile-menu-link.linkedin {
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: #0a0f14;
+      border-color: transparent;
+    }
+
+    .mobile-menu-link.linkedin:hover {
+      filter: saturate(1.05) brightness(1.03);
+      border-color: transparent;
+    }
+
+    /* Responsive behavior */
+    @media (max-width: 900px) {
+      .desktop-nav {
+        display: none !important;
+      }
+
+      .hamburger-btn {
+        display: flex;
+      }
+    }
+
     /* Mobile simplifications */
     @media (max-width:600px) {
       .btn-row {
@@ -896,7 +1064,8 @@
         <span class="logo-dot"></span>
         <span>Rick&nbsp;Rothbart</span>
       </a>
-      <nav style="display:flex; gap:10px; align-items:center">
+      <!-- Desktop Navigation -->
+      <nav class="desktop-nav" style="display:flex; gap:10px; align-items:center">
         <a class="ghost" href="#work">Work</a>
         <a class="ghost" href="#experience">Experience</a>
         <a class="cta" href="#contact">Contact</a>
@@ -908,8 +1077,38 @@
           </svg>
         </a>
       </nav>
+
+      <!-- Mobile Hamburger Menu Button -->
+      <button class="hamburger-btn" aria-label="Open mobile menu" aria-expanded="false">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
     </div>
   </header>
+
+  <!-- Mobile Menu Overlay -->
+  <div id="mobileMenuOverlay" class="mobile-menu-overlay">
+    <div class="mobile-menu-content">
+      <button class="close-btn" aria-label="Close mobile menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <nav class="mobile-menu-nav">
+        <a class="mobile-menu-link" href="#work">Work</a>
+        <a class="mobile-menu-link" href="#experience">Experience</a>
+        <a class="mobile-menu-link" href="#contact">Contact</a>
+        <a class="mobile-menu-link linkedin" href="https://www.linkedin.com/in/richardrothbart/" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+          </svg>
+          LinkedIn
+        </a>
+      </nav>
+    </div>
+  </div>
 
   <!-- HERO -->
   <section class="hero">
@@ -1159,193 +1358,7 @@
     </div>
   </footer>
 
-  <script>
-    // Year
-    document.getElementById('y').textContent = new Date().getFullYear();
-
-    // Scroll reveal
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-      })
-    }, { threshold: .18 });
-    document.querySelectorAll('.reveal').forEach(el => { if (!el.classList.contains('in')) io.observe(el) });
-
-    // Enable flip on tap for touch devices (including photo card)
-    document.querySelectorAll('[data-flip]').forEach(el => {
-      el.addEventListener('touchstart', () => el.classList.toggle('flipped'), { passive: true });
-    });
-
-    // Handle contact form submission
-    document.querySelector('.contact-form').addEventListener('submit', async function (e) {
-      e.preventDefault();
-      console.log('🚀 Form submission started');
-
-      const submitBtn = this.querySelector('button[type="submit"]');
-      const originalText = submitBtn.textContent;
-
-      // Prevent double submission
-      if (submitBtn.disabled) {
-        console.log('⚠️ Form already being submitted, ignoring');
-        return;
-      }
-
-      // Check if reCAPTCHA is completed
-      const recaptchaResponse = grecaptcha.getResponse();
-      if (!recaptchaResponse) {
-        showNotification('Please complete the reCAPTCHA verification.', 'error');
-        return;
-      }
-
-      // Show loading state
-      submitBtn.textContent = 'Sending...';
-      submitBtn.disabled = true;
-      submitBtn.style.opacity = '0.7';
-
-      // Convert FormData to regular object for JSON
-      const formData = new FormData(this);
-      const data = {};
-      for (let [key, value] of formData.entries()) {
-        data[key] = value;
-      }
-
-      // Add reCAPTCHA response
-      data['g-recaptcha-response'] = recaptchaResponse;
-
-      console.log('📝 Form data:', data);
-
-      try {
-        console.log('📡 Sending request to /contact...');
-
-        const response = await fetch(this.action, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data)
-        });
-
-        console.log('📨 Response received:', response.status, response.statusText);
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
-        console.log('📋 Response data:', result);
-
-        if (result.success) {
-          // Show success message
-          console.log('✅ Success! Showing success state');
-          submitBtn.textContent = 'Message Sent!';
-          submitBtn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
-          submitBtn.style.opacity = '1';
-
-          // Create and show success notification
-          showNotification('Message sent successfully! Rick will get back to you soon.', 'success');
-
-          // Reset form and reCAPTCHA
-          this.reset();
-          grecaptcha.reset();
-
-          // Reset button after 3 seconds
-          setTimeout(() => {
-            submitBtn.textContent = originalText;
-            submitBtn.style.background = '';
-            submitBtn.disabled = false;
-            submitBtn.style.opacity = '1';
-          }, 3000);
-        } else {
-          throw new Error(result.message || 'Unknown error occurred');
-        }
-      } catch (error) {
-        console.error('❌ Error occurred:', error);
-
-        // Reset reCAPTCHA on error
-        grecaptcha.reset();
-
-        // Show error notification with specific message if available
-        let errorMessage = 'Error sending message. Please try again.';
-        if (error.message.includes('reCAPTCHA has expired')) {
-          errorMessage = 'reCAPTCHA has expired. Please complete it again and resubmit.';
-        } else if (error.message.includes('reCAPTCHA')) {
-          errorMessage = error.message;
-        } else {
-          errorMessage = 'Error sending message. Opening email client as backup...';
-
-          // Fallback to email client only for non-reCAPTCHA errors
-          const name = data.name;
-          const email = data.email;
-          const company = data.company;
-          const project = data.project;
-          const message = data.message;
-
-          const subject = `Project Inquiry from ${name}${company ? ` (${company})` : ''}`;
-          const body = `Name: ${name}
-Email: ${email}
-${company ? `Company: ${company}` : ''}
-${project ? `Project Type: ${project}` : ''}
-
-Message:
-${message}`;
-
-          const mailtoLink = `mailto:richardarothbart@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-          setTimeout(() => {
-            window.location.href = mailtoLink;
-          }, 2000);
-        }
-
-        showNotification(errorMessage, 'error');
-
-        // Reset button
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-        submitBtn.style.opacity = '1';
-        submitBtn.style.background = '';
-      }
-    });
-
-    // Notification system
-    function showNotification(message, type = 'info') {
-      // Remove existing notifications
-      const existing = document.querySelector('.notification');
-      if (existing) existing.remove();
-
-      const notification = document.createElement('div');
-      notification.className = `notification ${type}`;
-      notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 16px 20px;
-        border-radius: 12px;
-        color: white;
-        font-weight: 600;
-        z-index: 1000;
-        max-width: 400px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        ${type === 'success' ? 'background: linear-gradient(135deg, #22c55e, #16a34a);' : ''}
-        ${type === 'error' ? 'background: linear-gradient(135deg, #ef4444, #dc2626);' : ''}
-      `;
-      notification.textContent = message;
-
-      document.body.appendChild(notification);
-
-      // Animate in
-      setTimeout(() => {
-        notification.style.transform = 'translateX(0)';
-      }, 100);
-
-      // Auto remove after 5 seconds
-      setTimeout(() => {
-        notification.style.transform = 'translateX(100%)';
-        setTimeout(() => notification.remove(), 300);
-      }, 5000);
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 
 </html>

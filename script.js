@@ -1,5 +1,74 @@
-// Year
-document.getElementById('y').textContent = new Date().getFullYear();
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  // Year
+  const yearElement = document.getElementById('y');
+  if (yearElement) {
+    yearElement.textContent = new Date().getFullYear();
+  }
+
+  // Mobile Menu Functionality
+  const hamburgerBtn = document.querySelector('.hamburger-btn');
+  const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+  const closeBtn = document.querySelector('.close-btn');
+  const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
+
+  function openMobileMenu() {
+    if (hamburgerBtn && mobileMenuOverlay) {
+      hamburgerBtn.classList.add('active');
+      mobileMenuOverlay.classList.add('active');
+      hamburgerBtn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+      console.log('Mobile menu opened'); // Debug log
+    }
+  }
+
+  function closeMobileMenu() {
+    if (hamburgerBtn && mobileMenuOverlay) {
+      hamburgerBtn.classList.remove('active');
+      mobileMenuOverlay.classList.remove('active');
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = ''; // Restore scrolling
+      console.log('Mobile menu closed'); // Debug log
+    }
+  }
+
+  // Event listeners
+  if (hamburgerBtn) {
+    hamburgerBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log('Hamburger button clicked'); // Debug log
+      openMobileMenu();
+    });
+    console.log('Hamburger button found and event listener added'); // Debug log
+  } else {
+    console.log('Hamburger button not found'); // Debug log
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeMobileMenu);
+  }
+
+  // Close menu when clicking on overlay background
+  if (mobileMenuOverlay) {
+    mobileMenuOverlay.addEventListener('click', (e) => {
+      if (e.target === mobileMenuOverlay) {
+        closeMobileMenu();
+      }
+    });
+  }
+
+  // Close menu when clicking on navigation links
+  mobileMenuLinks.forEach(link => {
+    link.addEventListener('click', closeMobileMenu);
+  });
+
+  // Close menu on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileMenuOverlay && mobileMenuOverlay.classList.contains('active')) {
+      closeMobileMenu();
+    }
+  });
+});
 
 // Scroll reveal
 const io = new IntersectionObserver((entries) => {
@@ -55,7 +124,7 @@ document.querySelector('.contact-form').addEventListener('submit', async functio
   try {
     console.log('📡 Sending request to /contact...');
 
-    const response = await fetch('/contact', {
+            const response = await fetch('https://k4jp7upqmcfmchbj35jb3jlojq0civky.lambda-url.us-west-1.on.aws/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
