@@ -38,3 +38,9 @@ npm-debug.log*
 
 # AWS CLI output
 aws-cli-output.json
+response.json
+test-*.json
+
+# Build artifacts
+*.tgz
+*.tar.gz
