@@ -43,6 +43,23 @@ jobs:
 
     - name: Deploy static files to S3
       run: |
+        # Configure bucket for static website hosting (if not already configured)
+        aws s3 website s3://${{ env.S3_BUCKET }} --index-document index.html --error-document index.html || echo "Website hosting already configured"
+        
+        # Set bucket policy for public read access
+        aws s3api put-bucket-policy --bucket ${{ env.S3_BUCKET }} --policy '{
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "PublicReadGetObject",
+              "Effect": "Allow",
+              "Principal": "*",
+              "Action": "s3:GetObject",
+              "Resource": "arn:aws:s3:::'${{ env.S3_BUCKET }}'/*"
+            }
+          ]
+        }' || echo "Bucket policy already set"
+        
         # Upload static files with proper content types
         aws s3 cp index.html s3://${{ env.S3_BUCKET }}/index.html --content-type "text/html"
         aws s3 cp styles.css s3://${{ env.S3_BUCKET }}/styles.css --content-type "text/css"
@@ -62,18 +79,76 @@ jobs:
         cd lambda
         
         # Install production dependencies
-        npm install --production
+        npm ci --omit=dev
         
         # Create deployment package
         zip -r deployment.zip contact.js package.json node_modules/
         
-        # Update Lambda function code
-        aws lambda update-function-code \
-          --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
-          --zip-file fileb://deployment.zip \
-          --region ${{ env.AWS_REGION }}
+        # Try to update function, create if it doesn't exist
+        if aws lambda get-function --function-name ${{ env.LAMBDA_FUNCTION_NAME }} --region ${{ env.AWS_REGION }} >/dev/null 2>&1; then
+          echo "Updating existing Lambda function..."
+          aws lambda update-function-code \
+            --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
+            --zip-file fileb://deployment.zip \
+            --region ${{ env.AWS_REGION }}
+        else
+          echo "Creating new Lambda function..."
+          
+          # Get account ID for role ARN
+          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          ROLE_ARN="arn:aws:iam::${ACCOUNT_ID}:role/rick-portfolio-lambda-role"
+          
+          # Create IAM role if it doesn't exist
+          if ! aws iam get-role --role-name rick-portfolio-lambda-role >/dev/null 2>&1; then
+            echo "Creating IAM role..."
+            aws iam create-role \
+              --role-name rick-portfolio-lambda-role \
+              --assume-role-policy-document '{
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": "lambda.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                  }
+                ]
+              }'
+            
+            aws iam attach-role-policy \
+              --role-name rick-portfolio-lambda-role \
+              --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+            
+            # Wait for role to propagate
+            sleep 15
+          fi
+          
+          # Create Lambda function
+          aws lambda create-function \
+            --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
+            --runtime nodejs18.x \
+            --role $ROLE_ARN \
+            --handler contact.handler \
+            --zip-file fileb://deployment.zip \
+            --timeout 30 \
+            --region ${{ env.AWS_REGION }}
+          
+          # Create Function URL
+          aws lambda create-function-url-config \
+            --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
+            --auth-type NONE \
+            --cors AllowCredentials=false,AllowHeaders=content-type,AllowMethods=POST,AllowOrigins=* \
+            --region ${{ env.AWS_REGION }}
+        fi
         
-        echo "✅ Lambda function updated"
+        echo "✅ Lambda function deployed"
+
+    - name: Wait for Lambda function to finish updating
+      run: |
+        echo "Waiting for Lambda function to finish updating..."
+        aws lambda wait function-updated --function-name ${{ env.LAMBDA_FUNCTION_NAME }} --region ${{ env.AWS_REGION }}
+        echo "✅ Lambda function update completed"
 
     - name: Update Lambda environment variables
       run: |
