@@ -1,0 +1,21 @@
+{
+  "name": "Rick Rothbart",
+  "short_name": "Rick Rothbart",
+  "description": "Prototyping & Build Leadership - Rick Rothbart Portfolio",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#50e3c2",
+  "background_color": "#0b0d12",
+  "display": "standalone",
+  "start_url": "/"
+}
