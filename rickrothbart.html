@@ -1061,6 +1061,72 @@
         justify-content: center;
       }
     }
+
+    /* Creative Projects Grid */
+    .projects-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width:900px) {
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .project-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .project-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.15rem;
+    }
+
+    .project-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin: 0 0 16px;
+      flex-grow: 1;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border: 1px solid var(--outline);
+      border-radius: 10px;
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      margin-top: auto;
+      width: fit-content;
+    }
+
+    .project-link:hover {
+      border-color: var(--brand);
+      color: var(--brand);
+    }
+
+    .project-link svg {
+      transition: transform 0.3s ease;
+    }
+
+    .project-link:hover svg {
+      transform: translateX(3px);
+    }
   </style>
 </head>
 
@@ -1075,6 +1141,7 @@
       <nav class="desktop-nav" style="display:flex; gap:10px; align-items:center">
         <a class="ghost" href="#work">Work</a>
         <a class="ghost" href="#experience">Experience</a>
+        <a class="ghost" href="#projects">Projects</a>
         <a class="cta" href="#contact">Contact</a>
         <a class="linkedin-link" href="https://www.linkedin.com/in/richardrothbart/" target="_blank" rel="noopener"
           aria-label="LinkedIn Profile">
@@ -1106,6 +1173,7 @@
       <nav class="mobile-menu-nav">
         <a class="mobile-menu-link" href="#work">Work</a>
         <a class="mobile-menu-link" href="#experience">Experience</a>
+        <a class="mobile-menu-link" href="#projects">Projects</a>
         <a class="mobile-menu-link" href="#contact">Contact</a>
         <a class="mobile-menu-link linkedin" href="https://www.linkedin.com/in/richardrothbart/" target="_blank" rel="noopener">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -1301,6 +1369,64 @@
             <div class="year" style="grid-column:3"><span>2025 →</span></div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREATIVE PROJECTS -->
+  <section id="projects">
+    <div class="container grid" style="gap:20px">
+      <div class="reveal">
+        <h2 style="margin:0 0 8px; font-size:clamp(24px, 3.2vw, 36px)">Creative Projects</h2>
+        <p class="lede">Personal apps and experiments I've built on the side—blending code, design, and curiosity.</p>
+      </div>
+
+      <div class="grid projects-grid">
+        <article class="card project-card reveal">
+          <h3>Couples Expense Tracker</h3>
+          <p>A shared expense tracking app built for couples to manage finances together—split bills, track spending categories, and settle up easily.</p>
+          <div class="project-tags">
+            <span class="pill">React</span>
+            <span class="pill">Full Stack</span>
+          </div>
+          <a class="project-link" href="https://expenses.rickrothbart.com" target="_blank" rel="noopener">
+            View Project
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </article>
+
+        <article class="card project-card reveal">
+          <h3>Calorie & Macro Tracker</h3>
+          <p>AI-powered nutrition tracking that makes logging meals effortless—snap a photo or describe your food, and let AI handle the rest.</p>
+          <div class="project-tags">
+            <span class="pill">React</span>
+            <span class="pill">AI</span>
+            <span class="pill">Vision API</span>
+          </div>
+          <a class="project-link" href="https://macroai.rickrothbart.com" target="_blank" rel="noopener">
+            View Project
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </article>
+
+        <article class="card project-card reveal">
+          <h3>Wealth Inequality Visualizer</h3>
+          <p>An interactive single-page app that makes wealth distribution tangible—see how the numbers stack up in ways that are hard to ignore.</p>
+          <div class="project-tags">
+            <span class="pill">React</span>
+            <span class="pill">Data Viz</span>
+          </div>
+          <a class="project-link" href="https://8bitwealth.vercel.app" target="_blank" rel="noopener">
+            View Project
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </article>
       </div>
     </div>
   </section>
