@@ -79,8 +79,23 @@ jobs:
         aws s3 cp favicon.svg s3://${{ env.S3_BUCKET }}/favicon.svg --content-type "image/svg+xml" || echo "favicon.svg not found"
         aws s3 cp apple-touch-icon.svg s3://${{ env.S3_BUCKET }}/apple-touch-icon.svg --content-type "image/svg+xml" || echo "apple-touch-icon.svg not found"
         aws s3 cp site.webmanifest s3://${{ env.S3_BUCKET }}/site.webmanifest --content-type "application/manifest+json" || echo "site.webmanifest not found"
-        
+
         echo "✅ Static files deployed to S3"
+
+    - name: Deploy BBQ cook-clock app to /bbq/
+      run: |
+        if [ -d bbq ]; then
+          # Sync the pre-built app (content types inferred from file extensions)
+          aws s3 sync bbq/ s3://${{ env.S3_BUCKET }}/bbq/ --delete
+
+          # Also serve the app at the extensionless /bbq key so the path
+          # resolves whether or not the origin handles directory indexes
+          aws s3 cp bbq/index.html s3://${{ env.S3_BUCKET }}/bbq --content-type "text/html"
+
+          echo "✅ BBQ app deployed to /bbq/"
+        else
+          echo "No bbq/ directory found, skipping"
+        fi
 
     - name: Build and deploy Lambda function
       run: |
