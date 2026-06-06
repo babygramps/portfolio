@@ -98,6 +98,21 @@ jobs:
           echo "No bbq/ directory found, skipping"
         fi
 
+    - name: Deploy Crossword app to /crossword/
+      run: |
+        if [ -d crossword ]; then
+          # Sync the pre-built app (content types inferred from file extensions).
+          aws s3 sync crossword/ s3://${{ env.S3_BUCKET }}/crossword/ --delete
+
+          # Also serve the app at the extensionless /crossword key so the path
+          # resolves whether or not the origin handles directory indexes
+          aws s3 cp crossword/index.html s3://${{ env.S3_BUCKET }}/crossword --content-type "text/html"
+
+          echo "✅ Crossword app deployed to /crossword/"
+        else
+          echo "No crossword/ directory found, skipping"
+        fi
+
     - name: Deploy BBQ shared-board backend (Lambda + DynamoDB)
       run: |
         if [ ! -d board-lambda ]; then echo "No board-lambda/, skipping"; exit 0; fi
