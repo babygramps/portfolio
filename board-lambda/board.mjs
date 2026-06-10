@@ -5,11 +5,14 @@
 //   { op: 'signup', shiftId, name }    add name to a shift (atomic set add)
 //   { op: 'drop',   shiftId, name }    remove name from a shift
 //   { op: 'reset-checks' }             clear all checkboxes
+//   { op: 'timer-start', id, label, seconds }   shared kitchen timer
+//   { op: 'timer-clear', id }                   remove a timer
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import {
   DynamoDBDocumentClient,
   QueryCommand,
   UpdateCommand,
+  DeleteCommand,
   BatchWriteCommand,
 } from '@aws-sdk/lib-dynamodb'
 
@@ -36,11 +39,14 @@ async function getState() {
   )
   const checks = {}
   const schedule = {}
+  const timers = {}
   for (const item of out.Items || []) {
     if (item.sk.startsWith('check#')) checks[item.sk.slice(6)] = !!item.v
     else if (item.sk.startsWith('shift#')) schedule[item.sk.slice(6)] = [...(item.names || [])].sort()
+    else if (item.sk.startsWith('timer#'))
+      timers[item.sk.slice(6)] = { label: item.label, endsAt: item.endsAt, total: item.total }
   }
-  return { checks, schedule }
+  return { checks, schedule, timers }
 }
 
 export const handler = async (event) => {
@@ -86,6 +92,35 @@ export const handler = async (event) => {
           UpdateExpression: 'DELETE #n :n',
           ExpressionAttributeNames: { '#n': 'names' },
           ExpressionAttributeValues: { ':n': new Set([String(op.name).slice(0, 64)]) },
+        }),
+      )
+    } else if (
+      op.op === 'timer-start' &&
+      typeof op.id === 'string' &&
+      Number.isFinite(op.seconds) &&
+      op.seconds > 0 &&
+      op.seconds <= 86400
+    ) {
+      // server computes endsAt so a device with a skewed clock can't poison
+      // the countdown for everyone else
+      await ddb.send(
+        new UpdateCommand({
+          TableName: TABLE,
+          Key: { pk: PK, sk: `timer#${op.id.slice(0, 64)}` },
+          UpdateExpression: 'SET #l = :l, #e = :e, #t = :t',
+          ExpressionAttributeNames: { '#l': 'label', '#e': 'endsAt', '#t': 'total' },
+          ExpressionAttributeValues: {
+            ':l': String(op.label || 'TIMER').slice(0, 64),
+            ':e': Date.now() + Math.round(op.seconds) * 1000,
+            ':t': Math.round(op.seconds),
+          },
+        }),
+      )
+    } else if (op.op === 'timer-clear' && typeof op.id === 'string') {
+      await ddb.send(
+        new DeleteCommand({
+          TableName: TABLE,
+          Key: { pk: PK, sk: `timer#${op.id.slice(0, 64)}` },
         }),
       )
     } else if (op.op === 'reset-checks') {
