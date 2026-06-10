@@ -5,8 +5,9 @@
 //   { op: 'signup', shiftId, name }    add name to a shift (atomic set add)
 //   { op: 'drop',   shiftId, name }    remove name from a shift
 //   { op: 'reset-checks' }             clear all checkboxes
-//   { op: 'timer-start', id, label, seconds }   shared kitchen timer
-//   { op: 'timer-clear', id }                   remove a timer
+//   { op: 'timer-start', id, label, seconds }   shared kitchen timer (counts down)
+//   { op: 'watch-start', id, label }            shared stopwatch (counts up)
+//   { op: 'timer-clear', id }                   remove a timer or stopwatch
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import {
   DynamoDBDocumentClient,
@@ -43,7 +44,13 @@ async function getState() {
     if (item.sk.startsWith('check#')) checks[item.sk.slice(6)] = !!item.v
     else if (item.sk.startsWith('shift#')) schedule[item.sk.slice(6)] = [...(item.names || [])].sort()
     else if (item.sk.startsWith('timer#'))
-      timers[item.sk.slice(6)] = { label: item.label, endsAt: item.endsAt, total: item.total }
+      // a stopwatch has startedAt and no endsAt; JSON drops the undefined keys
+      timers[item.sk.slice(6)] = {
+        label: item.label,
+        endsAt: item.endsAt,
+        total: item.total,
+        startedAt: item.startedAt,
+      }
   }
   return { checks, schedule, timers }
 }
@@ -112,6 +119,19 @@ export const handler = async (event) => {
             ':l': String(op.label || 'TIMER').slice(0, 64),
             ':e': Date.now() + Math.round(op.seconds) * 1000,
             ':t': Math.round(op.seconds),
+          },
+        }),
+      )
+    } else if (op.op === 'watch-start' && typeof op.id === 'string') {
+      await ddb.send(
+        new UpdateCommand({
+          TableName: TABLE,
+          Key: { pk: PK, sk: `timer#${op.id.slice(0, 64)}` },
+          UpdateExpression: 'SET #l = :l, #s = :s',
+          ExpressionAttributeNames: { '#l': 'label', '#s': 'startedAt' },
+          ExpressionAttributeValues: {
+            ':l': String(op.label || 'STOPWATCH').slice(0, 64),
+            ':s': Date.now(),
           },
         }),
       )
