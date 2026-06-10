@@ -12,7 +12,6 @@ import {
   DynamoDBDocumentClient,
   QueryCommand,
   UpdateCommand,
-  DeleteCommand,
   BatchWriteCommand,
 } from '@aws-sdk/lib-dynamodb'
 
@@ -117,10 +116,15 @@ export const handler = async (event) => {
         }),
       )
     } else if (op.op === 'timer-clear' && typeof op.id === 'string') {
+      // delete via BatchWrite — the role grants BatchWriteItem (used by
+      // reset-checks) but not DeleteItem
       await ddb.send(
-        new DeleteCommand({
-          TableName: TABLE,
-          Key: { pk: PK, sk: `timer#${op.id.slice(0, 64)}` },
+        new BatchWriteCommand({
+          RequestItems: {
+            [TABLE]: [
+              { DeleteRequest: { Key: { pk: PK, sk: `timer#${op.id.slice(0, 64)}` } } },
+            ],
+          },
         }),
       )
     } else if (op.op === 'reset-checks') {
