@@ -7,6 +7,8 @@
 //   { op: 'reset-checks' }             clear all checkboxes
 //   { op: 'timer-start', id, label, seconds }   shared kitchen timer (counts down)
 //   { op: 'watch-start', id, label }            shared stopwatch (counts up)
+//   { op: 'timer-pause', id }                   freeze a timer or stopwatch
+//   { op: 'timer-resume', id }                  shift its anchor and unfreeze
 //   { op: 'timer-clear', id }                   remove a timer or stopwatch
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import {
@@ -50,6 +52,8 @@ async function getState() {
         endsAt: item.endsAt,
         total: item.total,
         startedAt: item.startedAt,
+        pausedAt: item.pausedAt,
+        createdAt: item.createdAt,
       }
   }
   return { checks, schedule, timers }
@@ -113,12 +117,18 @@ export const handler = async (event) => {
         new UpdateCommand({
           TableName: TABLE,
           Key: { pk: PK, sk: `timer#${op.id.slice(0, 64)}` },
-          UpdateExpression: 'SET #l = :l, #e = :e, #t = :t',
-          ExpressionAttributeNames: { '#l': 'label', '#e': 'endsAt', '#t': 'total' },
+          UpdateExpression: 'SET #l = :l, #e = :e, #t = :t, #c = :c',
+          ExpressionAttributeNames: {
+            '#l': 'label',
+            '#e': 'endsAt',
+            '#t': 'total',
+            '#c': 'createdAt',
+          },
           ExpressionAttributeValues: {
             ':l': String(op.label || 'TIMER').slice(0, 64),
             ':e': Date.now() + Math.round(op.seconds) * 1000,
             ':t': Math.round(op.seconds),
+            ':c': Date.now(),
           },
         }),
       )
@@ -127,14 +137,52 @@ export const handler = async (event) => {
         new UpdateCommand({
           TableName: TABLE,
           Key: { pk: PK, sk: `timer#${op.id.slice(0, 64)}` },
-          UpdateExpression: 'SET #l = :l, #s = :s',
-          ExpressionAttributeNames: { '#l': 'label', '#s': 'startedAt' },
+          UpdateExpression: 'SET #l = :l, #s = :s, #c = :c',
+          ExpressionAttributeNames: { '#l': 'label', '#s': 'startedAt', '#c': 'createdAt' },
           ExpressionAttributeValues: {
             ':l': String(op.label || 'STOPWATCH').slice(0, 64),
             ':s': Date.now(),
+            ':c': Date.now(),
           },
         }),
       )
+    } else if (op.op === 'timer-pause' && typeof op.id === 'string') {
+      // condition: item must exist (no phantom rows) and not already be
+      // paused (a second concurrent pause must not move the freeze point)
+      try {
+        await ddb.send(
+          new UpdateCommand({
+            TableName: TABLE,
+            Key: { pk: PK, sk: `timer#${op.id.slice(0, 64)}` },
+            UpdateExpression: 'SET #p = :p',
+            ConditionExpression: 'attribute_exists(sk) AND attribute_not_exists(#p)',
+            ExpressionAttributeNames: { '#p': 'pausedAt' },
+            ExpressionAttributeValues: { ':p': Date.now() },
+          }),
+        )
+      } catch (e) {
+        if (e.name !== 'ConditionalCheckFailedException') throw e
+      }
+    } else if (op.op === 'timer-resume' && typeof op.id === 'string') {
+      const { timers } = await getState()
+      const t = timers[op.id.slice(0, 64)]
+      if (t && t.pausedAt != null) {
+        const upd =
+          t.endsAt != null
+            ? // timer: push the deadline out by however long it sat paused
+              { expr: 'SET #a = :a REMOVE #p', name: 'endsAt', val: Date.now() + (t.endsAt - t.pausedAt) }
+            : // stopwatch: slide the start forward so elapsed stays frozen
+              { expr: 'SET #a = :a REMOVE #p', name: 'startedAt', val: Date.now() - (t.pausedAt - t.startedAt) }
+        await ddb.send(
+          new UpdateCommand({
+            TableName: TABLE,
+            Key: { pk: PK, sk: `timer#${op.id.slice(0, 64)}` },
+            UpdateExpression: upd.expr,
+            ExpressionAttributeNames: { '#a': upd.name, '#p': 'pausedAt' },
+            ExpressionAttributeValues: { ':a': upd.val },
+          }),
+        )
+      }
     } else if (op.op === 'timer-clear' && typeof op.id === 'string') {
       // delete via BatchWrite — the role grants BatchWriteItem (used by
       // reset-checks) but not DeleteItem
