@@ -56,7 +56,9 @@ export const handler = async (event) => {
   }
 
   try {
-    if (op.op === 'check' && typeof op.id === 'string') {
+    // value must be an explicit boolean — a missing value coerced to false
+    // would silently uncheck the task instead of surfacing the client bug
+    if (op.op === 'check' && typeof op.id === 'string' && typeof op.value === 'boolean') {
       await ddb.send(
         new UpdateCommand({
           TableName: TABLE,
