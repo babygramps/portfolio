@@ -52,3 +52,9 @@ package-lock.json
 index-local.html
 LOCAL-DEVELOPMENT.md
 start-local.ps1
+
+# Keep the colorku build tooling tracked despite the global package.json /
+# package-lock.json ignores above (colorku-src/node_modules stays ignored
+# via the node_modules/ rule).
+!colorku-src/package.json
+!colorku-src/package-lock.json
