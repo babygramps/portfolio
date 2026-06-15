@@ -463,9 +463,16 @@ const STYLES = `
 .sg-layout { max-width: 980px; margin: 0 auto; display: grid; grid-template-columns: minmax(0,1fr) 320px; gap: 28px; }
 @media (max-width: 860px) { .sg-layout { grid-template-columns: 1fr; } }
 
-.sg-board { display: grid; grid-template-columns: repeat(9, 1fr); width: 100%; max-width: 520px;
+/* Square the BOARD (definite width -> aspect-ratio gives definite height) and
+   split it into 9 equal rows + columns. Squareness must NOT come from
+   aspect-ratio on the cells: WebKit/iOS Safari mis-resolves aspect-ratio on a
+   grid item whose width is set by a 1fr track, growing each row ~1px taller
+   than the last and crowding the discs into the grid lines. */
+.sg-board { display: grid; grid-template-columns: repeat(9, 1fr); grid-template-rows: repeat(9, 1fr);
+  aspect-ratio: 1; width: 100%; max-width: 520px;
   border: 3px solid var(--ink); background: #fcfdfe; user-select: none; }
-.sg-cell { position: relative; aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+.sg-cell { position: relative; display: flex; align-items: center; justify-content: center;
+  min-width: 0; min-height: 0;
   cursor: pointer;
   border-right: 1px solid var(--gridline); border-bottom: 1px solid var(--gridline);
   transition: background .08s; }
