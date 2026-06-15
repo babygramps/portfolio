@@ -517,13 +517,16 @@ const STYLES = `
 .sg-colorbtn.done .lbl { color: var(--muted); text-shadow: none; }
 .sg-erase { aspect-ratio: 1; font-size: 18px; }
 
-/* pencil guesses — semi-transparent color discs, centered like a committed value */
+/* pencil guesses — hollow rings ("holes"): the color shows only as a rim with
+   an empty center, so a guess reads clearly differently from a committed marble.
+   A radial mask punches the center out, which also works for the rainbow (9). */
 .sg-pencil { display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
   width: 100%; height: 100%; gap: 2px; padding: 8%; box-sizing: border-box; }
-.sg-note-disc { border-radius: 50%; opacity: .5; aspect-ratio: 1;
-  border: 1px solid rgba(0,0,0,.14);
-  height: clamp(13px, 2.6vw, 20px); width: auto; }
-.sg-pencil.single .sg-note-disc { height: clamp(22px, 4.4vw, 34px); opacity: .55; }
+.sg-note-disc { border-radius: 50%; opacity: .82; aspect-ratio: 1;
+  height: clamp(13px, 2.6vw, 20px); width: auto;
+  -webkit-mask: radial-gradient(circle, transparent 0 56%, #000 59%);
+  mask: radial-gradient(circle, transparent 0 56%, #000 59%); }
+.sg-pencil.single .sg-note-disc { height: clamp(22px, 4.4vw, 34px); opacity: .9; }
 
 .sg-panel { border: 2px solid var(--ink); background: var(--panel); }
 .sg-panel + .sg-panel { margin-top: 20px; }
@@ -926,10 +929,23 @@ ${printWithKey ? `<div class="key"><h2>Solution key &mdash; #${serial}</h2>${gri
     setWrongSet(wrong);
     setConflictSet(conf);
     const complete = entries.every((v) => v !== 0);
-    if (complete && wrong.size === 0) setStatus({ text: "Solved — grid matches the validated solution.", kind: "ok" });
-    else if (wrong.size > 0) setStatus({ text: `${wrong.size} incorrect ${wrong.size === 1 ? "entry" : "entries"} marked.`, kind: "err" });
-    else if (conf.size > 0) setStatus({ text: "No wrong colors yet, but there are duplicate placements (marked).", kind: "err" });
-    else setStatus({ text: filled === 0 ? "Nothing to check yet." : "All placements correct so far.", kind: "ok" });
+    // Give an unambiguous correct/incorrect verdict on every check.
+    if (complete && wrong.size === 0)
+      setStatus({ text: "✓ Correct — solved! Every color matches the unique solution.", kind: "ok" });
+    else if (complete)
+      setStatus({
+        text: `✗ Not solved — ${wrong.size} ${wrong.size === 1 ? "color is" : "colors are"} wrong (marked).`,
+        kind: "err",
+      });
+    else if (wrong.size > 0)
+      setStatus({
+        text: `✗ ${wrong.size} incorrect ${wrong.size === 1 ? "color" : "colors"} so far (marked).`,
+        kind: "err",
+      });
+    else if (conf.size > 0)
+      setStatus({ text: "Duplicate colors in a row, column, or box (marked) — none wrong yet.", kind: "err" });
+    else if (filled === 0) setStatus({ text: "Nothing to check yet.", kind: "" });
+    else setStatus({ text: "✓ Correct so far — no mistakes yet. Keep going.", kind: "ok" });
   };
 
   const reveal = () => {
