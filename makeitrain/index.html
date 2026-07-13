@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Make It Rain — GIFFYRAIN 8-Bit Emoji Storm Compiler</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- React & ReactDOM -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <!-- Babel for JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Primary CDN Script Elements -->
+  <!-- gifuct-js publishes no browser/UMD build at all, so it can't be loaded via a plain
+       <script src>. It's dynamically imported as an ES module further down instead. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gifshot/0.4.5/gifshot.min.js"></script>
+  <!-- gif.js: primary high-quality encoder (full-resolution palette sampling + dithering).
+       gifshot above is kept as an automatic fallback encoder. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+    :root {
+      --arcade-blue: #0166ff;
+      --arcade-blue-deep: #0047c2;
+      --arcade-green: #06c406;
+      --arcade-red: #e74034;
+      --gold: #ffd700;
+    }
+    body {
+      font-family: 'Press Start 2P', monospace;
+      background-color: var(--arcade-blue);
+      /* Scattered pixel "sky" squares, like the crowd/sky dots on classic 8-bit pages */
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Crect x='12' y='20' width='4' height='4' fill='%230047c2'/%3E%3Crect x='68' y='8' width='4' height='4' fill='%230047c2'/%3E%3Crect x='40' y='56' width='4' height='4' fill='%230052dd'/%3E%3Crect x='84' y='72' width='4' height='4' fill='%230047c2'/%3E%3Crect x='20' y='84' width='4' height='4' fill='%230052dd'/%3E%3C/svg%3E");
+      image-rendering: pixelated;
+      -webkit-font-smoothing: none;
+      font-smooth: never;
+    }
+    ::selection { background: var(--gold); color: #000; }
+    /* NES dialog-box panel: white pixel frame + black ring + hard drop */
+    .pixel-panel {
+      background: #000a2a;
+      border: 4px solid #fff;
+      outline: 4px solid #000;
+      box-shadow: 12px 12px 0 rgba(0, 0, 0, 0.35);
+    }
+    .pixel-chip {
+      background: #000;
+      border: 3px solid #fff;
+      color: var(--gold);
+    }
+    /* Arcade buttons: flat color, chunky black border, hard shadow, press-down on click */
+    .btn-arcade {
+      border: 4px solid #000;
+      box-shadow: 5px 5px 0 #000;
+      transition: none;
+    }
+    .btn-arcade:hover:not(:disabled) { filter: brightness(1.12); }
+    .btn-arcade:active:not(:disabled) {
+      transform: translate(5px, 5px);
+      box-shadow: 0 0 0 #000;
+    }
+    .btn-arcade:disabled { filter: saturate(0) brightness(0.6); cursor: not-allowed; }
+    /* Striped hero title, like the layered pixel logo on the reference site */
+    .title-stripes {
+      background: linear-gradient(180deg, #ffd700 0%, #ffd700 28%, #ffffff 28%, #ffffff 55%, #06c406 55%, #06c406 78%, #7fdfff 78%, #7fdfff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(4px 4px 0 #000);
+    }
+    .blink { animation: blink 1s steps(1, end) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    /* Chunky segmented loading bar that marches in whole-block steps */
+    .loading-bar {
+      background: repeating-linear-gradient(90deg, var(--gold) 0 14px, #000 14px 20px);
+      animation: march 0.5s steps(2, end) infinite;
+      border: 4px solid #000;
+      outline: 3px solid #fff;
+    }
+    @keyframes march { to { background-position: 20px 0; } }
+    /* CRT screen: scanlines over the live preview only */
+    .crt { position: relative; }
+    .crt::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0 2px, transparent 2px 4px);
+    }
+    .crt canvas { image-rendering: pixelated; }
+    /* Sliders: square gold thumb, black pixel track */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: #000;
+      border: 3px solid #fff;
+      height: 14px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 0;
+      background: var(--gold);
+      border: 3px solid #000;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover { background: #fff; }
+    /* Pixel scrollbar for the GIPHY results grid */
+    .pixel-scroll::-webkit-scrollbar { width: 14px; }
+    .pixel-scroll::-webkit-scrollbar-track { background: #000; border: 3px solid #fff; }
+    .pixel-scroll::-webkit-scrollbar-thumb { background: var(--gold); border: 3px solid #000; }
+    /* Sprite hop for the emoji "runners" on the track band */
+    .hop { display: inline-block; animation: hop 0.5s steps(2, end) infinite alternate; }
+    @keyframes hop { to { transform: translateY(-8px); } }
+  </style>
+</head>
+<body class="text-white min-h-screen flex flex-col">
+  <div id="root" class="flex-grow flex flex-col"></div>
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+    // A list of cool emojis to rain down!
+    const EMOJI_PRESETS = [
+      { char: "🍔", name: "Cheeseburger" },
+      { char: "🍕", name: "Pizza" },
+      { char: "🌮", name: "Taco" },
+      { char: "🍿", name: "Popcorn" },
+      { char: "🍩", name: "Donut" },
+      { char: "🥑", name: "Avocado" },
+      { char: "🐱", name: "Kitten" },
+      { char: "💖", name: "Hearts" },
+      { char: "✨", name: "Sparkles" },
+      { char: "🔥", name: "Fire" },
+      { char: "💩", name: "Poop" },
+      { char: "🚀", name: "Rocket" }
+    ];
+    function App() {
+      // Base file / source image states
+      const [baseFrames, setBaseFrames] = useState([]);
+      const [fileName, setFileName] = useState("Interactive Preset Demo");
+      const [dimensions, setDimensions] = useState({ width: 300, height: 300 });
+
+      // Sliders & Customization
+      const [emoji, setEmoji] = useState("🍔");
+      const [density, setDensity] = useState(35);
+      const [speed, setSpeed] = useState(1.5);
+      const [rotationSpeed, setRotationSpeed] = useState(1.5);
+      const [burgerSize, setBurgerSize] = useState(32);
+      const [wind, setWind] = useState(0); // Left-to-right slant
+      const [glowEffect, setGlowEffect] = useState(true);
+      // UI Process Control
+      const [isDecoding, setIsDecoding] = useState(false);
+      const [isEncoding, setIsEncoding] = useState(false);
+      const [encodingProgress, setEncodingProgress] = useState("");
+      const [outputGifUrl, setOutputGifUrl] = useState(null);
+      const [errorMessage, setErrorMessage] = useState("");
+      // Library loading status
+      const [libsStatus, setLibsStatus] = useState({ loaded: false, loading: true, error: false });
+      // GIPHY search
+      const [giphyQuery, setGiphyQuery] = useState("");
+      const [giphyResults, setGiphyResults] = useState([]);
+      const [isSearchingGiphy, setIsSearchingGiphy] = useState(false);
+      // Live Preview Reference Canvas
+      const previewCanvasRef = useRef(null);
+      const previewAnimationRef = useRef(null);
+      const lastTickTime = useRef(0);
+      const currentTickIndex = useRef(0);
+      const accumulatedTime = useRef(0);
+      // Multi-namespace utility resolver to locate the GIF parser methods under any environment wrapper
+      const getGifuctMethods = () => {
+        if (window.parseGIF && window.decompressFrames) {
+          return { parseGIF: window.parseGIF, decompressFrames: window.decompressFrames };
+        }
+        const g = window.gifuct || window.Gifuct;
+        if (g && g.parseGIF && g.decompressFrames) {
+          return { parseGIF: g.parseGIF, decompressFrames: g.decompressFrames };
+        }
+        if (g && g.default && g.default.parseGIF && g.default.decompressFrames) {
+          return { parseGIF: g.default.parseGIF, decompressFrames: g.default.decompressFrames };
+        }
+        return null;
+      };
+      // Resilient background script loader that implements CDN fallbacks if primary links are blocked or fail
+      useEffect(() => {
+        const verifyAndFallbackLoad = async () => {
+          const checkGifuct = () => !!getGifuctMethods();
+          const checkGifshot = () => !!window.gifshot;
+          const checkGifJs = () => !!window.GIF;
+          // gifuct-js ships as a CommonJS-only package (built with plain Babel, using
+          // require()/exports) and has never published a browser/UMD dist bundle, so a
+          // <script src> pointed at "dist/gifuct-js.min.js" 404s no matter which CDN mirrors
+          // it. These CDNs convert the npm package into a real ES module on the fly instead,
+          // which is loaded below via dynamic import().
+          const gifuctESMList = [
+            "https://esm.sh/gifuct-js@2.1.2",
+            "https://cdn.jsdelivr.net/npm/gifuct-js@2.1.2/+esm",
+            "https://cdn.skypack.dev/gifuct-js@2.1.2"
+          ];
+          // Fallback options for loading gifshot (this one does ship a real UMD build)
+          const gifshotCDNList = [
+            "https://cdnjs.cloudflare.com/ajax/libs/gifshot/0.4.5/gifshot.min.js",
+            "https://cdn.jsdelivr.net/npm/gifshot@0.4.5/dist/gifshot.min.js",
+            "https://unpkg.com/gifshot@0.4.5/dist/gifshot.min.js"
+          ];
+          // gif.js: preferred high-quality encoder. Its worker script must be same-origin
+          // or a blob URL, so the worker source is fetched and wrapped in a blob below.
+          const gifJsCDNList = [
+            "https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js",
+            "https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js",
+            "https://unpkg.com/gif.js@0.2.0/dist/gif.js"
+          ];
+          const gifJsWorkerCDNList = [
+            "https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js",
+            "https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js",
+            "https://unpkg.com/gif.js@0.2.0/dist/gif.worker.js"
+          ];
+          const loadGifJsWorkerBlob = async () => {
+            if (window.__gifJsWorkerUrl) return true;
+            for (const url of gifJsWorkerCDNList) {
+              try {
+                const resp = await fetch(url);
+                if (!resp.ok) continue;
+                const text = await resp.text();
+                window.__gifJsWorkerUrl = URL.createObjectURL(new Blob([text], { type: "application/javascript" }));
+                return true;
+              } catch (e) { /* try the next mirror */ }
+            }
+            return false;
+          };
+          const loadScriptDynamically = (url) => {
+            return new Promise((resolve) => {
+              const script = document.createElement("script");
+              script.src = url;
+              script.async = true;
+              script.onload = () => resolve(true);
+              script.onerror = () => resolve(false);
+              document.head.appendChild(script);
+            });
+          };
+          const loadEsmModule = (url) => {
+            return import(/* webpackIgnore: true */ url)
+              .then((mod) => {
+                if (mod && mod.parseGIF && mod.decompressFrames) {
+                  window.parseGIF = mod.parseGIF;
+                  window.decompressFrames = mod.decompressFrames;
+                  return true;
+                }
+                return false;
+              })
+              .catch(() => false);
+          };
+          let gifuctReady = checkGifuct();
+          if (!gifuctReady) {
+            for (const cdnUrl of gifuctESMList) {
+              const success = await loadEsmModule(cdnUrl);
+              if (success && checkGifuct()) {
+                gifuctReady = true;
+                break;
+              }
+            }
+          }
+          let gifshotReady = checkGifshot();
+          if (!gifshotReady) {
+            for (const cdnUrl of gifshotCDNList) {
+              const success = await loadScriptDynamically(cdnUrl);
+              if (success && checkGifshot()) {
+                gifshotReady = true;
+                break;
+              }
+            }
+          }
+          let gifJsReady = checkGifJs();
+          if (!gifJsReady) {
+            for (const cdnUrl of gifJsCDNList) {
+              const success = await loadScriptDynamically(cdnUrl);
+              if (success && checkGifJs()) {
+                gifJsReady = true;
+                break;
+              }
+            }
+          }
+          if (gifJsReady) {
+            gifJsReady = await loadGifJsWorkerBlob();
+          }
+          // gifuct is required for decoding; either encoder (gif.js preferred, gifshot fallback) suffices.
+          if (gifuctReady && (gifJsReady || gifshotReady)) {
+            setLibsStatus({ loaded: true, loading: false, error: false });
+          } else {
+            setLibsStatus({ loaded: false, loading: false, error: true });
+            setErrorMessage("Some critical GIF rendering libraries failed to load. We are running alternative loaders; please try again or reload.");
+          }
+        };
+        verifyAndFallbackLoad();
+        generateDemoGIF();
+      }, []);
+      // Automatically restart preview loop when frames or configuration sliders change
+      useEffect(() => {
+        if (baseFrames.length > 0) {
+          startLivePreview();
+        }
+        return () => {
+          if (previewAnimationRef.current) {
+            cancelAnimationFrame(previewAnimationRef.current);
+          }
+        };
+      }, [baseFrames, emoji, density, speed, rotationSpeed, burgerSize, wind, glowEffect]);
+      // Natively generates an attractive dancing demo animation for instant sandbox previewing
+      const generateDemoGIF = () => {
+        setIsDecoding(true);
+        setErrorMessage("");
+
+        setTimeout(() => {
+          try {
+            const width = 300;
+            const height = 300;
+            const frames = [];
+            const totalFrames = 24;
+            for (let i = 0; i < totalFrames; i++) {
+              const canvas = document.createElement('canvas');
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext('2d');
+              // Fancy colorful space gradient
+              const grad = ctx.createLinearGradient(0, 0, width, height);
+              grad.addColorStop(0, '#1e1b4b'); // deep purple
+              grad.addColorStop(0.5, '#311042'); // magenta glow
+              grad.addColorStop(1, '#0f172a'); // dark space
+              ctx.fillStyle = grad;
+              ctx.fillRect(0, 0, width, height);
+              // Circular orbital grid lines
+              ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.arc(width / 2, height / 2, 70, 0, Math.PI * 2);
+              ctx.stroke();
+              ctx.beginPath();
+              ctx.arc(width / 2, height / 2, 110, 0, Math.PI * 2);
+              ctx.stroke();
+              // Bouncing retro grid perspective
+              ctx.strokeStyle = 'rgba(245, 158, 11, 0.15)';
+              ctx.lineWidth = 1.5;
+              const horizon = height * 0.7;
+              for (let col = -100; col <= width + 100; col += 40) {
+                ctx.beginPath();
+                ctx.moveTo(width / 2, horizon - 50);
+                ctx.lineTo(col, height);
+                ctx.stroke();
+              }
+              // Animated planet/bouncing kitty face in the center
+              const progress = i / totalFrames;
+              const angle = progress * Math.PI * 2;
+              const bounceY = Math.abs(Math.sin(angle)) * 40;
+              const sizeOscillate = 1 + Math.sin(angle) * 0.08;
+
+              const x = width / 2;
+              const y = height / 2 - bounceY + 10;
+              // Draw a glowing platform
+              ctx.shadowColor = '#d97706';
+              ctx.shadowBlur = 15;
+              ctx.fillStyle = 'rgba(245, 158, 11, 0.2)';
+              ctx.beginPath();
+              ctx.ellipse(x, height / 2 + 55, 45, 10, 0, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.shadowBlur = 0; // Clear shadow for next draw
+              // Superimpose target smiley/kitty
+              ctx.font = `${Math.round(68 * sizeOscillate)}px sans-serif`;
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText('😸', x, y);
+              frames.push({
+                canvas: canvas,
+                delay: 85 // milliseconds per frame
+              });
+            }
+            setDimensions({ width, height });
+            setBaseFrames(frames);
+            setFileName("Custom Procedural Space Demo");
+            setIsDecoding(false);
+          } catch (err) {
+            setErrorMessage("Failed to build procedural sandbox: " + err.message);
+            setIsDecoding(false);
+          }
+        }, 300);
+      };
+      // Handles loading a custom file from the user's hard drive
+      const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        decodeUploadedGif(file);
+      };
+      // Decodes a standard GIF into arrays of Canvas frames using the robustly resolved gifuct-js methods
+      const decodeUploadedGif = (file) => {
+        setIsDecoding(true);
+        setErrorMessage("");
+        setOutputGifUrl(null);
+        const reader = new FileReader();
+        reader.onload = (event) => decodeGifBuffer(event.target.result, file.name);
+        reader.onerror = () => {
+          setErrorMessage("Failed to read the file.");
+          setIsDecoding(false);
+        };
+        reader.readAsArrayBuffer(file);
+      };
+      // Shared decode core for both uploaded files and GIFs fetched from GIPHY.
+      // Deferred a tick so the decoding spinner paints before the heavy synchronous parse.
+      const decodeGifBuffer = (arrayBuffer, displayName) => {
+        setIsDecoding(true);
+        setFileName(displayName);
+        setTimeout(() => {
+          try {
+            // Retrieve dynamically resolved methods
+            const methods = getGifuctMethods();
+            if (!methods) {
+              throw new Error("GIF parsing libraries are currently unavailable. We are attempting to load a fallback. Please wait a moment and try uploading again.");
+            }
+            const { parseGIF, decompressFrames } = methods;
+            // Parse file bytes
+            const gif = parseGIF(arrayBuffer);
+            const rawFrames = decompressFrames(gif, true);
+            if (!rawFrames || rawFrames.length === 0) {
+              throw new Error("Unable to parse any valid frames inside this GIF file.");
+            }
+            // Extract initial dimensions
+            const rawWidth = rawFrames[0].dims.width;
+            const rawHeight = rawFrames[0].dims.height;
+            // Performance guard: only downscale truly huge GIFs, and generously — quality first.
+            const MAX_WIDTH = 800;
+            let scale = 1;
+            if (rawWidth > MAX_WIDTH) {
+              scale = MAX_WIDTH / rawWidth;
+            }
+            const targetWidth = Math.round(rawWidth * scale);
+            const targetHeight = Math.round(rawHeight * scale);
+            // Accumulation canvas to handle GIF disposal methods (frame-patching overlays).
+            // Compositing happens at NATIVE resolution so patches land pixel-exact; any
+            // downscale is a single high-quality resample of the finished frame.
+            let accumCanvas = document.createElement('canvas');
+            accumCanvas.width = rawWidth;
+            accumCanvas.height = rawHeight;
+            let accumCtx = accumCanvas.getContext('2d');
+            const renderedFrames = rawFrames.map((frame, index) => {
+              const { width, height, top, left } = frame.dims;
+              // Create temporary canvas for the raw frame patch
+              const patchCanvas = document.createElement('canvas');
+              patchCanvas.width = width;
+              patchCanvas.height = height;
+              const patchCtx = patchCanvas.getContext('2d');
+              const imgData = patchCtx.createImageData(width, height);
+              imgData.data.set(frame.patch);
+              patchCtx.putImageData(imgData, 0, 0);
+              // Emulate Disposal Method 2: Clear last frame's boundaries if requested
+              if (index > 0 && rawFrames[index - 1].disposalType === 2) {
+                const prevDims = rawFrames[index - 1].dims;
+                accumCtx.clearRect(prevDims.left, prevDims.top, prevDims.width, prevDims.height);
+              }
+              // Draw this patch over accumulated canvas
+              accumCtx.drawImage(patchCanvas, left, top);
+              // Copy completed frame (downscaling once, at high quality, if needed)
+              const frameCanvas = document.createElement('canvas');
+              frameCanvas.width = targetWidth;
+              frameCanvas.height = targetHeight;
+              const frameCtx = frameCanvas.getContext('2d');
+              frameCtx.imageSmoothingEnabled = true;
+              frameCtx.imageSmoothingQuality = 'high';
+              frameCtx.drawImage(accumCanvas, 0, 0, targetWidth, targetHeight);
+              return {
+                canvas: frameCanvas,
+                delay: frame.delay || 100
+              };
+            });
+            setDimensions({ width: targetWidth, height: targetHeight });
+            setBaseFrames(renderedFrames);
+            setIsDecoding(false);
+          } catch (err) {
+            console.error(err);
+            setErrorMessage("Error decoding GIF file: " + err.message);
+            setIsDecoding(false);
+          }
+        }, 50);
+      };
+      // ---- GIPHY search integration (client-side key; GIPHY keys are public by design) ----
+      const GIPHY_API_KEY = "7Wdmg5LVr5FOih8HqLXjegEAv1LPxkGW";
+      const searchGiphy = async () => {
+        const q = giphyQuery.trim();
+        if (!q || isSearchingGiphy) return;
+        setIsSearchingGiphy(true);
+        setErrorMessage("");
+        try {
+          const resp = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(q)}&limit=12`);
+          if (!resp.ok) throw new Error(`search request failed (HTTP ${resp.status})`);
+          const json = await resp.json();
+          setGiphyResults(json.data || []);
+          if (!json.data || json.data.length === 0) {
+            setErrorMessage(`No GIPHY results found for "${q}".`);
+          }
+        } catch (err) {
+          setErrorMessage("GIPHY search error: " + err.message);
+        }
+        setIsSearchingGiphy(false);
+      };
+      // Highest-quality rendition that stays inside a sane in-browser decode budget
+      const pickBestRendition = (images) => {
+        const MAX_BYTES = 8 * 1024 * 1024;
+        const preferenceOrder = ["original", "downsized_large", "downsized_medium", "downsized", "fixed_height"];
+        for (const key of preferenceOrder) {
+          const r = images[key];
+          if (r && r.url && (!r.size || parseInt(r.size, 10) <= MAX_BYTES)) return r;
+        }
+        return images.original || images.downsized || null;
+      };
+      const loadGiphyGif = async (gif) => {
+        if (isDecoding || isEncoding) return;
+        setIsDecoding(true);
+        setErrorMessage("");
+        setOutputGifUrl(null);
+        try {
+          const rendition = pickBestRendition(gif.images || {});
+          if (!rendition) throw new Error("this result has no downloadable GIF rendition.");
+          const resp = await fetch(rendition.url);
+          if (!resp.ok) throw new Error(`could not download the GIF (HTTP ${resp.status})`);
+          const buffer = await resp.arrayBuffer();
+          decodeGifBuffer(buffer, gif.title || "GIPHY result");
+        } catch (err) {
+          setErrorMessage("GIPHY load error: " + err.message);
+          setIsDecoding(false);
+        }
+      };
+      // Math Loop Physics Generator: Pre-allocates deterministic raining details to ensure
+      // perfectly seamless start-and-end frame synchronization.
+      const generateRainElements = (numElements, width, height, totalDurationSeconds) => {
+        const elements = [];
+        const spawnPadding = 80;
+        const totalHeightY = height + spawnPadding * 2; // full movement length
+        for (let k = 0; k < numElements; k++) {
+          // Spread across width, with room for diagonal wind drift
+          const xInit = Math.random() * (width + 120) - 60;
+          const yInit = Math.random() * totalHeightY - spawnPadding;
+          // Assign deterministic cycles: Complete exactly C vertical screens in totalDuration
+          // This mathematical condition guarantees seamless continuous loop wrapping.
+          const speedMultiplier = speed;
+          const baseCycles = Math.max(1, Math.round(speedMultiplier * (0.6 + Math.random() * 1.4)));
+          const verticalVelocity = (baseCycles * totalHeightY) / totalDurationSeconds;
+          // Seamless rotation speed: Complete exactly R full 360-degree spins in totalDuration
+          const rotCycles = Math.round(rotationSpeed * (Math.random() > 0.5 ? 1 : -1) * (0.5 + Math.random() * 1.5));
+          const rotationVelocity = (rotCycles * Math.PI * 2) / totalDurationSeconds;
+          const angleInit = Math.random() * Math.PI * 2;
+          const relativeScale = burgerSize * (0.75 + Math.random() * 0.5);
+          elements.push({
+            xInit,
+            yInit,
+            verticalVelocity,
+            rotationVelocity,
+            angleInit,
+            size: relativeScale,
+            totalHeightY
+          });
+        }
+        return elements;
+      };
+      // Runs the real-time simulation on top of our background canvases for instant UI slider feedback
+      const startLivePreview = () => {
+        if (previewAnimationRef.current) {
+          cancelAnimationFrame(previewAnimationRef.current);
+        }
+        const canvas = previewCanvasRef.current;
+        if (!canvas || baseFrames.length === 0) return;
+        const ctx = canvas.getContext('2d');
+        const { width, height } = dimensions;
+        canvas.width = width;
+        canvas.height = height;
+        // Calculate total runtime of the GIF sequence
+        const totalDelayMs = baseFrames.reduce((sum, f) => sum + f.delay, 0);
+        const totalDurationSeconds = totalDelayMs / 1000;
+        // Precalculate physics matrices
+        const previewRain = generateRainElements(density, width, height, totalDurationSeconds);
+        lastTickTime.current = performance.now();
+        accumulatedTime.current = 0;
+        currentTickIndex.current = 0;
+        const tick = (now) => {
+          const delta = (now - lastTickTime.current) / 1000;
+          lastTickTime.current = now;
+          // Advance accumulated loop time
+          accumulatedTime.current = (accumulatedTime.current + delta) % totalDurationSeconds;
+          // Calculate which frame we are currently on based on delays
+          let runningSum = 0;
+          let activeIndex = 0;
+          const targetMs = (accumulatedTime.current * 1000);
+          for (let i = 0; i < baseFrames.length; i++) {
+            runningSum += baseFrames[i].delay;
+            if (targetMs <= runningSum) {
+              activeIndex = i;
+              break;
+            }
+          }
+          // Draw base GIF frame
+          const baseFrame = baseFrames[activeIndex];
+          if (baseFrame) {
+            ctx.clearRect(0, 0, width, height);
+            ctx.drawImage(baseFrame.canvas, 0, 0);
+          }
+          // Overlay rain
+          previewRain.forEach(b => {
+            // Apply wind offset based on elapsed time
+            const windDrift = wind * accumulatedTime.current * 40;
+            // Loop coordinate mechanics
+            const x = ((b.xInit + windDrift) % (width + 120) + (width + 120)) % (width + 120) - 60;
+            const y = ((b.yInit + b.verticalVelocity * accumulatedTime.current) % b.totalHeightY + b.totalHeightY) % b.totalHeightY - 80;
+            const currentAngle = b.angleInit + b.rotationVelocity * accumulatedTime.current;
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(currentAngle);
+            // High-fidelity rendering: apply soft dropshadow for simulated depth
+            if (glowEffect) {
+              ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
+              ctx.shadowBlur = 6;
+              ctx.shadowOffsetX = 2;
+              ctx.shadowOffsetY = 4;
+            }
+            ctx.font = `${Math.round(b.size)}px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(emoji, 0, 0);
+            ctx.restore();
+          });
+          previewAnimationRef.current = requestAnimationFrame(tick);
+        };
+        previewAnimationRef.current = requestAnimationFrame(tick);
+      };
+      // Compiles, superimposes, and builds the final GIF file to export
+      const compileProcessedGIF = () => {
+        if (baseFrames.length === 0) return;
+        setIsEncoding(true);
+        setEncodingProgress("Analyzing dimensions and setting up canvas structures...");
+        setTimeout(() => {
+          try {
+            const { width, height } = dimensions;
+            const totalDelayMs = baseFrames.reduce((sum, f) => sum + f.delay, 0);
+            const totalDurationSeconds = totalDelayMs / 1000;
+            setEncodingProgress("Baking physics constraints and emoji coordinate maps...");
+            const renderingRain = generateRainElements(density, width, height, totalDurationSeconds);
+            // Temporal supersampling: source GIFs often run at only ~10fps, and sampling the
+            // rain solely at those timestamps makes each emoji jump 20-60px between frames.
+            // Resample the whole timeline at ~33fps (matching how the live preview animates
+            // continuously) while keeping the exact total duration, so the loop stays seamless.
+            const TARGET_STEP_MS = 30;
+            const outputFrameCount = Math.max(baseFrames.length, Math.round(totalDelayMs / TARGET_STEP_MS));
+            const simStepMs = totalDelayMs / outputFrameCount;
+            // GIF stores delays in 10ms units (and browsers clamp anything under 20ms to
+            // 100ms), so snap the encoded delay to a value the format can represent.
+            const encodedDelayMs = Math.max(20, Math.round(simStepMs / 10) * 10);
+            // End timestamp of each base frame, to pick which one is active at a given tick
+            const cumulativeEndMs = [];
+            baseFrames.reduce((sum, f) => { cumulativeEndMs.push(sum + f.delay); return sum + f.delay; }, 0);
+            const compiledCanvases = [];
+            let baseIndex = 0;
+            // Generate each composite frame step-by-step
+            for (let i = 0; i < outputFrameCount; i++) {
+              setEncodingProgress(`Drawing elements onto Canvas Frame ${i + 1} of ${outputFrameCount}...`);
+              const tickMs = i * simStepMs;
+              while (baseIndex < baseFrames.length - 1 && tickMs >= cumulativeEndMs[baseIndex]) {
+                baseIndex++;
+              }
+              const baseFrame = baseFrames[baseIndex];
+              const elapsedSimulationTime = tickMs / 1000;
+
+              const compCanvas = document.createElement('canvas');
+              compCanvas.width = width;
+              compCanvas.height = height;
+              const compCtx = compCanvas.getContext('2d');
+              // 1. Draw base GIF content
+              compCtx.drawImage(baseFrame.canvas, 0, 0);
+              // 2. Overlay seamless looping rain
+              renderingRain.forEach(b => {
+                const windDrift = wind * elapsedSimulationTime * 40;
+                const x = ((b.xInit + windDrift) % (width + 120) + (width + 120)) % (width + 120) - 60;
+                const y = ((b.yInit + b.verticalVelocity * elapsedSimulationTime) % b.totalHeightY + b.totalHeightY) % b.totalHeightY - 80;
+                const currentAngle = b.angleInit + b.rotationVelocity * elapsedSimulationTime;
+                compCtx.save();
+                compCtx.translate(x, y);
+                compCtx.rotate(currentAngle);
+                if (glowEffect) {
+                  compCtx.shadowColor = 'rgba(0, 0, 0, 0.45)';
+                  compCtx.shadowBlur = 6;
+                  compCtx.shadowOffsetX = 2;
+                  compCtx.shadowOffsetY = 4;
+                }
+                compCtx.font = `${Math.round(b.size)}px sans-serif`;
+                compCtx.textAlign = 'center';
+                compCtx.textBaseline = 'middle';
+                compCtx.fillText(emoji, 0, 0);
+                compCtx.restore();
+              });
+              compiledCanvases.push(compCanvas);
+            }
+            setEncodingProgress("Packing processed images into high quality GIF. Please wait...");
+            const finishExport = (dataUrl) => {
+              setOutputGifUrl(dataUrl);
+              setIsEncoding(false);
+              setEncodingProgress("");
+            };
+            if (window.GIF && window.__gifJsWorkerUrl) {
+              // Preferred encoder: gif.js at maximum quality — palette built from every
+              // pixel (quality: 1) plus Floyd-Steinberg dithering, which eliminates the
+              // color banding gifshot produces on gradients.
+              const encoder = new window.GIF({
+                workers: 4,
+                quality: 1,
+                dither: "FloydSteinberg-serpentine",
+                width: width,
+                height: height,
+                workerScript: window.__gifJsWorkerUrl,
+                repeat: 0
+              });
+              compiledCanvases.forEach((c) => encoder.addFrame(c, { delay: encodedDelayMs }));
+              encoder.on("progress", (p) => {
+                setEncodingProgress(`Quantizing & dithering at maximum quality: ${Math.round(p * 100)}%`);
+              });
+              encoder.on("finished", (blob) => {
+                // Deliver as a data URI so the download link and Copy Base64 button work unchanged
+                const fr = new FileReader();
+                fr.onload = () => finishExport(fr.result);
+                fr.onerror = () => {
+                  setErrorMessage("Failed to read the encoded GIF output.");
+                  setIsEncoding(false);
+                };
+                fr.readAsDataURL(blob);
+              });
+              encoder.render();
+            } else {
+              // Fallback encoder: gifshot (no dithering), tuned to its highest quality
+              window.gifshot.createGIF({
+                images: compiledCanvases,
+                gifWidth: width,
+                gifHeight: height,
+                interval: encodedDelayMs / 1000,
+                numFrames: compiledCanvases.length,
+                sampleInterval: 1, // Palette sampling: 1 = examine every pixel (highest quality)
+                numWorkers: 4
+              }, function(obj) {
+                if (!obj.error) {
+                  finishExport(obj.image);
+                } else {
+                  setErrorMessage("Encoding engine error: " + obj.errorMsg);
+                  setIsEncoding(false);
+                }
+              });
+            }
+          } catch (err) {
+            console.error(err);
+            setErrorMessage("Process error: " + err.message);
+            setIsEncoding(false);
+          }
+        }, 150);
+      };
+      return (
+        <div className="flex-grow flex flex-col">
+          {/* Header: centered pixel logo, arcade-corner links */}
+          <header className="relative px-6 pt-6 md:pt-8 pb-6 text-center">
+            <div className="flex justify-between items-center mb-8 md:mb-0 md:block md:absolute md:left-5 md:top-5 text-left md:space-y-3">
+              <button
+                onClick={generateDemoGIF}
+                disabled={isDecoding || isEncoding}
+                className="block text-[9px] text-white hover:text-yellow-300 disabled:opacity-50 underline decoration-2 underline-offset-4"
+              >
+                Sandbox Demo
+              </button>
+              <span className="block text-[9px] text-white/80">v1.2</span>
+            </div>
+            <p className="text-[10px] md:text-xs text-white mb-5 tracking-widest">The Emoji Storm Compiler</p>
+            <h1 className="title-stripes text-4xl md:text-6xl leading-none inline-block">GIFFYRAIN</h1>
+            <p className="blink text-[10px] md:text-xs text-white mt-6">* SELECT A GIF TO BEGIN *</p>
+          </header>
+          {/* Workspace Body */}
+          <main className="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            {/* Left controls column */}
+            <section className="lg:col-span-5 space-y-6">
+
+              {/* Media input module */}
+              <div className="pixel-panel p-5 space-y-5">
+                <div className="flex justify-between items-center flex-wrap gap-2">
+                  <h3 className="text-[10px] text-yellow-300 uppercase">Stage 1: Source GIF</h3>
+                  {/* Status lights showing whether the background parser engine is armed and healthy */}
+                  <div className="text-[8px] uppercase">
+                    {libsStatus.loading ? (
+                      <span className="text-yellow-300 blink">Engines: Loading...</span>
+                    ) : libsStatus.error ? (
+                      <span className="text-red-400">! Load Error !</span>
+                    ) : (
+                      <span className="text-green-400">Parser: *Ready*</span>
+                    )}
+                  </div>
+                </div>
+                {/* Drag and Drop Container, styled as a console cartridge slot */}
+                <label className="group flex flex-col items-center justify-center border-4 border-dashed border-white hover:border-yellow-300 bg-black hover:bg-[#001060] p-6 cursor-pointer text-center">
+                  <input
+                    type="file"
+                    accept="image/gif"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                  <div className="space-y-4 py-3 flex flex-col items-center">
+                    <div className="text-2xl leading-none group-hover:text-yellow-300">▲</div>
+                    <div className="text-[10px] text-white uppercase group-hover:text-yellow-300">
+                      Insert Cartridge
+                    </div>
+                    <p className="text-[8px] leading-relaxed text-white/70 uppercase max-w-[260px]">
+                      Drop a GIF here or click to browse. 100% local play.
+                    </p>
+                  </div>
+                </label>
+                {/* GIPHY search: pick a GIF without leaving the app */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between flex-wrap gap-1">
+                    <span className="text-[9px] text-white uppercase">Or search the arcade:</span>
+                    <span className="text-[7px] text-white/60 uppercase">Powered by GIPHY</span>
+                  </div>
+                  <div className="flex space-x-3">
+                    <input
+                      type="text"
+                      value={giphyQuery}
+                      onChange={(e) => setGiphyQuery(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === "Enter") searchGiphy(); }}
+                      placeholder="DANCING CAT..."
+                      className="flex-grow min-w-0 bg-black border-4 border-white focus:border-yellow-300 outline-none text-[9px] text-yellow-300 placeholder-white/40 px-3 py-3 uppercase"
+                    />
+                    <button
+                      onClick={searchGiphy}
+                      disabled={isSearchingGiphy || !giphyQuery.trim()}
+                      className="btn-arcade shrink-0 bg-yellow-400 text-black px-4 py-3 text-[9px] uppercase"
+                    >
+                      {isSearchingGiphy ? "..." : "GO!"}
+                    </button>
+                  </div>
+                  {giphyResults.length > 0 && (
+                    <div className="pixel-scroll grid grid-cols-4 gap-2 max-h-52 overflow-y-auto pr-1">
+                      {giphyResults.map((g) => (
+                        <button
+                          key={g.id}
+                          onClick={() => loadGiphyGif(g)}
+                          disabled={isDecoding || isEncoding}
+                          title={g.title}
+                          className="overflow-hidden border-4 border-white hover:border-yellow-300 disabled:opacity-50 bg-black"
+                        >
+                          <img
+                            src={(g.images.fixed_width_downsampled || g.images.fixed_width || g.images.original).url}
+                            alt={g.title}
+                            loading="lazy"
+                            className="w-full h-20 object-cover"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center justify-between text-[8px] bg-black px-3 py-3 border-4 border-white gap-2">
+                  <span className="text-green-400 truncate uppercase">► {fileName}</span>
+                  <span className="text-yellow-300 shrink-0">{dimensions.width}×{dimensions.height} ({baseFrames.length}F)</span>
+                </div>
+              </div>
+              {/* Slider variables configuration module */}
+              <div className="pixel-panel p-5 space-y-6">
+                <h3 className="text-[10px] text-yellow-300 uppercase">Stage 2: Power-Ups</h3>
+                {/* Emojis Preset Selector Grid */}
+                <div className="space-y-3">
+                  <span className="text-[9px] text-white uppercase block">Select your sprite:</span>
+                  <div className="grid grid-cols-6 gap-2">
+                    {EMOJI_PRESETS.map((p) => (
+                      <button
+                        key={p.char}
+                        onClick={() => setEmoji(p.char)}
+                        title={p.name}
+                        className={`h-11 text-2xl flex items-center justify-center border-4 ${
+                          emoji === p.char
+                            ? "bg-yellow-400 border-black"
+                            : "bg-black border-white hover:border-yellow-300"
+                        }`}
+                      >
+                        {p.char}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <hr className="border-t-4 border-white/30 border-dashed" />
+                {/* Density Slider */}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center text-[9px] uppercase">
+                    <span className="text-white">Rain Density</span>
+                    <span className="pixel-chip px-2.5 py-1">{density}</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="5"
+                    max="100"
+                    value={density}
+                    onChange={(e) => setDensity(parseInt(e.target.value))}
+                    className="w-full"
+                  />
+                </div>
+                {/* Size Slider */}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center text-[9px] uppercase">
+                    <span className="text-white">Sprite Size</span>
+                    <span className="pixel-chip px-2.5 py-1">{burgerSize}px</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="12"
+                    max="64"
+                    value={burgerSize}
+                    onChange={(e) => setBurgerSize(parseInt(e.target.value))}
+                    className="w-full"
+                  />
+                </div>
+                {/* Speed Slider */}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center text-[9px] uppercase">
+                    <span className="text-white">Fall Speed</span>
+                    <span className="pixel-chip px-2.5 py-1">{speed}x</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0.5"
+                    max="4.0"
+                    step="0.1"
+                    value={speed}
+                    onChange={(e) => setSpeed(parseFloat(e.target.value))}
+                    className="w-full"
+                  />
+                </div>
+                {/* Rotation Speed Slider */}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center text-[9px] uppercase">
+                    <span className="text-white">Spin Power</span>
+                    <span className="pixel-chip px-2.5 py-1">{rotationSpeed}x</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="5"
+                    step="0.5"
+                    value={rotationSpeed}
+                    onChange={(e) => setRotationSpeed(parseFloat(e.target.value))}
+                    className="w-full"
+                  />
+                </div>
+                {/* Wind Angle Slider */}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center text-[9px] uppercase">
+                    <span className="text-white">Wind Slant</span>
+                    <span className="pixel-chip px-2.5 py-1">
+                      {wind === 0 ? "None" : wind > 0 ? `R${wind}` : `L${Math.abs(wind)}`}
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min="-3"
+                    max="3"
+                    step="1"
+                    value={wind}
+                    onChange={(e) => setWind(parseInt(e.target.value))}
+                    className="w-full"
+                  />
+                </div>
+                <div className="flex items-center justify-between gap-3 p-3 bg-black border-4 border-white">
+                  <div className="flex flex-col space-y-1.5">
+                    <span className="text-[9px] text-white uppercase">Drop Shadows</span>
+                    <span className="text-[7px] text-white/60 uppercase">3D depth for sprites</span>
+                  </div>
+                  <button
+                    onClick={() => setGlowEffect(!glowEffect)}
+                    className={`text-[9px] px-3 py-2 uppercase ${glowEffect ? "text-green-400" : "text-white/50"}`}
+                  >
+                    {glowEffect ? "*ON*" : "*OFF*"}
+                  </button>
+                </div>
+              </div>
+              {/* Compile Engine trigger */}
+              <button
+                onClick={compileProcessedGIF}
+                disabled={baseFrames.length === 0 || isEncoding || isDecoding}
+                className="btn-arcade w-full bg-red-500 text-white text-[11px] md:text-xs uppercase py-5 px-6"
+              >
+                ► Render Looping GIF ◄
+              </button>
+            </section>
+            {/* Right side live rendering screens */}
+            <section className="lg:col-span-7 flex flex-col space-y-6">
+
+              {/* Error Box Notification */}
+              {errorMessage && (
+                <div className="bg-red-600 border-4 border-white outline outline-4 outline-black text-white p-4 flex items-start space-x-3">
+                  <span className="text-yellow-300 text-xs shrink-0 blink">!!</span>
+                  <p className="text-[9px] leading-relaxed uppercase">{errorMessage}</p>
+                </div>
+              )}
+              {/* Canvas Preview Area */}
+              <div className="pixel-panel p-6 flex flex-col items-center justify-between min-h-[400px]">
+                <div className="w-full flex justify-between items-center mb-5 pb-4 border-b-4 border-white/30 border-dashed flex-wrap gap-2">
+                  <h3 className="text-[10px] text-yellow-300 uppercase flex items-center space-x-2">
+                    <span className="text-red-500 blink">●</span>
+                    <span>Player 1: Live Preview</span>
+                  </h3>
+                  <span className="text-[8px] text-white/70 uppercase">60 FPS</span>
+                </div>
+                {/* Main visualization output screen */}
+                <div className="flex-grow flex items-center justify-center w-full relative min-h-[250px]">
+                  {isDecoding ? (
+                    <div className="flex flex-col items-center space-y-5">
+                      <p className="text-[10px] text-yellow-300 uppercase blink">Loading...</p>
+                      <p className="text-[8px] text-white/70 uppercase">Decompressing frames</p>
+                    </div>
+                  ) : (
+                    <div className="crt relative max-w-full overflow-hidden border-4 border-white outline outline-4 outline-black bg-black flex items-center justify-center p-2">
+                      <canvas
+                        ref={previewCanvasRef}
+                        style={{ maxWidth: '100%', height: 'auto', maxHeight: '420px' }}
+                        className="block"
+                      />
+                    </div>
+                  )}
+                </div>
+                {/* Info summary */}
+                <div className="w-full mt-5 pt-4 border-t-4 border-white/30 border-dashed flex flex-wrap justify-between items-center text-[8px] text-white/80 uppercase gap-2">
+                  <span className="text-green-400">Loop: Seamless *OK*</span>
+                  <span>Max 800px wide</span>
+                </div>
+              </div>
+              {/* Compilation state / export target container */}
+              <div className="pixel-panel p-6 space-y-6">
+                <div className="flex justify-between items-center border-b-4 border-white/30 border-dashed pb-4 flex-wrap gap-2">
+                  <h3 className="text-[10px] text-yellow-300 uppercase">Stage 3: Export</h3>
+                  <span className="text-[8px] text-white/70 uppercase">Final Boss</span>
+                </div>
+                {isEncoding ? (
+                  <div className="flex flex-col items-center justify-center py-10 space-y-6">
+                    <div className="loading-bar w-full max-w-md h-6"></div>
+                    <div className="text-center space-y-2">
+                      <p className="text-[9px] text-yellow-300 uppercase blink">{encodingProgress}</p>
+                      <p className="text-[8px] text-white/70 uppercase">Max quality mode: big GIFs take a while</p>
+                    </div>
+                  </div>
+                ) : outputGifUrl ? (
+                  <div className="flex flex-col sm:flex-row items-center gap-6 py-2 bg-black p-4 border-4 border-white">
+                    <div className="shrink-0 max-w-[180px] overflow-hidden border-4 border-yellow-400 bg-black p-1 flex items-center justify-center">
+                      <img src={outputGifUrl} alt="Exported Result" className="max-w-full h-auto" />
+                    </div>
+
+                    <div className="flex-grow space-y-5 text-center sm:text-left">
+                      <div className="space-y-2">
+                        <h4 className="text-[11px] text-yellow-300 uppercase">★ Stage Clear! ★</h4>
+                        <p className="text-[8px] text-white/80 uppercase leading-relaxed">
+                          Emoji storm baked into every frame. Seamless loop achieved.
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap gap-4 justify-center sm:justify-start">
+                        <a
+                          href={outputGifUrl}
+                          download={`giffyrain_${emoji}_${Date.now()}.gif`}
+                          className="btn-arcade bg-green-500 text-black text-[9px] uppercase px-4 py-3 inline-block"
+                        >
+                          ↓ Download GIF
+                        </a>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(outputGifUrl);
+                          }}
+                          className="btn-arcade bg-white text-black text-[9px] uppercase px-4 py-3"
+                        >
+                          Copy Base64
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-12 border-4 border-dashed border-white/50 bg-black/40 space-y-3">
+                    <p className="text-[10px] text-white uppercase">No save data<span className="blink">_</span></p>
+                    <p className="text-[8px] text-white/60 uppercase max-w-[300px] text-center leading-relaxed">
+                      Press the big red button to compile your loop
+                    </p>
+                  </div>
+                )}
+              </div>
+            </section>
+          </main>
+          {/* Track band: selected sprite "runs" laps above the footer */}
+          <div className="mt-auto border-t-4 border-b-4 border-white bg-red-500 py-3 flex justify-around items-end overflow-hidden" aria-hidden="true">
+            {[0, 1, 2, 3].map((i) => (
+              <span key={i} className="hop text-2xl" style={{ animationDelay: `${i * 0.13}s` }}>{emoji}</span>
+            ))}
+          </div>
+          {/* Bottom Footer */}
+          <footer className="bg-[#06c406] py-5 px-6 flex flex-wrap justify-between items-center gap-2 text-[9px] text-black uppercase">
+            <p>Made with <span className="text-white">GiffyRain</span> © 2026</p>
+            <p>Local play only — no uploads. Loops are: <span className="text-white">*Seamless*</span></p>
+          </footer>
+        </div>
+      );
+    }
+    // Render the App component
+    const rootElement = document.getElementById("root");
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(<App />);
+  </script>
+</body>
+</html>

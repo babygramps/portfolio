@@ -129,6 +129,21 @@ jobs:
           echo "No colorku/ directory found, skipping"
         fi
 
+    - name: Deploy MakeItRain (GiffyRain) app to /makeitrain/
+      run: |
+        if [ -d makeitrain ]; then
+          # Sync the single-file app (content types inferred from file extensions).
+          aws s3 sync makeitrain/ s3://${{ env.S3_BUCKET }}/makeitrain/ --delete
+
+          # Also serve the app at the extensionless /makeitrain key so the path
+          # resolves whether or not the origin handles directory indexes
+          aws s3 cp makeitrain/index.html s3://${{ env.S3_BUCKET }}/makeitrain --content-type "text/html"
+
+          echo "✅ MakeItRain app deployed to /makeitrain/"
+        else
+          echo "No makeitrain/ directory found, skipping"
+        fi
+
     - name: Deploy BBQ shared-board backend (Lambda + DynamoDB)
       run: |
         if [ ! -d board-lambda ]; then echo "No board-lambda/, skipping"; exit 0; fi
