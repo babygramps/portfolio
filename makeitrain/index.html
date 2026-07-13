@@ -527,9 +527,16 @@
           setIsDecoding(false);
         }
       };
+      // Seamlessness forces every element to complete a whole number (>=1) of screen
+      // cycles per loop, so sub-1x speeds are impossible inside a single base loop.
+      // For slow speeds the compiled loop plays the source GIF this many times while
+      // the rain falls one long cycle across all of them — still perfectly seamless.
+      const getLoopRepeats = () => (speed >= 1 ? 1 : Math.ceil(1 / speed));
       // Math Loop Physics Generator: Pre-allocates deterministic raining details to ensure
       // perfectly seamless start-and-end frame synchronization.
-      const generateRainElements = (numElements, width, height, totalDurationSeconds) => {
+      const generateRainElements = (numElements, width, height, baseDurationSeconds) => {
+        const laps = getLoopRepeats();
+        const rainDurationSeconds = baseDurationSeconds * laps;
         const elements = [];
         const spawnPadding = 80;
         const totalHeightY = height + spawnPadding * 2; // full movement length
@@ -537,14 +544,13 @@
           // Spread across width, with room for diagonal wind drift
           const xInit = Math.random() * (width + 120) - 60;
           const yInit = Math.random() * totalHeightY - spawnPadding;
-          // Assign deterministic cycles: Complete exactly C vertical screens in totalDuration
-          // This mathematical condition guarantees seamless continuous loop wrapping.
-          const speedMultiplier = speed;
-          const baseCycles = Math.max(1, Math.round(speedMultiplier * (0.6 + Math.random() * 1.4)));
-          const verticalVelocity = (baseCycles * totalHeightY) / totalDurationSeconds;
-          // Seamless rotation speed: Complete exactly R full 360-degree spins in totalDuration
-          const rotCycles = Math.round(rotationSpeed * (Math.random() > 0.5 ? 1 : -1) * (0.5 + Math.random() * 1.5));
-          const rotationVelocity = (rotCycles * Math.PI * 2) / totalDurationSeconds;
+          // Assign deterministic cycles: Complete exactly C vertical screens across the
+          // full rain duration. This guarantees seamless continuous loop wrapping.
+          const baseCycles = Math.max(1, Math.round(speed * laps * (0.6 + Math.random() * 1.4)));
+          const verticalVelocity = (baseCycles * totalHeightY) / rainDurationSeconds;
+          // Seamless rotation speed: Complete exactly R full 360-degree spins in the rain duration
+          const rotCycles = Math.round(rotationSpeed * laps * (Math.random() > 0.5 ? 1 : -1) * (0.5 + Math.random() * 1.5));
+          const rotationVelocity = (rotCycles * Math.PI * 2) / rainDurationSeconds;
           const angleInit = Math.random() * Math.PI * 2;
           const relativeScale = burgerSize * (0.75 + Math.random() * 0.5);
           elements.push({
@@ -573,6 +579,8 @@
         // Calculate total runtime of the GIF sequence
         const totalDelayMs = baseFrames.reduce((sum, f) => sum + f.delay, 0);
         const totalDurationSeconds = totalDelayMs / 1000;
+        // At sub-1x speeds the full loop spans several plays of the base GIF
+        const loopSeconds = totalDurationSeconds * getLoopRepeats();
         // Precalculate physics matrices
         const previewRain = generateRainElements(density, width, height, totalDurationSeconds);
         lastTickTime.current = performance.now();
@@ -582,11 +590,11 @@
           const delta = (now - lastTickTime.current) / 1000;
           lastTickTime.current = now;
           // Advance accumulated loop time
-          accumulatedTime.current = (accumulatedTime.current + delta) % totalDurationSeconds;
+          accumulatedTime.current = (accumulatedTime.current + delta) % loopSeconds;
           // Calculate which frame we are currently on based on delays
           let runningSum = 0;
           let activeIndex = 0;
-          const targetMs = (accumulatedTime.current * 1000);
+          const targetMs = (accumulatedTime.current * 1000) % totalDelayMs;
           for (let i = 0; i < baseFrames.length; i++) {
             runningSum += baseFrames[i].delay;
             if (targetMs <= runningSum) {
@@ -644,9 +652,12 @@
             // rain solely at those timestamps makes each emoji jump 20-60px between frames.
             // Resample the whole timeline at ~33fps (matching how the live preview animates
             // continuously) while keeping the exact total duration, so the loop stays seamless.
+            // Sub-1x speeds compile several plays of the base GIF so slow rain can wrap.
             const TARGET_STEP_MS = 30;
-            const outputFrameCount = Math.max(baseFrames.length, Math.round(totalDelayMs / TARGET_STEP_MS));
-            const simStepMs = totalDelayMs / outputFrameCount;
+            const laps = getLoopRepeats();
+            const exportDelayMs = totalDelayMs * laps;
+            const outputFrameCount = Math.max(baseFrames.length * laps, Math.round(exportDelayMs / TARGET_STEP_MS));
+            const simStepMs = exportDelayMs / outputFrameCount;
             // GIF stores delays in 10ms units (and browsers clamp anything under 20ms to
             // 100ms), so snap the encoded delay to a value the format can represent.
             const encodedDelayMs = Math.max(20, Math.round(simStepMs / 10) * 10);
@@ -655,11 +666,16 @@
             baseFrames.reduce((sum, f) => { cumulativeEndMs.push(sum + f.delay); return sum + f.delay; }, 0);
             const compiledCanvases = [];
             let baseIndex = 0;
+            let prevBaseTickMs = -1;
             // Generate each composite frame step-by-step
             for (let i = 0; i < outputFrameCount; i++) {
               setEncodingProgress(`Drawing elements onto Canvas Frame ${i + 1} of ${outputFrameCount}...`);
               const tickMs = i * simStepMs;
-              while (baseIndex < baseFrames.length - 1 && tickMs >= cumulativeEndMs[baseIndex]) {
+              // The base GIF repeats each lap; rewind the frame pointer on wraparound
+              const baseTickMs = tickMs % totalDelayMs;
+              if (baseTickMs < prevBaseTickMs) baseIndex = 0;
+              prevBaseTickMs = baseTickMs;
+              while (baseIndex < baseFrames.length - 1 && baseTickMs >= cumulativeEndMs[baseIndex]) {
                 baseIndex++;
               }
               const baseFrame = baseFrames[baseIndex];
@@ -922,13 +938,18 @@
                   </div>
                   <input
                     type="range"
-                    min="0.5"
+                    min="0.2"
                     max="4.0"
                     step="0.1"
                     value={speed}
                     onChange={(e) => setSpeed(parseFloat(e.target.value))}
                     className="w-full"
                   />
+                  {speed < 1 && (
+                    <p className="text-[7px] text-white/60 uppercase leading-relaxed">
+                      Slow-mo: export plays the source ×{getLoopRepeats()} so slow rain still loops seamlessly
+                    </p>
+                  )}
                 </div>
                 {/* Rotation Speed Slider */}
                 <div className="space-y-3">
