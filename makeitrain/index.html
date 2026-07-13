@@ -167,6 +167,9 @@
       const [videoReady, setVideoReady] = useState(false);
       const [isRecording, setIsRecording] = useState(false);
       const [recordProgress, setRecordProgress] = useState(0);
+      const [cameraDevices, setCameraDevices] = useState([]);
+      const [cameraDeviceId, setCameraDeviceId] = useState(null);
+      const [cameraMirrored, setCameraMirrored] = useState(true);
       const videoRef = useRef(null);
       const mediaStreamRef = useRef(null);
       const captureTimerRef = useRef(null);
@@ -521,17 +524,54 @@
       // ---- Player Cam: capture a 5s clip directly into pipeline-ready canvas frames ----
       const CAM_SECONDS = 5;
       const CAM_FPS = 12;
+      const openCameraStream = async (deviceId) => {
+        const constraints = {
+          video: deviceId
+            ? { deviceId: { exact: deviceId }, width: { ideal: 640 }, height: { ideal: 480 } }
+            : { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" },
+          audio: false
+        };
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        mediaStreamRef.current = stream;
+        // Identify which camera we actually got, and only selfie-mirror front-facing ones
+        const track = stream.getVideoTracks()[0];
+        const settings = track && track.getSettings ? track.getSettings() : {};
+        setCameraDeviceId(settings.deviceId || deviceId || null);
+        setCameraMirrored(settings.facingMode !== "environment");
+        // With permission granted, enumerate cameras (labels are now populated)
+        try {
+          const devices = await navigator.mediaDevices.enumerateDevices();
+          setCameraDevices(devices.filter((d) => d.kind === "videoinput"));
+        } catch (e) { /* enumeration is optional; SWAP just won't show */ }
+        // If the <video> element is already mounted (camera switch), attach directly
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          videoRef.current.play().catch(() => {});
+        }
+      };
       const openCamera = async () => {
         setErrorMessage("");
         try {
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" },
-            audio: false
-          });
-          mediaStreamRef.current = stream;
+          await openCameraStream(null);
           setCameraOpen(true);
         } catch (err) {
           setErrorMessage("Camera error: " + (err && err.message ? err.message : "permission denied."));
+        }
+      };
+      const switchCamera = async () => {
+        if (cameraDevices.length < 2 || isRecording) return;
+        const idx = cameraDevices.findIndex((d) => d.deviceId === cameraDeviceId);
+        const next = cameraDevices[(idx + 1) % cameraDevices.length];
+        if (mediaStreamRef.current) {
+          mediaStreamRef.current.getTracks().forEach((t) => t.stop());
+          mediaStreamRef.current = null;
+        }
+        setVideoReady(false);
+        try {
+          await openCameraStream(next.deviceId);
+        } catch (err) {
+          setErrorMessage("Camera switch error: " + (err && err.message ? err.message : "device unavailable."));
+          closeCamera();
         }
       };
       const closeCamera = () => {
@@ -562,9 +602,11 @@
           c.width = w;
           c.height = h;
           const ctx = c.getContext("2d");
-          // Mirror horizontally so the saved clip matches the selfie-style preview
-          ctx.translate(w, 0);
-          ctx.scale(-1, 1);
+          // Front cameras are selfie-mirrored to match the preview; rear cameras aren't
+          if (cameraMirrored) {
+            ctx.translate(w, 0);
+            ctx.scale(-1, 1);
+          }
           ctx.drawImage(video, 0, 0, w, h);
           frames.push({ canvas: c, delay: frameDelay });
           setRecordProgress(frames.length / totalFrames);
@@ -976,9 +1018,14 @@
                           muted
                           onLoadedMetadata={() => setVideoReady(true)}
                           className="w-full block"
-                          style={{ transform: "scaleX(-1)" }}
+                          style={{ transform: cameraMirrored ? "scaleX(-1)" : "none" }}
                         />
                       </div>
+                      {cameraDevices.length > 1 && (
+                        <p className="text-[7px] text-white/60 uppercase truncate">
+                          CAM: {(cameraDevices.find((d) => d.deviceId === cameraDeviceId) || {}).label || "Camera"}
+                        </p>
+                      )}
                       {isRecording ? (
                         <div className="flex items-center gap-3">
                           <span className="text-[9px] text-red-400 uppercase blink shrink-0">● REC</span>
@@ -988,7 +1035,7 @@
                           <span className="text-[9px] text-white shrink-0">{Math.ceil(CAM_SECONDS * (1 - recordProgress))}s</span>
                         </div>
                       ) : (
-                        <div className="flex gap-3">
+                        <div className="flex gap-3 flex-wrap">
                           <button
                             onClick={startRecording}
                             disabled={!videoReady}
@@ -996,6 +1043,15 @@
                           >
                             ● Record 5 Sec
                           </button>
+                          {cameraDevices.length > 1 && (
+                            <button
+                              onClick={switchCamera}
+                              disabled={!videoReady}
+                              className="btn-arcade bg-yellow-400 text-black text-[9px] uppercase px-4 py-3"
+                            >
+                              Swap Cam
+                            </button>
+                          )}
                           <button
                             onClick={closeCamera}
                             className="btn-arcade bg-white text-black text-[9px] uppercase px-4 py-3"
