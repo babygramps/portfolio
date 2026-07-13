@@ -162,6 +162,14 @@
       const [giphyQuery, setGiphyQuery] = useState("");
       const [giphyResults, setGiphyResults] = useState([]);
       const [isSearchingGiphy, setIsSearchingGiphy] = useState(false);
+      // Player Cam: record a short selfie clip as the source
+      const [cameraOpen, setCameraOpen] = useState(false);
+      const [videoReady, setVideoReady] = useState(false);
+      const [isRecording, setIsRecording] = useState(false);
+      const [recordProgress, setRecordProgress] = useState(0);
+      const videoRef = useRef(null);
+      const mediaStreamRef = useRef(null);
+      const captureTimerRef = useRef(null);
       // Live Preview Reference Canvas
       const previewCanvasRef = useRef(null);
       const previewAnimationRef = useRef(null);
@@ -510,6 +518,79 @@
         }
         return images.original || images.downsized || null;
       };
+      // ---- Player Cam: capture a 5s clip directly into pipeline-ready canvas frames ----
+      const CAM_SECONDS = 5;
+      const CAM_FPS = 12;
+      const openCamera = async () => {
+        setErrorMessage("");
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" },
+            audio: false
+          });
+          mediaStreamRef.current = stream;
+          setCameraOpen(true);
+        } catch (err) {
+          setErrorMessage("Camera error: " + (err && err.message ? err.message : "permission denied."));
+        }
+      };
+      const closeCamera = () => {
+        if (captureTimerRef.current) clearInterval(captureTimerRef.current);
+        if (mediaStreamRef.current) {
+          mediaStreamRef.current.getTracks().forEach((t) => t.stop());
+          mediaStreamRef.current = null;
+        }
+        setIsRecording(false);
+        setCameraOpen(false);
+        setVideoReady(false);
+      };
+      // Grab frames straight off the <video> element — no codec round-trip needed,
+      // since the pipeline consumes exactly this shape: [{ canvas, delay }].
+      const startRecording = () => {
+        const video = videoRef.current;
+        if (!video || !video.videoWidth || isRecording) return;
+        const scale = Math.min(1, 480 / video.videoWidth);
+        const w = Math.round(video.videoWidth * scale);
+        const h = Math.round(video.videoHeight * scale);
+        const frames = [];
+        const frameDelay = Math.round(1000 / CAM_FPS);
+        const totalFrames = CAM_SECONDS * CAM_FPS;
+        setIsRecording(true);
+        setRecordProgress(0);
+        captureTimerRef.current = setInterval(() => {
+          const c = document.createElement("canvas");
+          c.width = w;
+          c.height = h;
+          const ctx = c.getContext("2d");
+          // Mirror horizontally so the saved clip matches the selfie-style preview
+          ctx.translate(w, 0);
+          ctx.scale(-1, 1);
+          ctx.drawImage(video, 0, 0, w, h);
+          frames.push({ canvas: c, delay: frameDelay });
+          setRecordProgress(frames.length / totalFrames);
+          if (frames.length >= totalFrames) {
+            closeCamera();
+            setOutputGifUrl(null);
+            setDimensions({ width: w, height: h });
+            setBaseFrames(frames);
+            setFileName(`Player Cam Recording (${CAM_SECONDS}s)`);
+          }
+        }, frameDelay);
+      };
+      // Attach the stream once the <video> element is on screen
+      useEffect(() => {
+        if (cameraOpen && videoRef.current && mediaStreamRef.current) {
+          videoRef.current.srcObject = mediaStreamRef.current;
+          videoRef.current.play().catch(() => {});
+        }
+      }, [cameraOpen]);
+      // Release the camera if the app unmounts mid-session
+      useEffect(() => () => {
+        if (captureTimerRef.current) clearInterval(captureTimerRef.current);
+        if (mediaStreamRef.current) {
+          mediaStreamRef.current.getTracks().forEach((t) => t.stop());
+        }
+      }, []);
       const loadGiphyGif = async (gif) => {
         if (isDecoding || isEncoding) return;
         setIsDecoding(true);
@@ -868,6 +949,61 @@
                           />
                         </button>
                       ))}
+                    </div>
+                  )}
+                </div>
+                {/* Player Cam: record a 5-second selfie clip as the source */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between flex-wrap gap-1">
+                    <span className="text-[9px] text-white uppercase">Or star in it yourself:</span>
+                    <span className="text-[7px] text-white/60 uppercase">5 sec · never uploaded</span>
+                  </div>
+                  {!cameraOpen ? (
+                    <button
+                      onClick={openCamera}
+                      disabled={isDecoding || isEncoding}
+                      className="btn-arcade w-full bg-yellow-400 text-black text-[9px] uppercase px-4 py-3"
+                    >
+                      ◉ Open Player Cam
+                    </button>
+                  ) : (
+                    <div className="space-y-3">
+                      <div className="crt border-4 border-white outline outline-4 outline-black bg-black overflow-hidden">
+                        <video
+                          ref={videoRef}
+                          autoPlay
+                          playsInline
+                          muted
+                          onLoadedMetadata={() => setVideoReady(true)}
+                          className="w-full block"
+                          style={{ transform: "scaleX(-1)" }}
+                        />
+                      </div>
+                      {isRecording ? (
+                        <div className="flex items-center gap-3">
+                          <span className="text-[9px] text-red-400 uppercase blink shrink-0">● REC</span>
+                          <div className="flex-grow bg-black border-4 border-white h-5">
+                            <div className="bg-red-500 h-full" style={{ width: `${Math.round(recordProgress * 100)}%` }}></div>
+                          </div>
+                          <span className="text-[9px] text-white shrink-0">{Math.ceil(CAM_SECONDS * (1 - recordProgress))}s</span>
+                        </div>
+                      ) : (
+                        <div className="flex gap-3">
+                          <button
+                            onClick={startRecording}
+                            disabled={!videoReady}
+                            className="btn-arcade flex-grow bg-red-500 text-white text-[9px] uppercase px-4 py-3"
+                          >
+                            ● Record 5 Sec
+                          </button>
+                          <button
+                            onClick={closeCamera}
+                            className="btn-arcade bg-white text-black text-[9px] uppercase px-4 py-3"
+                          >
+                            Exit
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
