@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Blockus — Rick Rothbart</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  :root {
+    --bg: #0f1420;
+    --panel: #1a2233;
+    --panel-2: #223048;
+    --line: #2c3a55;
+    --text: #e8edf7;
+    --muted: #93a1bd;
+    --blue: #3b82f6;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --green: #22c55e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    background: radial-gradient(1200px 800px at 70% -10%, #16203a 0%, var(--bg) 55%);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex; flex-direction: column; min-height: 100vh;
+  }
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px; border-bottom: 1px solid var(--line);
+  }
+  header h1 { font-size: 1.15rem; letter-spacing: .5px; display: flex; align-items: center; gap: 10px; }
+  header h1 .logo { display: inline-flex; gap: 2px; }
+  header h1 .logo i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  header a { color: var(--muted); text-decoration: none; font-size: .85rem; }
+  header a:hover { color: var(--text); }
+
+  main {
+    flex: 1; display: flex; gap: 20px; padding: 20px;
+    max-width: 1200px; margin: 0 auto; width: 100%;
+    align-items: flex-start; justify-content: center;
+  }
+  #boardWrap { flex: 0 1 640px; min-width: 0; position: relative; }
+  #board {
+    width: 100%; display: block; border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.45);
+    touch-action: none; cursor: crosshair;
+  }
+  aside {
+    flex: 0 0 320px; display: flex; flex-direction: column; gap: 14px;
+  }
+
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+
+  #players { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .pchip {
+    display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+    border-radius: 9px; background: var(--panel-2); border: 1px solid var(--line);
+    font-size: .8rem; transition: box-shadow .2s, border-color .2s; min-width: 0;
+  }
+  .pchip .dot { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+  .pchip .info { min-width: 0; }
+  .pchip .nm { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pchip .st { color: var(--muted); font-size: .72rem; }
+  .pchip.active { border-color: currentColor; box-shadow: 0 0 0 1px currentColor, 0 0 14px -2px currentColor; }
+  .pchip.done { opacity: .55; }
+
+  #controls { display: flex; flex-wrap: wrap; gap: 8px; }
+  button {
+    font: inherit; color: var(--text); background: var(--panel-2);
+    border: 1px solid var(--line); border-radius: 9px; padding: 9px 13px;
+    cursor: pointer; font-size: .85rem; transition: background .15s, transform .05s;
+  }
+  button:hover:not(:disabled) { background: #2b3c5c; }
+  button:active:not(:disabled) { transform: translateY(1px); }
+  button:disabled { opacity: .4; cursor: default; }
+  button.primary { background: var(--blue); border-color: var(--blue); font-weight: 600; }
+  button.primary:hover:not(:disabled) { background: #2563eb; }
+  button kbd {
+    font: inherit; font-size: .7rem; color: var(--muted);
+    border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; margin-left: 6px;
+  }
+
+  #trayCard h2, #players-card h2 { font-size: .75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 10px; }
+  #tray { display: flex; flex-wrap: wrap; gap: 8px; min-height: 60px; align-content: flex-start; }
+  .piece-btn {
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px;
+    padding: 6px; cursor: pointer; line-height: 0; transition: border-color .15s, background .15s;
+  }
+  .piece-btn:hover { background: #2b3c5c; }
+  .piece-btn.sel { border-color: #fff; box-shadow: 0 0 0 1px #fff; }
+  .piece-btn.noclick { cursor: default; opacity: .8; }
+  .piece-btn canvas { display: block; }
+
+  details { color: var(--muted); font-size: .82rem; }
+  details summary { cursor: pointer; color: var(--text); font-size: .8rem; text-transform: uppercase; letter-spacing: 1px; }
+  details ul { margin: 10px 0 0 18px; display: flex; flex-direction: column; gap: 6px; }
+
+  #overlay {
+    position: fixed; inset: 0; background: rgba(8, 12, 22, .8); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center; z-index: 20; padding: 20px;
+  }
+  #overlay.hidden { display: none; }
+  .dialog {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+    padding: 28px; width: 100%; max-width: 420px; box-shadow: 0 20px 80px rgba(0,0,0,.6);
+  }
+  .dialog h2 { font-size: 1.3rem; margin-bottom: 6px; }
+  .dialog p.sub { color: var(--muted); font-size: .85rem; margin-bottom: 18px; }
+  .setup-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 0; border-bottom: 1px solid var(--line); font-size: .9rem;
+  }
+  .setup-row:last-of-type { border-bottom: none; }
+  .setup-row .lbl { display: flex; align-items: center; gap: 9px; font-weight: 600; }
+  .setup-row .lbl i { width: 13px; height: 13px; border-radius: 3px; display: inline-block; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .seg button { border: none; border-radius: 0; padding: 6px 14px; font-size: .8rem; background: transparent; }
+  .seg button.on { background: var(--blue); font-weight: 600; }
+  .dialog .actions { margin-top: 20px; display: flex; gap: 10px; }
+  .dialog .actions button { flex: 1; padding: 12px; }
+
+  #results { margin: 14px 0 4px; display: flex; flex-direction: column; gap: 8px; }
+  .res-row {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 9px; font-size: .9rem;
+  }
+  .res-row .dot { width: 12px; height: 12px; border-radius: 3px; }
+  .res-row .nm { flex: 1; font-weight: 600; }
+  .res-row .sc { font-variant-numeric: tabular-nums; }
+  .res-row.winner { border-color: var(--yellow); box-shadow: 0 0 12px -4px var(--yellow); }
+  .res-row.winner .nm::after { content: " 🏆"; }
+
+  #toast {
+    position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(20px);
+    background: #0b1120; border: 1px solid var(--line); color: var(--text);
+    padding: 10px 18px; border-radius: 10px; font-size: .85rem; opacity: 0;
+    transition: opacity .25s, transform .25s; pointer-events: none; z-index: 30;
+    box-shadow: 0 8px 30px rgba(0,0,0,.5); max-width: 90vw; text-align: center;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 900px) {
+    main { flex-direction: column; align-items: stretch; padding: 12px; gap: 12px; }
+    aside { flex: none; width: 100%; }
+    #boardWrap { flex: none; width: 100%; max-width: 560px; margin: 0 auto; }
+    #players { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>
+    <span class="logo" aria-hidden="true">
+      <i style="background:var(--blue)"></i><i style="background:var(--yellow)"></i><i style="background:var(--red)"></i><i style="background:var(--green)"></i>
+    </span>
+    Blockus
+  </h1>
+  <a href="/">← rickrothbart.com</a>
+</header>
+
+<main>
+  <div id="boardWrap">
+    <canvas id="board"></canvas>
+  </div>
+  <aside>
+    <div class="card" id="players-card">
+      <h2>Players</h2>
+      <div id="players"></div>
+    </div>
+    <div class="card">
+      <div id="controls">
+        <button id="btnRotate">⟳ Rotate<kbd>R</kbd></button>
+        <button id="btnFlip">⇋ Flip<kbd>F</kbd></button>
+        <button id="btnPlace" class="primary">✓ Place</button>
+        <button id="btnPass">Pass</button>
+        <button id="btnNew">New Game</button>
+      </div>
+    </div>
+    <div class="card" id="trayCard">
+      <h2 id="trayTitle">Your pieces</h2>
+      <div id="tray"></div>
+    </div>
+    <div class="card">
+      <details>
+        <summary>How to play</summary>
+        <ul>
+          <li>Each player places pieces of their color, starting from their corner of the board.</li>
+          <li>Every new piece must touch one of your own pieces <b>at a corner</b> — but may never share an edge with your own color.</li>
+          <li>Touching other players' pieces is allowed anywhere.</li>
+          <li>Click a piece in the tray, rotate (<b>R</b>) or flip (<b>F</b>) it, then click the board. On touch screens, tap the board to preview, then hit <b>✓ Place</b>.</li>
+          <li>When you can't move, you're done. Fewest squares left over wins — place all 21 pieces for a +15 bonus (+20 if the single square is last).</li>
+        </ul>
+      </details>
+    </div>
+  </aside>
+</main>
+
+<div id="overlay" class="hidden"></div>
+<div id="toast"></div>
+
+<script>
+'use strict';
+// ---------- Constants ----------
+const N = 20;
+const PLAYERS = [
+  { name: 'Blue',   color: '#3b82f6', light: '#7fb0fb', dark: '#1e50a8' },
+  { name: 'Yellow', color: '#eab308', light: '#f5d34e', dark: '#8f6c05' },
+  { name: 'Red',    color: '#ef4444', light: '#f78f8f', dark: '#9c2222' },
+  { name: 'Green',  color: '#22c55e', light: '#7fdea4', dark: '#147a38' },
+];
+const STARTS = [[0, 0], [N - 1, 0], [N - 1, N - 1], [0, N - 1]];
+
+// The 21 Blokus pieces as [x,y] cell lists (1..5 squares each).
+const BASE_PIECES = [
+  ['1',  [[0,0]]],
+  ['2',  [[0,0],[1,0]]],
+  ['I3', [[0,0],[1,0],[2,0]]],
+  ['V3', [[0,0],[1,0],[1,1]]],
+  ['I4', [[0,0],[1,0],[2,0],[3,0]]],
+  ['O4', [[0,0],[1,0],[0,1],[1,1]]],
+  ['T4', [[0,0],[1,0],[2,0],[1,1]]],
+  ['S4', [[1,0],[2,0],[0,1],[1,1]]],
+  ['L4', [[0,0],[0,1],[0,2],[1,2]]],
+  ['I5', [[0,0],[0,1],[0,2],[0,3],[0,4]]],
+  ['L5', [[0,0],[0,1],[0,2],[0,3],[1,3]]],
+  ['Y5', [[1,0],[0,1],[1,1],[1,2],[1,3]]],
+  ['N5', [[1,0],[0,1],[1,1],[0,2],[0,3]]],
+  ['P5', [[0,0],[1,0],[0,1],[1,1],[0,2]]],
+  ['U5', [[0,0],[2,0],[0,1],[1,1],[2,1]]],
+  ['V5', [[0,0],[0,1],[0,2],[1,2],[2,2]]],
+  ['T5', [[0,0],[1,0],[2,0],[1,1],[1,2]]],
+  ['W5', [[0,0],[0,1],[1,1],[1,2],[2,2]]],
+  ['X5', [[1,0],[0,1],[1,1],[2,1],[1,2]]],
+  ['Z5', [[0,0],[1,0],[1,1],[1,2],[2,2]]],
+  ['F5', [[1,0],[2,0],[0,1],[1,1],[1,2]]],
+];
+
+function normalize(cells) {
+  const mx = Math.min(...cells.map(c => c[0]));
+  const my = Math.min(...cells.map(c => c[1]));
+  return cells.map(([x, y]) => [x - mx, y - my]).sort((a, b) => a[1] - b[1] || a[0] - b[0]);
+}
+function rotateCW(cells) { return normalize(cells.map(([x, y]) => [-y, x])); }
+function flipH(cells)    { return normalize(cells.map(([x, y]) => [-x, y])); }
+function cellsKey(cells) { return cells.map(c => c.join(',')).join(';'); }
+
+// Precompute all distinct orientations for every piece.
+const ORIENTS = BASE_PIECES.map(([, base]) => {
+  const seen = new Map();
+  let c = normalize(base);
+  for (let f = 0; f < 2; f++) {
+    for (let r = 0; r < 4; r++) {
+      seen.set(cellsKey(c), c);
+      c = rotateCW(c);
+    }
+    c = flipH(c);
+  }
+  return [...seen.values()];
+});
+
+const EDGE = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+const DIAG = [[1, 1], [1, -1], [-1, 1], [-1, -1]];
+const inB = (x, y) => x >= 0 && y >= 0 && x < N && y < N;
+
+// ---------- Game state ----------
+let board, players, turn, gameOver, gen = 0;
+let sel = null;            // { pieceIdx, cells } currently selected piece (human)
+let ghost = null;          // { cells, valid } preview on board
+let lastTap = { x: -1, y: -1, t: 0 };
+
+function newGame(types) {
+  gen++;
+  board = Array.from({ length: N }, () => new Int8Array(N).fill(-1));
+  players = types.map((t, i) => ({
+    isAI: t === 'ai',
+    pieces: BASE_PIECES.map(() => true), // true = still in hand
+    finished: false,
+    lastWasMono: false,
+    idx: i,
+  }));
+  turn = -1;
+  gameOver = false;
+  sel = null; ghost = null;
+  advanceTurn();
+}
+
+function remainingSquares(p) {
+  let s = 0;
+  p.pieces.forEach((have, i) => { if (have) s += BASE_PIECES[i][1].length; });
+  return s;
+}
+function remainingCount(p) { return p.pieces.filter(Boolean).length; }
+function isFirstMove(pi) { return players[pi].pieces.filter(v => !v).length === 0; }
+
+function canPlace(pi, cells) {
+  const first = isFirstMove(pi);
+  const [sx, sy] = STARTS[pi];
+  let anchored = false;
+  for (const [x, y] of cells) {
+    if (!inB(x, y) || board[y][x] !== -1) return false;
+    for (const [dx, dy] of EDGE) {
+      const nx = x + dx, ny = y + dy;
+      if (inB(nx, ny) && board[ny][nx] === pi) return false;
+    }
+    if (first) {
+      if (x === sx && y === sy) anchored = true;
+    } else if (!anchored) {
+      for (const [dx, dy] of DIAG) {
+        const nx = x + dx, ny = y + dy;
+        if (inB(nx, ny) && board[ny][nx] === pi) { anchored = true; break; }
+      }
+    }
+  }
+  return anchored;
+}
+
+// Cells a new piece could anchor on: the start corner, or empty cells
+// diagonally adjacent to this player's color.
+function seedCells(pi) {
+  if (isFirstMove(pi)) return [STARTS[pi]];
+  const seeds = [];
+  const seen = new Set();
+  for (let y = 0; y < N; y++) {
+    for (let x = 0; x < N; x++) {
+      if (board[y][x] !== pi) continue;
+      for (const [dx, dy] of DIAG) {
+        const nx = x + dx, ny = y + dy;
+        if (inB(nx, ny) && board[ny][nx] === -1) {
+          const k = nx * N + ny;
+          if (!seen.has(k)) { seen.add(k); seeds.push([nx, ny]); }
+        }
+      }
+    }
+  }
+  return seeds;
+}
+
+function allMoves(pi, firstOnly) {
+  const p = players[pi];
+  const seeds = seedCells(pi);
+  const moves = [];
+  const seen = new Set();
+  for (let pieceIdx = 0; pieceIdx < 21; pieceIdx++) {
+    if (!p.pieces[pieceIdx]) continue;
+    const orients = ORIENTS[pieceIdx];
+    for (let oi = 0; oi < orients.length; oi++) {
+      const o = orients[oi];
+      for (const [sx, sy] of seeds) {
+        for (const [cx, cy] of o) {
+          const ox = sx - cx, oy = sy - cy;
+          const key = pieceIdx * 100000 + oi * 4000 + (ox + 5) * 40 + (oy + 5);
+          if (seen.has(key)) continue;
+          seen.add(key);
+          const abs = o.map(([x, y]) => [x + ox, y + oy]);
+          if (canPlace(pi, abs)) {
+            if (firstOnly) return [{ pieceIdx, cells: abs }];
+            moves.push({ pieceIdx, cells: abs });
+          }
+        }
+      }
+    }
+  }
+  return moves;
+}
+const hasMoves = pi => allMoves(pi, true).length > 0;
+
+function applyMove(pi, move) {
+  const p = players[pi];
+  for (const [x, y] of move.cells) board[y][x] = pi;
+  p.pieces[move.pieceIdx] = false;
+  if (remainingCount(p) === 0) {
+    p.finished = true;
+    p.lastWasMono = move.pieceIdx === 0;
+    toast(`${PLAYERS[pi].name} placed all 21 pieces!`);
+  }
+}
+
+function finalScore(p) {
+  const rem = remainingSquares(p);
+  if (rem === 0) return p.lastWasMono ? 20 : 15;
+  return -rem;
+}
+
+// ---------- Turn engine ----------
+function advanceTurn() {
+  const myGen = gen;
+  for (let step = 0; step < 4; step++) {
+    turn = (turn + 1) % 4;
+    const p = players[turn];
+    if (p.finished) continue;
+    if (!hasMoves(turn)) {
+      p.finished = true;
+      toast(`${PLAYERS[turn].name} has no moves left`);
+      continue;
+    }
+    render();
+    if (p.isAI) {
+      setTimeout(() => { if (gen === myGen && !gameOver) aiMove(turn); }, 550);
+    }
+    return;
+  }
+  endGame();
+}
+
+function endGame() {
+  gameOver = true;
+  sel = null; ghost = null;
+  render();
+  const rows = players
+    .map((p, i) => ({ i, score: finalScore(p), rem: remainingSquares(p) }))
+    .sort((a, b) => b.score - a.score);
+  const best = rows[0].score;
+  showOverlay(`
+    <h2>Game over</h2>
+    <p class="sub">Highest score wins. Unplaced squares count against you.</p>
+    <div id="results">
+      ${rows.map(r => `
+        <div class="res-row ${r.score === best ? 'winner' : ''}">
+          <span class="dot" style="background:${PLAYERS[r.i].color}"></span>
+          <span class="nm">${PLAYERS[r.i].name}${players[r.i].isAI ? ' (AI)' : ''}</span>
+          <span class="sc">${r.score > 0 ? '+' : ''}${r.score} pts · ${r.rem} left</span>
+        </div>`).join('')}
+    </div>
+    <div class="actions"><button class="primary" onclick="openSetup()">Play again</button></div>
+  `);
+}
+
+// ---------- AI ----------
+function aiMove(pi) {
+  const moves = allMoves(pi);
+  if (!moves.length) { players[pi].finished = true; advanceTurn(); return; }
+  const placedTotal = players[pi].pieces.filter(v => !v).length;
+  const centerW = placedTotal < 4 ? 6 : 1.5;
+  let best = null, bestScore = -Infinity;
+  for (const m of moves) {
+    const size = m.cells.length;
+    // Temporarily place to count fresh corner openings this move creates.
+    for (const [x, y] of m.cells) board[y][x] = pi;
+    const cornerSet = new Set();
+    for (const [x, y] of m.cells) {
+      for (const [dx, dy] of DIAG) {
+        const nx = x + dx, ny = y + dy;
+        if (!inB(nx, ny) || board[ny][nx] !== -1) continue;
+        let blocked = false;
+        for (const [ex, ey] of EDGE) {
+          const ax = nx + ex, ay = ny + ey;
+          if (inB(ax, ay) && board[ay][ax] === pi) { blocked = true; break; }
+        }
+        if (!blocked) cornerSet.add(nx * N + ny);
+      }
+    }
+    for (const [x, y] of m.cells) board[y][x] = -1;
+    let cx = 0, cy = 0;
+    for (const [x, y] of m.cells) { cx += x; cy += y; }
+    cx /= size; cy /= size;
+    const centerDist = Math.abs(cx - (N - 1) / 2) + Math.abs(cy - (N - 1) / 2);
+    const score = size * 100 + cornerSet.size * 8 - centerDist * centerW + Math.random() * 4;
+    if (score > bestScore) { bestScore = score; best = m; }
+  }
+  applyMove(pi, best);
+  render();
+  advanceTurn();
+}
+
+// ---------- Selection / placement (human) ----------
+function selectPiece(pieceIdx) {
+  const p = players[turn];
+  if (gameOver || p.isAI || !p.pieces[pieceIdx]) return;
+  sel = { pieceIdx, cells: ORIENTS[pieceIdx][0].map(c => [...c]) };
+  ghost = null;
+  render();
+}
+function rotateSel() { if (sel) { sel.cells = rotateCW(sel.cells); reGhost(); render(); } }
+function flipSel()   { if (sel) { sel.cells = flipH(sel.cells);    reGhost(); render(); } }
+
+let ghostAnchor = null; // last board cell the pointer indicated
+function reGhost() { if (ghostAnchor) setGhost(ghostAnchor[0], ghostAnchor[1]); }
+
+function setGhost(bx, by) {
+  if (!sel || gameOver || players[turn].isAI) { ghost = null; return; }
+  ghostAnchor = [bx, by];
+  const w = Math.max(...sel.cells.map(c => c[0])) + 1;
+  const h = Math.max(...sel.cells.map(c => c[1])) + 1;
+  let ox = bx - ((w - 1) >> 1), oy = by - ((h - 1) >> 1);
+  ox = Math.max(0, Math.min(N - w, ox));
+  oy = Math.max(0, Math.min(N - h, oy));
+  const cells = sel.cells.map(([x, y]) => [x + ox, y + oy]);
+  ghost = { cells, valid: canPlace(turn, cells) };
+}
+
+function tryPlace() {
+  if (!sel || !ghost || !ghost.valid || gameOver || players[turn].isAI) return false;
+  applyMove(turn, { pieceIdx: sel.pieceIdx, cells: ghost.cells });
+  sel = null; ghost = null; ghostAnchor = null;
+  render();
+  advanceTurn();
+  return true;
+}
+
+function passTurn() {
+  if (gameOver || players[turn].isAI) return;
+  if (!confirm(`${PLAYERS[turn].name}: pass and sit out the rest of the game?`)) return;
+  players[turn].finished = true;
+  sel = null; ghost = null;
+  advanceTurn();
+}
+
+// ---------- Rendering ----------
+const canvas = document.getElementById('board');
+const ctx = canvas.getContext('2d');
+let cellPx = 28, dpr = 1;
+
+function sizeCanvas() {
+  const wrap = document.getElementById('boardWrap');
+  const w = Math.min(wrap.clientWidth, 640);
+  dpr = window.devicePixelRatio || 1;
+  cellPx = w / N;
+  canvas.style.height = w + 'px';
+  canvas.width = Math.round(w * dpr);
+  canvas.height = Math.round(w * dpr);
+  draw();
+}
+window.addEventListener('resize', sizeCanvas);
+
+function roundedCell(x, y, pad, r) {
+  const s = cellPx;
+  const px = x * s + pad, py = y * s + pad, sz = s - pad * 2;
+  ctx.beginPath();
+  ctx.roundRect(px, py, sz, sz, r);
+}
+
+function draw() {
+  if (!board) return;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const W = canvas.width / dpr;
+  ctx.clearRect(0, 0, W, W);
+  // background + grid
+  ctx.fillStyle = '#141b2c';
+  ctx.fillRect(0, 0, W, W);
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= N; i++) {
+    const t = Math.round(i * cellPx) + .5;
+    ctx.beginPath(); ctx.moveTo(t, 0); ctx.lineTo(t, W); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, t); ctx.lineTo(W, t); ctx.stroke();
+  }
+  // start-corner markers
+  STARTS.forEach(([sx, sy], i) => {
+    if (board[sy][sx] !== -1) return;
+    ctx.fillStyle = PLAYERS[i].color + '55';
+    ctx.beginPath();
+    ctx.arc((sx + .5) * cellPx, (sy + .5) * cellPx, cellPx * .18, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  // placed pieces
+  for (let y = 0; y < N; y++) {
+    for (let x = 0; x < N; x++) {
+      const v = board[y][x];
+      if (v === -1) continue;
+      const P = PLAYERS[v];
+      ctx.fillStyle = P.color;
+      roundedCell(x, y, cellPx * .06, cellPx * .14);
+      ctx.fill();
+      // subtle bevel
+      ctx.fillStyle = 'rgba(255,255,255,0.22)';
+      ctx.fillRect(x * cellPx + cellPx * .12, y * cellPx + cellPx * .10, cellPx * .5, cellPx * .12);
+    }
+  }
+  // ghost preview
+  if (ghost) {
+    const P = PLAYERS[turn];
+    for (const [x, y] of ghost.cells) {
+      ctx.fillStyle = ghost.valid ? P.color + 'aa' : '#ef444488';
+      roundedCell(x, y, cellPx * .06, cellPx * .14);
+      ctx.fill();
+      ctx.strokeStyle = ghost.valid ? '#ffffffcc' : '#ef4444';
+      ctx.lineWidth = 2;
+      roundedCell(x, y, cellPx * .10, cellPx * .12);
+      ctx.stroke();
+    }
+  }
+}
+
+function drawMiniPiece(pieceIdx, color, scale) {
+  const cells = ORIENTS[pieceIdx][0];
+  const w = Math.max(...cells.map(c => c[0])) + 1;
+  const h = Math.max(...cells.map(c => c[1])) + 1;
+  const c = document.createElement('canvas');
+  const d = window.devicePixelRatio || 1;
+  c.width = w * scale * d; c.height = h * scale * d;
+  c.style.width = w * scale + 'px'; c.style.height = h * scale + 'px';
+  const g = c.getContext('2d');
+  g.setTransform(d, 0, 0, d, 0, 0);
+  g.fillStyle = color;
+  for (const [x, y] of cells) {
+    g.beginPath();
+    g.roundRect(x * scale + 1, y * scale + 1, scale - 2, scale - 2, 2.5);
+    g.fill();
+  }
+  return c;
+}
+
+function render() {
+  draw();
+  renderPlayers();
+  renderTray();
+  renderControls();
+}
+
+function renderPlayers() {
+  const el = document.getElementById('players');
+  el.innerHTML = '';
+  players.forEach((p, i) => {
+    const div = document.createElement('div');
+    div.className = 'pchip' + (i === turn && !gameOver && !p.finished ? ' active' : '') + (p.finished ? ' done' : '');
+    div.style.color = PLAYERS[i].color;
+    const status = p.finished
+      ? (remainingCount(p) === 0 ? 'All placed!' : 'Done')
+      : `${remainingSquares(p)} sq · ${remainingCount(p)} pieces`;
+    div.innerHTML = `
+      <span class="dot" style="background:${PLAYERS[i].color}"></span>
+      <span class="info">
+        <div class="nm" style="color:var(--text)">${PLAYERS[i].name}${p.isAI ? ' 🤖' : ''}</div>
+        <div class="st">${status}</div>
+      </span>`;
+    el.appendChild(div);
+  });
+}
+
+function renderTray() {
+  const tray = document.getElementById('tray');
+  const title = document.getElementById('trayTitle');
+  tray.innerHTML = '';
+  if (gameOver) { title.textContent = 'Game over'; return; }
+  const p = players[turn];
+  title.textContent = p.isAI
+    ? `${PLAYERS[turn].name} (AI) is thinking…`
+    : `${PLAYERS[turn].name} — pick a piece`;
+  p.pieces.forEach((have, i) => {
+    if (!have) return;
+    const b = document.createElement('button');
+    b.className = 'piece-btn' + (sel && sel.pieceIdx === i ? ' sel' : '') + (p.isAI ? ' noclick' : '');
+    b.appendChild(drawMiniPiece(i, PLAYERS[turn].color, 11));
+    if (!p.isAI) b.addEventListener('click', () => selectPiece(i));
+    tray.appendChild(b);
+  });
+}
+
+function renderControls() {
+  const human = !gameOver && !players[turn].isAI;
+  document.getElementById('btnRotate').disabled = !human || !sel;
+  document.getElementById('btnFlip').disabled = !human || !sel;
+  document.getElementById('btnPlace').disabled = !human || !ghost || !ghost.valid;
+  document.getElementById('btnPass').disabled = !human;
+}
+
+// ---------- Input ----------
+function cellFromEvent(e) {
+  const r = canvas.getBoundingClientRect();
+  const x = Math.floor((e.clientX - r.left) / r.width * N);
+  const y = Math.floor((e.clientY - r.top) / r.height * N);
+  return [Math.max(0, Math.min(N - 1, x)), Math.max(0, Math.min(N - 1, y))];
+}
+
+canvas.addEventListener('pointermove', e => {
+  if (e.pointerType !== 'mouse' && e.buttons === 0) return;
+  const [x, y] = cellFromEvent(e);
+  setGhost(x, y);
+  draw();
+  renderControls();
+});
+canvas.addEventListener('pointerleave', e => {
+  if (e.pointerType === 'mouse') { ghost = null; ghostAnchor = null; draw(); renderControls(); }
+});
+canvas.addEventListener('pointerdown', e => {
+  if (!sel) return;
+  const [x, y] = cellFromEvent(e);
+  if (e.pointerType === 'mouse') {
+    setGhost(x, y);
+    if (!tryPlace()) { draw(); renderControls(); }
+  } else {
+    // touch/pen: first tap previews, second tap on the same cell (or ✓ Place) confirms
+    const now = performance.now();
+    const doubleTap = lastTap.x === x && lastTap.y === y && now - lastTap.t < 450;
+    lastTap = { x, y, t: now };
+    setGhost(x, y);
+    if (doubleTap && ghost && ghost.valid) tryPlace();
+    else { draw(); renderControls(); }
+  }
+});
+
+document.getElementById('btnRotate').addEventListener('click', rotateSel);
+document.getElementById('btnFlip').addEventListener('click', flipSel);
+document.getElementById('btnPlace').addEventListener('click', tryPlace);
+document.getElementById('btnPass').addEventListener('click', passTurn);
+document.getElementById('btnNew').addEventListener('click', openSetup);
+
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+  const k = e.key.toLowerCase();
+  if (k === 'r') { e.preventDefault(); rotateSel(); }
+  else if (k === 'f') { e.preventDefault(); flipSel(); }
+  else if (k === 'escape') { sel = null; ghost = null; render(); }
+  else if (k === 'enter') { tryPlace(); }
+});
+
+// ---------- Overlay / setup ----------
+const overlay = document.getElementById('overlay');
+function showOverlay(html) {
+  overlay.innerHTML = `<div class="dialog">${html}</div>`;
+  overlay.classList.remove('hidden');
+}
+function hideOverlay() { overlay.classList.add('hidden'); }
+
+let setupTypes = ['human', 'ai', 'ai', 'ai'];
+function openSetup() {
+  showOverlay(`
+    <h2>Blockus</h2>
+    <p class="sub">Claim territory with polyomino pieces. Corners connect, edges never touch.</p>
+    ${PLAYERS.map((P, i) => `
+      <div class="setup-row">
+        <span class="lbl"><i style="background:${P.color}"></i>${P.name}</span>
+        <span class="seg" data-i="${i}">
+          <button data-t="human" class="${setupTypes[i] === 'human' ? 'on' : ''}">Human</button>
+          <button data-t="ai" class="${setupTypes[i] === 'ai' ? 'on' : ''}">AI</button>
+        </span>
+      </div>`).join('')}
+    <div class="actions">
+      <button class="primary" id="btnStart">Start game</button>
+    </div>
+  `);
+  overlay.querySelectorAll('.seg').forEach(seg => {
+    seg.addEventListener('click', e => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      setupTypes[+seg.dataset.i] = b.dataset.t;
+      seg.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+    });
+  });
+  overlay.querySelector('#btnStart').addEventListener('click', () => {
+    hideOverlay();
+    newGame([...setupTypes]);
+  });
+}
+
+// ---------- Toast ----------
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+// ---------- Boot ----------
+sizeCanvas();
+openSetup();
+</script>
+</body>
+</html>

@@ -144,6 +144,21 @@ jobs:
           echo "No makeitrain/ directory found, skipping"
         fi
 
+    - name: Deploy Blockus app to /blockus/
+      run: |
+        if [ -d blockus ]; then
+          # Sync the single-file app (content types inferred from file extensions).
+          aws s3 sync blockus/ s3://${{ env.S3_BUCKET }}/blockus/ --delete
+
+          # Also serve the app at the extensionless /blockus key so the path
+          # resolves whether or not the origin handles directory indexes
+          aws s3 cp blockus/index.html s3://${{ env.S3_BUCKET }}/blockus --content-type "text/html"
+
+          echo "✅ Blockus app deployed to /blockus/"
+        else
+          echo "No blockus/ directory found, skipping"
+        fi
+
     - name: Deploy BBQ shared-board backend (Lambda + DynamoDB)
       run: |
         if [ ! -d board-lambda ]; then echo "No board-lambda/, skipping"; exit 0; fi
