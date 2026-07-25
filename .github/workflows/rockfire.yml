@@ -101,18 +101,33 @@ jobs:
             --content-type "application/json"
 
       - name: Publish page assets
+        # Vendor files go up BEFORE index.html. The page is useless without
+        # them, and this origin answers a missing key with the site homepage at
+        # status 200 -- so a half-finished upload would publish a page that
+        # silently loads HTML where its map library should be.
+        #
+        # Explicit CLI timeouts: an earlier run stalled here for ten minutes on
+        # a one-megabyte PUT. Better to fail fast and retry than to hold the
+        # job open.
+        env:
+          AWS_RETRY_MODE: standard
+          AWS_MAX_ATTEMPTS: "5"
         run: |
-          aws s3 cp rockfire/index.html "s3://$S3_BUCKET/$PREFIX/index.html" \
-            --content-type "text/html" --cache-control "public, max-age=300"
+          cp() {
+            aws --cli-connect-timeout 15 --cli-read-timeout 120 \
+              s3 cp "$1" "s3://$S3_BUCKET/$2" --only-show-errors \
+              --content-type "$3" --cache-control "$4"
+            echo "  uploaded $2"
+          }
+          cp rockfire/vendor/maplibre-gl.js  "$PREFIX/vendor/maplibre-gl.js" \
+             "application/javascript" "public, max-age=604800"
+          cp rockfire/vendor/maplibre-gl.css "$PREFIX/vendor/maplibre-gl.css" \
+             "text/css" "public, max-age=604800"
           # The extensionless key answers /rockfire (no trailing slash) with a
           # redirect stub rather than the page itself: index.html uses relative
           # asset paths, which only resolve from /rockfire/.
-          aws s3 cp rockfire/redirect.html "s3://$S3_BUCKET/$PREFIX" \
-            --content-type "text/html" --cache-control "public, max-age=3600"
-          aws s3 cp rockfire/vendor/maplibre-gl.js "s3://$S3_BUCKET/$PREFIX/vendor/maplibre-gl.js" \
-            --content-type "application/javascript" --cache-control "public, max-age=604800"
-          aws s3 cp rockfire/vendor/maplibre-gl.css "s3://$S3_BUCKET/$PREFIX/vendor/maplibre-gl.css" \
-            --content-type "text/css" --cache-control "public, max-age=604800"
+          cp rockfire/redirect.html "$PREFIX" "text/html" "public, max-age=3600"
+          cp rockfire/index.html "$PREFIX/index.html" "text/html" "public, max-age=300"
 
       - name: Invalidate CloudFront
         run: |
@@ -125,6 +140,34 @@ jobs:
           aws cloudfront create-invalidation \
             --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
             --paths $PATHS
+
+      - name: Verify what visitors will actually get
+        run: |
+          # This origin returns its homepage, at status 200, for any key that is
+          # missing -- so "HTTP 200" proves nothing. Check content types and
+          # sizes against the origin directly, bypassing the CDN.
+          ORIGIN="http://$S3_BUCKET.s3-website-$AWS_REGION.amazonaws.com"
+          fail=0
+          check() {
+            read -r code type len < <(curl -sL -o /dev/null \
+              -w "%{http_code} %{content_type} %{size_download}" "$ORIGIN/$1")
+            if [ "$code" != "200" ] || [[ "$type" != *"$2"* ]] || [ "$len" -lt "$3" ]; then
+              echo "  FAIL $1 -> $code $type ${len}B (wanted $2, >=${3}B)"
+              fail=1
+            else
+              echo "  ok   $1 -> $type ${len}B"
+            fi
+          }
+          check "$PREFIX/index.html"             "text/html"  20000
+          check "$PREFIX/vendor/maplibre-gl.js"  "javascript" 500000
+          check "$PREFIX/vendor/maplibre-gl.css" "css"        20000
+          check "$PREFIX/data/stats.json"        "json"       1000
+          check "$PREFIX/data/perimeters.geojson" "json"      10000
+          check "$PREFIX/data/hotspots.geojson"  "json"       10000
+          check "$PREFIX/data/smoke.geojson"     "json"       1000
+          check "$PREFIX/data/airquality.json"   "json"       10000
+          check "$PREFIX/data/landmarks.geojson" "json"       500
+          [ "$fail" = "0" ] || { echo "::error::published tree is incomplete"; exit 1; }
 
       - name: Summary
         run: |

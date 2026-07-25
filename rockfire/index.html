@@ -372,10 +372,16 @@ let hoverT = null;            // chart hover position, null when not hovering
 
 // ---------------------------------------------------------------- data load
 async function load() {
-  const j = async (p) => {
+  const j = async (p, retry = true) => {
     const r = await fetch(p, { cache: "no-store" });
-    if (!r.ok) throw new Error(`${p}: HTTP ${r.status}`);
-    return r.json();
+    if (!r.ok) throw new Error(`${p} returned HTTP ${r.status}`);
+    const body = await r.text();
+    if (!body.trimStart().startsWith("{")) {
+      // Almost always a stale CDN entry from before the file was published.
+      if (retry) return j(`${p}?r=${Date.now()}`, false);
+      throw new Error(`${p} did not return JSON`);
+    }
+    return JSON.parse(body);
   };
   [S, PERIMS, HOTS, MARKS, SMOKE, AIR] = await Promise.all([
     j("data/stats.json"), j("data/perimeters.geojson"),
@@ -1273,10 +1279,14 @@ function buildNotes() {
 }
 
 load().catch((e) => {
-  $("subtitle").innerHTML =
-    `<b style="color:#e66767">Could not load data:</b> ${e.message}. ` +
-    `Run <code>python3 fetch.py</code>, then serve this folder over http ` +
-    `(<code>python3 -m http.server 8000</code>) — opening the file directly blocks the data files.`;
+  const local = location.protocol === "file:" || /^(localhost|127\.|\[::1\])/.test(location.hostname);
+  $("subtitle").innerHTML = local
+    ? `<b style="color:#e66767">Could not load data:</b> ${e.message}. ` +
+      `Run <code>python3 fetch.py</code>, then serve this folder over http ` +
+      `(<code>python3 -m http.server 8000</code>) — opening the file directly blocks the data files.`
+    : `<b style="color:#e66767">The fire data didn't load.</b> ${e.message}. ` +
+      `This usually means a refresh is mid-publish — the data is rebuilt every hour. ` +
+      `<a href="${location.pathname}?r=${Date.now()}" style="color:var(--reported)">Try again</a>.`;
 });
 </script>
 </body>
