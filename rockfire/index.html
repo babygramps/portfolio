@@ -1,0 +1,1283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rock Fire 2026 — spread over time</title>
+<link rel="stylesheet" href="vendor/maplibre-gl.css">
+<style>
+  /* Palette: dataviz reference palette, dark column. Validated with
+     scripts/validate_palette.js "#3987e5,#d95926,#199e70" --mode dark --pairs all
+     -> all checks pass (worst CVD dE 9.4, worst normal-vision dE 20.9). */
+  :root {
+    color-scheme: dark;
+    --surface-1: #1a1a19;
+    --page: #0d0d0d;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --axis: #383835;
+    --hair: rgba(255, 255, 255, 0.10);
+
+    --reported: #3987e5;   /* series 1 - officially reported acreage */
+    --mapped: #d95926;     /* series 2 - acreage measured off the perimeter */
+    --contained: #199e70;  /* series 3 - containment */
+    /* the PM chart takes the same validated slots in the same fixed order */
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+
+    /* Map thematic colors. Perimeter = bright orange line with a dark casing.
+       Hotspot age = single-hue yellow ramp, light (fresh) -> dark (old). */
+    --perim: #f4713c;
+    --casing: rgba(0, 0, 0, 0.55);
+    --age-0: #ffe9a3;
+    --age-1: #ffd24a;
+    --age-2: #eda100;
+    --age-3: #b87d00;
+    --age-4: #7d5500;
+
+    --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font: 14px/1.5 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  .app { max-width: 1400px; margin: 0 auto; padding: 20px 20px 48px; }
+
+  /* ---------- header ---------- */
+  header { display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-end; padding-bottom: 18px; }
+  .title h1 { font-size: 26px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .title p { margin: 0; color: var(--ink-2); font-size: 13px; max-width: 60ch; }
+  .stats { display: flex; gap: 26px; margin-left: auto; flex-wrap: wrap; }
+  .tile .label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; }
+  .tile .value { font-size: 30px; font-weight: 600; line-height: 1.15; }
+  .tile .value.hero { font-size: 48px; }
+  .tile .sub { color: var(--ink-2); font-size: 12px; }
+  .swatch { display: inline-block; width: 9px; height: 9px; border-radius: 2px; vertical-align: 1px; margin-right: 5px; }
+
+  /* ---------- map ---------- */
+  .map-wrap { position: relative; height: min(78vh, 760px); min-height: 460px; border-radius: 10px; overflow: hidden; border: 1px solid var(--hair); background: var(--surface-1); }
+  #map { position: absolute; inset: 0; }
+  .maplibregl-ctrl-attrib { font-size: 10px; }
+
+  .panel {
+    position: absolute; z-index: 2;
+    background: rgba(16, 16, 15, 0.86);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--hair);
+    border-radius: 8px; padding: 10px 12px;
+    font-size: 12px; line-height: 1.45;
+  }
+  .readout { top: 10px; left: 10px; min-width: 214px; }
+  .readout .clock { font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .readout .elapsed { color: var(--muted); font-size: 11px; margin-bottom: 8px; }
+  .readout dl { display: grid; grid-template-columns: auto auto; gap: 2px 12px; margin: 0; }
+  .readout dt { color: var(--muted); }
+  .readout dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+  .readout .note { color: var(--muted); font-size: 11px; margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--hair); }
+
+  .legend { top: 10px; right: 10px; max-width: 210px; }
+  .legend h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin: 11px 0 5px; font-weight: 600; }
+  .legend h3:first-child { margin-top: 0; }
+  .legend .row { display: flex; align-items: center; gap: 7px; }
+  .ramp { display: flex; height: 9px; border-radius: 2px; overflow: hidden; margin: 3px 0 2px; }
+  .ramp i { flex: 1; }
+  .ramp-labels { display: flex; justify-content: space-between; color: var(--muted); font-size: 10px; }
+  .key-line { width: 16px; height: 0; border-top: 2px solid var(--perim); }
+  .key-line.ghost { border-top-width: 1px; opacity: 0.5; }
+  .key-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--age-1); border: 1px solid rgba(0,0,0,.6); }
+
+  .toolbar { position: absolute; z-index: 2; bottom: 10px; left: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .toolbar button, .ctl {
+    font: inherit; font-size: 11px; color: var(--ink-2);
+    background: rgba(16,16,15,.86); border: 1px solid var(--hair);
+    border-radius: 6px; padding: 5px 9px; cursor: pointer;
+    backdrop-filter: blur(8px);
+  }
+  .toolbar button:hover, .ctl:hover { color: var(--ink); border-color: rgba(255,255,255,.24); }
+  .toolbar button[aria-pressed="true"] { color: var(--ink); background: rgba(244,113,60,.20); border-color: rgba(244,113,60,.55); }
+
+  /* map labels (HTML markers - avoids needing a glyph server) */
+  .mk { display: flex; align-items: center; gap: 5px; font-size: 11px; white-space: nowrap; pointer-events: none; }
+  .mk .glyph { width: 7px; height: 7px; flex: none; }
+  .mk.town .glyph { background: #fff; border-radius: 50%; box-shadow: 0 0 0 1.5px rgba(0,0,0,.65); }
+  .mk.trailhead .glyph { width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-bottom: 7px solid #fff; filter: drop-shadow(0 0 1.4px rgba(0,0,0,.9)); }
+  .mk.ignition .glyph { width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--perim); background: rgba(244,113,60,.35); box-shadow: 0 0 0 1px rgba(0,0,0,.7); }
+  .mk span { color: #fff; text-shadow: 0 1px 2px #000, 0 0 3px #000; }
+  .mk.trailhead span { color: #ffe9a3; }
+  .mk.monitor { pointer-events: auto; cursor: default; }
+  .mk.monitor .glyph { width: 9px; height: 9px; border-radius: 2px; background: #dfe6ec;
+    box-shadow: 0 0 0 1.5px rgba(0,0,0,.7); }
+  .mk.monitor span { font-variant-numeric: tabular-nums; }
+  .smoke-key { display: flex; height: 9px; border-radius: 2px; overflow: hidden; margin: 3px 0 2px; }
+  .smoke-key i { flex: 1; }
+
+  /* ---------- timeline ---------- */
+  .timeline { margin-top: 14px; background: var(--surface-1); border: 1px solid var(--hair); border-radius: 10px; padding: 12px 14px 8px; }
+  .tl-head { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .play { width: 34px; height: 34px; flex: none; border-radius: 50%; border: 1px solid var(--hair); background: rgba(244,113,60,.16); color: var(--perim); font-size: 13px; cursor: pointer; display: grid; place-items: center; }
+  .play:hover { background: rgba(244,113,60,.28); }
+  .tl-head .hint { color: var(--muted); font-size: 11px; margin-left: auto; }
+  .track { position: relative; }
+  #density { display: block; width: 100%; height: 34px; }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; margin: 0; display: block; }
+  input[type=range]::-webkit-slider-runnable-track { height: 3px; background: var(--axis); border-radius: 2px; }
+  input[type=range]::-moz-range-track { height: 3px; background: var(--axis); border-radius: 2px; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 15px; height: 15px; margin-top: -6px; border-radius: 50%; background: var(--perim); border: 2px solid #12120f; cursor: pointer; }
+  input[type=range]::-moz-range-thumb { width: 15px; height: 15px; border-radius: 50%; background: var(--perim); border: 2px solid #12120f; cursor: pointer; }
+  .tl-axis { position: relative; height: 14px; color: var(--muted); font-size: 10px; margin-top: 5px; }
+
+  /* ---------- charts ---------- */
+  .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(430px, 1fr)); gap: 14px; margin-top: 14px; }
+  .card { background: var(--surface-1); border: 1px solid var(--hair); border-radius: 10px; padding: 14px 16px 10px; }
+  .card h2 { font-size: 13px; font-weight: 600; margin: 0; }
+  .card .sub { color: var(--muted); font-size: 11px; margin: 2px 0 8px; }
+  .chart-legend { display: flex; gap: 14px; font-size: 11px; color: var(--ink-2); margin: 0 0 4px; }
+  svg.chart { display: block; width: 100%; overflow: visible; }
+  .tip {
+    position: absolute; z-index: 5; pointer-events: none; opacity: 0;
+    transform: translate(-50%, -100%); transition: opacity .1s;
+    background: rgba(16,16,15,.94); border: 1px solid var(--hair); border-radius: 7px;
+    padding: 7px 9px; font-size: 11px; line-height: 1.5; white-space: nowrap;
+  }
+  .tip .t { color: var(--muted); margin-bottom: 3px; }
+  .tip .r { display: flex; align-items: center; gap: 6px; font-variant-numeric: tabular-nums; }
+  .chart-host { position: relative; }
+
+  /* ---------- table + notes ---------- */
+  details { margin-top: 14px; background: var(--surface-1); border: 1px solid var(--hair); border-radius: 10px; padding: 12px 16px; }
+  summary { cursor: pointer; font-size: 13px; font-weight: 600; }
+  table { border-collapse: collapse; width: 100%; margin-top: 10px; font-size: 12px; font-variant-numeric: tabular-nums; }
+  th, td { text-align: right; padding: 5px 8px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+  th:first-child, td:first-child, th.l, td.l { text-align: left; }
+  thead th { color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
+  .notes { margin-top: 14px; color: var(--ink-2); font-size: 12.5px; }
+  .notes h2 { font-size: 13px; color: var(--ink); margin: 0 0 8px; }
+  .notes li { margin-bottom: 7px; }
+  .notes a { color: var(--reported); }
+  .caveat { color: var(--age-1); }
+  footer { margin-top: 20px; color: var(--muted); font-size: 11px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="title">
+      <h1>Rock Fire — how it spread</h1>
+      <p id="subtitle">Loading…</p>
+    </div>
+    <div class="stats" id="tiles"></div>
+  </header>
+
+  <div class="map-wrap">
+    <div id="map"></div>
+    <div class="panel readout">
+      <div class="clock" id="clock">—</div>
+      <div class="elapsed" id="elapsed">—</div>
+      <dl>
+        <dt>Acres burned</dt><dd id="r-acres">—</dd>
+        <dt>Contained</dt><dd id="r-cont">—</dd>
+        <dt>Perimeter</dt><dd id="r-perim">—</dd>
+        <dt>Heat detections</dt><dd id="r-hot">—</dd>
+        <dt>Smoke overhead</dt><dd id="r-smoke">—</dd>
+        <dt id="r-pm-label">Nearest monitor</dt><dd id="r-pm">—</dd>
+      </dl>
+      <div class="note" id="r-note"></div>
+    </div>
+    <div class="panel legend">
+      <h3>Fire perimeter</h3>
+      <div class="row"><span class="key-line"></span> current official map</div>
+      <div class="row"><span class="key-line ghost"></span> earlier maps</div>
+      <h3>Satellite heat detection</h3>
+      <div class="ramp">
+        <i style="background:var(--age-0)"></i><i style="background:var(--age-1)"></i>
+        <i style="background:var(--age-2)"></i><i style="background:var(--age-3)"></i>
+        <i style="background:var(--age-4)"></i>
+      </div>
+      <div class="ramp-labels"><span>just now</span><span>3 days old</span></div>
+      <div class="row" style="margin-top:5px">
+        <span class="key-dot" style="width:6px;height:6px"></span>
+        <span class="key-dot" style="width:13px;height:13px"></span>
+        <span style="color:var(--muted)">dot size = heat output</span>
+      </div>
+      <h3>Smoke plume overhead</h3>
+      <div class="smoke-key">
+        <i style="background:#aebccb;opacity:.30"></i>
+        <i style="background:#93a5b8;opacity:.55"></i>
+        <i style="background:#77899e;opacity:.85"></i>
+      </div>
+      <div class="ramp-labels"><span>light</span><span>medium</span><span>heavy</span></div>
+      <h3>Places</h3>
+      <div class="row"><span class="mk town" style="display:inline-flex"><span class="glyph"></span></span> town
+        &nbsp;<span class="mk trailhead" style="display:inline-flex"><span class="glyph"></span></span> closed trailhead</div>
+      <div class="row" style="margin-top:4px"><span class="mk ignition" style="display:inline-flex"><span class="glyph"></span></span> where it started</div>
+      <div class="row" style="margin-top:4px"><span class="mk monitor" style="display:inline-flex"><span class="glyph"></span></span> air monitor (PM2.5 now)</div>
+    </div>
+    <div class="toolbar" id="toolbar"></div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-head">
+      <button class="play" id="play" aria-label="Play the fire timeline">▶</button>
+      <div>
+        <div style="font-size:12px">Play the fire from discovery to now</div>
+        <div style="color:var(--muted);font-size:11px" id="tl-caption">—</div>
+      </div>
+      <div class="hint">bars below = satellite detections per 3 hours · ticks = new official perimeter</div>
+    </div>
+    <div class="track">
+      <svg id="density" aria-hidden="true"></svg>
+      <input type="range" id="scrub" min="0" max="100" value="100" step="1" aria-label="Time">
+      <div class="tl-axis" id="tl-axis"></div>
+    </div>
+  </div>
+
+  <div class="charts">
+    <div class="card">
+      <h2>Fire size over time</h2>
+      <div class="sub">Acres. Two figures disagree, so both are drawn.</div>
+      <div class="chart-legend">
+        <span><span class="swatch" style="background:var(--reported)"></span>Officially reported</span>
+        <span><span class="swatch" style="background:var(--mapped)"></span>Measured from the perimeter map</span>
+      </div>
+      <div class="chart-host"><svg class="chart" id="c-acres" role="img"
+        aria-label="Acreage over time, two step lines: officially reported acres and acres measured from the published perimeter. Values are listed in the table view below."></svg><div class="tip" id="tip-acres"></div></div>
+    </div>
+    <div class="card">
+      <h2>Containment over time</h2>
+      <div class="sub">Percent of the fire edge crews have secured.</div>
+      <div class="chart-host"><svg class="chart" id="c-cont" role="img"
+        aria-label="Containment percentage over time as a step line. Values are listed in the table view below."></svg><div class="tip" id="tip-cont"></div></div>
+    </div>
+
+    <div class="card">
+      <h2>Smoke on the ground — PM2.5</h2>
+      <div class="sub">Micrograms of fine particulate per cubic metre, hourly, at the
+        three nearest monitors that measure it.</div>
+      <div class="chart-legend" id="pm-legend"></div>
+      <div class="chart-legend" id="pm-bands" style="color:var(--muted);gap:10px"></div>
+      <div class="chart-host"><svg class="chart" id="c-pm" role="img"
+        aria-label="Hourly PM2.5 concentration at the three nearest air monitors, with EPA air quality category bands. Values are listed in the table view below."></svg><div class="tip" id="tip-pm"></div></div>
+    </div>
+  </div>
+
+  <details>
+    <summary>Table view — every reported figure</summary>
+    <div style="overflow-x:auto"><table id="tbl"></table></div>
+    <div style="overflow-x:auto"><table id="tbl-air"></table></div>
+  </details>
+
+  <div class="notes card">
+    <h2>How to read this, and what the data can't tell you</h2>
+    <ul id="notes"></ul>
+  </div>
+
+  <footer id="footer"></footer>
+</div>
+
+<script src="vendor/maplibre-gl.js"></script>
+<script>
+"use strict";
+
+const HOUR = 3600e3, DAY = 24 * HOUR;
+const STEP = 15 * 60e3;            // timeline resolution: 15 minutes
+const PLAY_RATE = 4 * HOUR;        // fire-hours advanced per real second
+const AGE_MAX = 3 * DAY;           // oldest detection age the ramp distinguishes
+
+const $ = (id) => document.getElementById(id);
+const fmtInt = (n) => n == null ? "—" : Math.round(n).toLocaleString("en-US");
+const fmtTime = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/Los_Angeles", month: "short", day: "numeric",
+  hour: "numeric", minute: "2-digit"
+});
+const fmtDay = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/Los_Angeles", month: "short", day: "numeric"
+});
+const fmtHour = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/Los_Angeles", hour: "numeric"
+});
+const pt = (ms) => fmtTime.format(new Date(ms)) + " PDT";
+
+const ptDate = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "America/Los_Angeles", year: "numeric", month: "2-digit", day: "2-digit"
+});
+// Timestamps of Pacific midnight inside the window. Found by walking hours and
+// bisecting where the local date rolls over, so it stays right across a DST
+// change instead of assuming a fixed UTC offset.
+function dayTicks(t0, t1) {
+  const out = [];
+  let prev = ptDate.format(new Date(t0));
+  for (let ms = t0 + HOUR; ms <= t1; ms += HOUR) {
+    const key = ptDate.format(new Date(ms));
+    if (key === prev) continue;
+    let lo = ms - HOUR, hi = ms;
+    while (hi - lo > 60e3) {
+      const mid = Math.floor((lo + hi) / 2);
+      if (ptDate.format(new Date(mid)) === prev) lo = mid; else hi = mid;
+    }
+    out.push(hi);
+    prev = key;
+  }
+  return out;
+}
+
+// California and Nevada: far enough out to watch a plume drift off the Sierra,
+// close enough that the fire is still a place rather than a pixel.
+const REGION_VIEW = [[-124.5, 33.0], [-113.5, 41.5]];
+
+const BASEMAPS = [
+  ["Imagery + topo", "USGSImageryTopo"],
+  ["Topo", "USGSTopo"],
+  ["Imagery", "USGSImageryOnly"],
+  ["Relief", "USGSShadedReliefOnly"],
+];
+const USGS_ATTRIB =
+  'Basemap: <a href="https://basemap.nationalmap.gov/">USGS The National Map</a> (public domain) · ' +
+  'Perimeters: <a href="https://data-nifc.opendata.arcgis.com/">NIFC WFIGS</a> · ' +
+  'Detections: <a href="https://firms.modaps.eosdis.nasa.gov/">NASA FIRMS</a> · ' +
+  'Places: © OpenStreetMap contributors';
+
+function rasterStyle(service) {
+  return {
+    version: 8,
+    sources: {
+      base: {
+        type: "raster",
+        tiles: [`https://basemap.nationalmap.gov/arcgis/rest/services/${service}/MapServer/tile/{z}/{y}/{x}`],
+        tileSize: 256, maxzoom: 16, attribution: USGS_ATTRIB,
+      },
+    },
+    layers: [
+      { id: "bg", type: "background", paint: { "background-color": "#101010" } },
+      { id: "base", type: "raster", source: "base", paint: { "raster-brightness-max": 0.94 } },
+    ],
+  };
+}
+
+let S, PERIMS, HOTS, MARKS, SMOKE, AIR;   // loaded data
+let PM_SITES = [];            // the monitors drawn on the PM chart
+let showSmoke = true;
+let T0, T1, STEPS, t = 0;     // timeline state
+let map, playing = false, lastFrame = 0, markers = [], monitorEls = {};
+let hoverT = null;            // chart hover position, null when not hovering
+
+// ---------------------------------------------------------------- data load
+async function load() {
+  const j = async (p) => {
+    const r = await fetch(p, { cache: "no-store" });
+    if (!r.ok) throw new Error(`${p}: HTTP ${r.status}`);
+    return r.json();
+  };
+  [S, PERIMS, HOTS, MARKS, SMOKE, AIR] = await Promise.all([
+    j("data/stats.json"), j("data/perimeters.geojson"),
+    j("data/hotspots.geojson"), j("data/landmarks.geojson"),
+    j("data/smoke.geojson"), j("data/airquality.json"),
+  ]);
+  indexAir();
+  T0 = S.timeline.start_ms;
+  T1 = S.timeline.end_ms;
+  forwardFill();
+  STEPS = Math.ceil((T1 - T0) / STEP);
+  t = T1;
+  buildHeader();
+  buildToolbar();
+  buildMap();
+  buildDensity();
+  buildPmLegend();
+  buildTable();
+  buildNotes();
+  $("scrub").max = STEPS;
+  $("scrub").value = STEPS;
+  $("scrub").addEventListener("input", (e) => { pause(); setT(T0 + +e.target.value * STEP); });
+  $("play").addEventListener("click", () => (playing ? pause() : play()));
+  window.addEventListener("keydown", (e) => {
+    if (e.key === " ") { e.preventDefault(); playing ? pause() : play(); }
+    if (e.key === "ArrowRight") { pause(); setT(t + HOUR); }
+    if (e.key === "ArrowLeft") { pause(); setT(t - HOUR); }
+  });
+  new ResizeObserver(() => { drawCharts(); buildDensity(); }).observe($("c-acres").parentElement);
+  setT(t);
+}
+
+// ---------------------------------------------------------- air quality
+// EPA PM2.5 breakpoints. Officially these grade 24-hour averages, so an hourly
+// reading landing in a band is an indication of conditions that hour, not a
+// published AQI. The chart labels them as categories, never as "the AQI".
+const AQI_BANDS = [
+  { to: 9.0, name: "Good", color: "#0ca30c" },
+  { to: 35.4, name: "Moderate", color: "#fab219" },
+  { to: 55.4, name: "Unhealthy for sensitive groups", color: "#ec835a" },
+  { to: 125.4, name: "Unhealthy", color: "#d03b3b" },
+  { to: 1e9, name: "Very unhealthy", color: "#8d2020" },
+];
+const aqiBand = (v) => AQI_BANDS.find((b) => v <= b.to) || AQI_BANDS[AQI_BANDS.length - 1];
+
+// One short display name per monitor, used on the map, in the readout and in the
+// legend. Full names stay in the table and the marker tooltip.
+const shortName = (n) => n
+  .replace(/-CA$/, "").replace(/^NCORE - /, "")
+  .replace("/Shoshone Tribe", "").replace(" Tribe", "").trim();
+
+// pm[siteId] = array of {ts_ms, pm25} sorted by time
+const pm = {};
+function indexAir() {
+  AIR.sites.forEach((st) => (pm[st.id] = []));
+  AIR.obs.forEach((o) => {
+    if (o.pm25 != null) pm[o.site].push({ x: o.ts_ms, y: o.pm25 });
+  });
+  Object.values(pm).forEach((a) => a.sort((p, q) => p.x - q.x));
+  // Nearest three monitors that actually measure PM2.5. The rest are Owens Lake
+  // dust monitors that only report PM10.
+  PM_SITES = AIR.sites.filter((st) => pm[st.id].length > 0).slice(0, 3);
+}
+// value at time t, holding the last reading for up to two hours
+function pmAt(siteId, ms) {
+  const a = pm[siteId];
+  if (!a || !a.length) return null;
+  let cur = null;
+  for (const p of a) if (p.x <= ms) cur = p; else break;
+  return cur && ms - cur.x <= 2 * HOUR ? cur.y : null;
+}
+
+// ---- smoke ---------------------------------------------------------------
+function activeSmoke(ms) {
+  return SMOKE.features.filter(
+    (f) => f.properties.start_ms <= ms && ms < f.properties.end_ms);
+}
+function inRing(x, y, ring) {
+  let inside = false;
+  for (let i = 0, k = ring.length - 1; i < ring.length; k = i++) {
+    const [xi, yi] = ring[i], [xk, yk] = ring[k];
+    if ((yi > y) !== (yk > y) && x < ((xk - xi) * (y - yi)) / (yk - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
+function inGeom(x, y, g) {
+  const polys = g.type === "Polygon" ? [g.coordinates] : g.coordinates;
+  return polys.some(
+    (rings) => inRing(x, y, rings[0]) && !rings.slice(1).some((h) => inRing(x, y, h)));
+}
+const DENSITY_RANK = { Light: 1, Medium: 2, Heavy: 3 };
+// Heaviest plume classification sitting over the fire itself at time ms.
+function smokeOverFire(ms) {
+  const here = activeSmoke(ms).filter(
+    (f) => inGeom(S.incident.lon, S.incident.lat, f.geometry));
+  if (!here.length) return null;
+  return here.sort(
+    (a, b) => (DENSITY_RANK[b.properties.density] || 0) - (DENSITY_RANK[a.properties.density] || 0)
+  )[0].properties.density;
+}
+function lastSmokeBefore(ms) {
+  let best = null;
+  for (const f of SMOKE.features) {
+    if (f.properties.end_ms <= ms && (best === null || f.properties.end_ms > best)) {
+      best = f.properties.end_ms;
+    }
+  }
+  return best;
+}
+
+// ------------------------------------------------------------ header tiles
+function buildHeader() {
+  const i = S.incident, c = S.current, pk = S.air?.peak_pm25;
+  const days = ((T1 - i.discovery_ms) / DAY);
+  $("subtitle").innerHTML =
+    `${i.location}, ${i.county}. Discovered <b>${pt(i.discovery_ms)}</b> at ${i.discovery_acres} acre — ` +
+    `${days.toFixed(1)} days ago. Cause ${String(i.cause).toLowerCase()}. ` +
+    `${fmtInt(i.personnel)} personnel assigned.`;
+  $("tiles").innerHTML = `
+    <div class="tile">
+      <div class="label">Acres burned</div>
+      <div class="value hero">${fmtInt(c.acres)}</div>
+      <div class="sub">${(c.acres / 640).toFixed(1)} square miles</div>
+    </div>
+    <div class="tile">
+      <div class="label">Contained</div>
+      <div class="value" style="color:var(--ink)">${c.pct_contained}%</div>
+      <div class="sub"><span class="swatch" style="background:var(--contained)"></span>as of ${pt(Date.parse(c.as_of))}</div>
+    </div>
+    <div class="tile">
+      <div class="label">Official perimeter maps</div>
+      <div class="value">${S.perimeter_count}</div>
+      <div class="sub">${S.hotspot_count} satellite detections</div>
+    </div>
+    ${pk ? `<div class="tile">
+      <div class="label">Worst hour of smoke</div>
+      <div class="value">${pk.value}<span style="font-size:15px;color:var(--ink-2)"> µg/m³</span></div>
+      <div class="sub"><span class="swatch" style="background:${aqiBand(pk.value).color}"></span>${aqiBand(pk.value).name.toLowerCase()} ·
+        ${shortName(pk.site)}, ${pk.miles} mi ${pk.bearing}</div>
+    </div>` : ""}`;
+}
+
+function buildToolbar() {
+  const tb = $("toolbar");
+  BASEMAPS.forEach(([label, svc], k) => {
+    const b = document.createElement("button");
+    b.textContent = label;
+    b.setAttribute("aria-pressed", String(k === 0));
+    b.onclick = () => {
+      [...tb.querySelectorAll("button[aria-pressed]")].forEach((x) =>
+        x.setAttribute("aria-pressed", String(x === b)));
+      swapBasemap(svc);
+    };
+    tb.appendChild(b);
+  });
+  const sm = document.createElement("button");
+  sm.className = "ctl";
+  sm.textContent = "Smoke";
+  sm.setAttribute("aria-pressed", "true");
+  sm.onclick = () => {
+    showSmoke = !showSmoke;
+    sm.setAttribute("aria-pressed", String(showSmoke));
+    paintTime();
+  };
+  tb.appendChild(sm);
+  const wide = document.createElement("button");
+  wide.className = "ctl";
+  wide.textContent = "Zoom out to region";
+  wide.onclick = () => map.fitBounds(REGION_VIEW, { padding: 20, duration: 900 });
+  tb.appendChild(wide);
+  const fit = document.createElement("button");
+  fit.className = "ctl";
+  fit.textContent = "Zoom out to all detections";
+  fit.onclick = () => map.fitBounds(bboxOf(HOTS), { padding: 40, duration: 700 });
+  tb.appendChild(fit);
+  const back = document.createElement("button");
+  back.className = "ctl";
+  back.textContent = "Zoom to fire";
+  back.onclick = () => map.fitBounds(homeBounds(), { padding: 46, duration: 700 });
+  tb.appendChild(back);
+}
+
+// ------------------------------------------------------------------- map
+// Default view: the perimeter plus the closed trailheads. Towns are excluded --
+// Big Pine and Independence are far enough apart to shrink the fire to a speck.
+function homeBounds() {
+  const trailheads = {
+    type: "FeatureCollection",
+    features: MARKS.features.filter((f) => f.properties.kind === "trailhead"),
+  };
+  const near = {
+    type: "FeatureCollection",
+    features: PM_SITES.filter((st) => st.miles <= 20).map((st) => ({
+      type: "Feature", geometry: { type: "Point", coordinates: [st.lon, st.lat] },
+    })),
+  };
+  const boxes = [bboxOf(PERIMS), bboxOf(trailheads)];
+  if (near.features.length) boxes.push(bboxOf(near));
+  return [
+    [Math.min(...boxes.map((b) => b[0][0])), Math.min(...boxes.map((b) => b[0][1]))],
+    [Math.max(...boxes.map((b) => b[1][0])), Math.max(...boxes.map((b) => b[1][1]))],
+  ];
+}
+
+function bboxOf(fc) {
+  let w = 180, s = 90, e = -180, n = -90;
+  const walk = (c) => {
+    if (typeof c[0] === "number") {
+      w = Math.min(w, c[0]); e = Math.max(e, c[0]);
+      s = Math.min(s, c[1]); n = Math.max(n, c[1]);
+    } else c.forEach(walk);
+  };
+  fc.features.forEach((f) => walk(f.geometry.coordinates));
+  return [[w, s], [e, n]];
+}
+
+// Age of each detection at timeline position `now`, as a MapLibre expression.
+// Injecting `now` as a literal lets the styling change every frame without
+// re-uploading the GeoJSON.
+const ageExpr = (now) => ["max", 0, ["-", now, ["get", "ts_ms"]]];
+
+// Single-hue yellow ramp, light (fresh) -> dark (old): recent detections read
+// brightest against the imagery, older ones recede on purpose.
+const ageColor = (now) => [
+  "interpolate", ["linear"], ageExpr(now),
+  0, "#ffe9a3", 6 * HOUR, "#ffd24a", 18 * HOUR, "#eda100",
+  36 * HOUR, "#b87d00", AGE_MAX, "#7d5500",
+];
+const ageOpacity = (now) => [
+  "interpolate", ["linear"], ageExpr(now),
+  0, 0.9, 12 * HOUR, 0.62, 36 * HOUR, 0.34, AGE_MAX, 0.18,
+];
+
+function addLayers() {
+  // Smoke goes on first so it sits beneath the perimeter and the detections --
+  // it is haze in the air above the ground, not a feature on it.
+  map.addSource("smoke", { type: "geojson", data: SMOKE });
+  map.addLayer({
+    id: "smoke-fill", type: "fill", source: "smoke",
+    filter: ["==", ["get", "start_ms"], -1],
+    paint: {
+      "fill-color": ["match", ["get", "density"],
+        "Light", "#aebccb", "Medium", "#93a5b8", "Heavy", "#77899e", "#aebccb"],
+      "fill-opacity": ["match", ["get", "density"],
+        "Light", 0.16, "Medium", 0.28, "Heavy", 0.42, 0.16],
+    },
+  });
+  map.addLayer({
+    id: "smoke-edge", type: "line", source: "smoke",
+    filter: ["==", ["get", "start_ms"], -1],
+    paint: { "line-color": "#cfdae4", "line-width": 1, "line-opacity": 0.35 },
+  });
+
+  map.addSource("perims", { type: "geojson", data: PERIMS });
+  map.addSource("hots", { type: "geojson", data: HOTS });
+
+  // every perimeter issued so far, as a thin ghost outline
+  map.addLayer({
+    id: "perim-ghost", type: "line", source: "perims",
+    filter: ["<=", ["get", "as_of_ms"], 0],
+    paint: { "line-color": "#f4713c", "line-width": 1, "line-opacity": 0.45 },
+  });
+  // the perimeter in force at the current time
+  map.addLayer({
+    id: "perim-fill", type: "fill", source: "perims",
+    filter: ["==", ["get", "seq"], -1],
+    paint: { "fill-color": "#f4713c", "fill-opacity": 0.08 },
+  });
+  map.addLayer({
+    id: "perim-casing", type: "line", source: "perims",
+    filter: ["==", ["get", "seq"], -1],
+    paint: { "line-color": "rgba(0,0,0,0.55)", "line-width": 5 },
+  });
+  map.addLayer({
+    id: "perim-line", type: "line", source: "perims",
+    filter: ["==", ["get", "seq"], -1],
+    paint: { "line-color": "#f4713c", "line-width": 2 },
+  });
+  // satellite heat detections: color by age, radius by fire radiative power
+  map.addLayer({
+    id: "hots", type: "circle", source: "hots",
+    filter: ["<=", ["get", "ts_ms"], 0],
+    paint: {
+      "circle-radius": [
+        "interpolate", ["exponential", 0.55], ["get", "frp"],
+        1, 2.5, 10, 4, 50, 6.5, 150, 9, 500, 12,
+      ],
+      "circle-color": ageColor(T1),
+      "circle-opacity": ageOpacity(T1),
+      "circle-stroke-width": 1,
+      "circle-stroke-color": "rgba(0,0,0,0.6)",
+      "circle-stroke-opacity": 0.7,
+    },
+  });
+
+  bindMapInteraction();
+}
+
+let mapBound = false;
+function bindMapInteraction() {
+  if (mapBound) return;
+  mapBound = true;
+  map.on("click", "hots", (e) => {
+    const p = e.features[0].properties;
+    new maplibregl.Popup({ closeButton: false, offset: 10 })
+      .setLngLat(e.lngLat)
+      .setHTML(
+        `<div style="font:12px/1.5 var(--sans);color:#111">
+           <b>${pt(p.ts_ms)}</b><br>${p.satellite} · ${p.daynight === "N" ? "night" : "day"} pass<br>
+           ${Number(p.frp).toFixed(1)} MW radiated · ${p.confidence} confidence
+         </div>`)
+      .addTo(map);
+  });
+  map.on("mouseenter", "hots", () => (map.getCanvas().style.cursor = "pointer"));
+  map.on("mouseleave", "hots", () => (map.getCanvas().style.cursor = ""));
+}
+
+function addMarkers() {
+  markers.forEach((m) => m.remove());
+  markers = [];
+  const add = (lon, lat, cls, label) => {
+    const el = document.createElement("div");
+    el.className = `mk ${cls}`;
+    el.innerHTML = `<span class="glyph"></span>${label ? `<span>${label}</span>` : ""}`;
+    markers.push(new maplibregl.Marker({ element: el, anchor: "left" })
+      .setLngLat([lon, lat]).addTo(map));
+  };
+  MARKS.features.forEach((f) => {
+    const [lon, lat] = f.geometry.coordinates;
+    add(lon, lat, f.properties.kind, f.properties.name.replace(" Trailhead", " TH"));
+  });
+  add(S.incident.lon, S.incident.lat, "ignition", "");
+  // Monitors carry a live value, so keep a handle on each label element.
+  monitorEls = {};
+  AIR.sites.filter((st) => pm[st.id] && pm[st.id].length).forEach((st) => {
+    const el = document.createElement("div");
+    el.className = "mk monitor";
+    el.title = `${st.name} — ${st.miles} mi ${st.bearing} of the fire (${st.agency})`;
+    el.innerHTML = `<span class="glyph"></span><span></span>`;
+    monitorEls[st.id] = el.lastElementChild;
+    markers.push(new maplibregl.Marker({ element: el, anchor: "left" })
+      .setLngLat([st.lon, st.lat]).addTo(map));
+  });
+  updateLabelVisibility();
+}
+
+function buildMap() {
+  map = new maplibregl.Map({
+    container: "map",
+    style: rasterStyle(BASEMAPS[0][1]),
+    bounds: homeBounds(),
+    fitBoundsOptions: { padding: 46 },
+    attributionControl: { compact: true },
+  });
+  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
+  map.addControl(new maplibregl.ScaleControl({ unit: "imperial" }), "bottom-right");
+  map.on("load", () => { addLayers(); addMarkers(); paintTime(); });
+  map.on("zoom", updateLabelVisibility);
+}
+
+// Place and monitor names are only legible at local zooms; past that they
+// collapse to their glyphs rather than stacking into an unreadable pile.
+function updateLabelVisibility() {
+  const show = map.getZoom() >= 8.2;
+  document.querySelectorAll(".mk span:last-child").forEach((el) => {
+    if (el.classList.contains("glyph")) return;
+    el.style.display = show ? "" : "none";
+  });
+}
+
+function swapBasemap(service) {
+  const c = map.getCenter(), z = map.getZoom();
+  map.setStyle(rasterStyle(service));
+  map.once("styledata", () => {
+    if (!map.getSource("perims")) { addLayers(); addMarkers(); }
+    map.jumpTo({ center: c, zoom: z });
+    paintTime();
+  });
+}
+
+// --------------------------------------------------------------- timeline
+function play() {
+  if (t >= T1) setT(T0);
+  playing = true; lastFrame = performance.now(); $("play").textContent = "❚❚";
+  requestAnimationFrame(tick);
+}
+function pause() { playing = false; $("play").textContent = "▶"; }
+function tick(now) {
+  if (!playing) return;
+  const dt = (now - lastFrame) / 1000;
+  lastFrame = now;
+  const next = t + dt * PLAY_RATE;
+  if (next >= T1) { setT(T1); pause(); return; }
+  setT(next);
+  requestAnimationFrame(tick);
+}
+function setT(ms) {
+  t = Math.max(T0, Math.min(T1, ms));
+  $("scrub").value = Math.round((t - T0) / STEP);
+  paintTime();
+}
+
+// Each reported figure holds until the next report that changes it. CAL FIRE
+// publishes acreage and containment without a perimeter, and NIFC sometimes
+// republishes a perimeter without a new reported acreage, so carry the last
+// known value forward on every field rather than showing gaps.
+function forwardFill() {
+  const carry = {};
+  for (const r of S.series) {
+    for (const k of ["reported_acres", "mapped_acres", "pct_contained"]) {
+      if (r[k] == null) r[k + "_held"] = carry[k] ?? null;
+      else r[k + "_held"] = carry[k] = r[k];
+    }
+  }
+}
+function heldAt(ms) {
+  let cur = null;
+  for (const r of S.series) if (r.as_of_ms <= ms) cur = r; else break;
+  return cur;
+}
+function activeSeq(ms) {
+  let seq = -1;
+  for (const f of PERIMS.features) if (f.properties.as_of_ms <= ms) seq = f.properties.seq;
+  return seq;
+}
+
+function paintTime() {
+  const held = heldAt(t);
+  const seq = activeSeq(t);
+  const per = seq >= 0 ? PERIMS.features[seq].properties : null;
+
+  $("clock").textContent = pt(t);
+  const el = t - S.incident.discovery_ms;
+  $("elapsed").textContent = el < 0 ? "before discovery"
+    : `${Math.floor(el / DAY)}d ${Math.floor((el % DAY) / HOUR)}h after discovery`;
+
+  const acres = held ? (held.reported_acres_held ?? held.mapped_acres_held) : null;
+  $("r-acres").textContent = acres == null ? "not yet reported" : fmtInt(acres);
+  $("r-cont").textContent = held?.pct_contained_held == null ? "not yet reported" : held.pct_contained_held + "%";
+  $("r-perim").textContent = per ? `#${per.version} · ${fmtInt(per.mapped_acres)} ac` : "none mapped yet";
+
+  const recent = HOTS.features.filter((f) => {
+    const a = t - f.properties.ts_ms;
+    return a >= 0 && a <= 12 * HOUR;
+  }).length;
+  $("r-hot").textContent = `${recent} in last 12 h`;
+
+  const dens = smokeOverFire(t);
+  const anySmoke = activeSmoke(t).length;
+  $("r-smoke").textContent = dens ? dens.toLowerCase()
+    : anySmoke ? "none over the fire"
+    : "not analysed";
+  const nearest = PM_SITES[0];
+  if (nearest) {
+    const v = pmAt(nearest.id, t);
+    $("r-pm-label").textContent = shortName(nearest.name);
+    $("r-pm").innerHTML = v == null ? "no reading"
+      : `${v} <span style="color:${aqiBand(v).color}">µg/m³</span>`;
+  }
+  $("r-note").textContent = per
+    ? `Perimeter mapped by ${per.map_method.toLowerCase()}.`
+    : "No official perimeter existed yet — only satellite heat detections.";
+
+  if (map && map.getLayer("hots")) {
+    map.setFilter("hots", ["<=", ["get", "ts_ms"], t]);
+    map.setPaintProperty("hots", "circle-color", ageColor(t));
+    map.setPaintProperty("hots", "circle-opacity", ageOpacity(t));
+    map.setFilter("perim-ghost", ["all", ["<=", ["get", "as_of_ms"], t], ["!=", ["get", "seq"], seq]]);
+    ["perim-fill", "perim-casing", "perim-line"].forEach((id) =>
+      map.setFilter(id, ["==", ["get", "seq"], seq]));
+    // Plumes are only drawn for the scan window that actually contains t --
+    // holding a stale plume on screen would invent coverage that wasn't analysed.
+    const smokeFilter = showSmoke
+      ? ["all", ["<=", ["get", "start_ms"], t], [">", ["get", "end_ms"], t]]
+      : ["==", ["get", "start_ms"], -1];
+    ["smoke-fill", "smoke-edge"].forEach((id) => map.setFilter(id, smokeFilter));
+  }
+  for (const [sid, el] of Object.entries(monitorEls)) {
+    const v = pmAt(sid, t);
+    const st = AIR.sites.find((x) => x.id === sid);
+    el.textContent = v == null ? shortName(st.name) : `${shortName(st.name)} ${v}`;
+    el.style.color = v == null ? "#dfe6ec" : aqiBand(v).color;
+  }
+  drawCharts();
+  drawDensityCursor();
+}
+
+// --------------------------------- detection density strip under the scrubber
+const DENS_BIN = 3 * HOUR;
+function densityBins() {
+  const n = Math.ceil((T1 - T0) / DENS_BIN);
+  const bins = new Array(n).fill(0);
+  HOTS.features.forEach((f) => {
+    const k = Math.floor((f.properties.ts_ms - T0) / DENS_BIN);
+    if (k >= 0 && k < n) bins[k]++;
+  });
+  return bins;
+}
+function buildDensity() {
+  const svg = $("density");
+  const w = svg.clientWidth || 900, h = 34;
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  const bins = densityBins();
+  const max = Math.max(1, ...bins);
+  const bw = w / bins.length;
+  let out = "";
+  bins.forEach((v, k) => {
+    if (!v) return;
+    const bh = Math.max(1.5, (v / max) * (h - 6));
+    out += `<rect x="${(k * bw + 0.6).toFixed(1)}" y="${(h - bh).toFixed(1)}" ` +
+      `width="${Math.max(1, bw - 1.2).toFixed(1)}" height="${bh.toFixed(1)}" rx="1" ` +
+      `fill="#eda100" opacity="0.75"><title>${v} detections, ${pt(T0 + k * DENS_BIN)}</title></rect>`;
+  });
+  PERIMS.features.forEach((f) => {
+    const x = ((f.properties.as_of_ms - T0) / (T1 - T0)) * w;
+    out += `<line x1="${x.toFixed(1)}" y1="0" x2="${x.toFixed(1)}" y2="${h}" ` +
+      `stroke="#f4713c" stroke-width="1.5" opacity="0.85"><title>perimeter #${f.properties.version}, ` +
+      `${pt(f.properties.as_of_ms)}</title></line>`;
+  });
+  out += `<line id="dens-cursor" x1="0" y1="0" x2="0" y2="${h}" stroke="#fff" stroke-width="1.5" opacity="0.9"/>`;
+  svg.innerHTML = out;
+
+  // Midnight labels, placed at their true x position rather than spaced evenly.
+  const ax = $("tl-axis");
+  ax.innerHTML = "";
+  for (const d of dayTicks(T0, T1)) {
+    const el = document.createElement("span");
+    el.textContent = fmtDay.format(new Date(d));
+    el.style.position = "absolute";
+    el.style.left = (((d - T0) / (T1 - T0)) * 100).toFixed(2) + "%";
+    el.style.transform = "translateX(-50%)";
+    ax.appendChild(el);
+  }
+  $("tl-caption").textContent =
+    `${pt(T0)} → ${pt(T1)} · ${((T1 - T0) / DAY).toFixed(1)} days · space to play, ←/→ to step an hour`;
+  drawDensityCursor();
+}
+function drawDensityCursor() {
+  const svg = $("density"), cur = svg.querySelector("#dens-cursor");
+  if (!cur) return;
+  const w = svg.clientWidth || 900;
+  const x = ((t - T0) / (T1 - T0)) * w;
+  cur.setAttribute("x1", x); cur.setAttribute("x2", x);
+}
+
+// ------------------------------------------------------------------ charts
+const PAD = { l: 52, r: 46, t: 10, b: 22 };
+const CH = 168;
+
+function series(key) {
+  return S.series.filter((r) => r[key] != null).map((r) => ({ x: r.as_of_ms, y: r[key] }));
+}
+// A reported figure holds until the next report, so the line is a staircase.
+function stepPath(pts, X, Y, extendTo) {
+  if (!pts.length) return "";
+  let d = `M${X(pts[0].x)},${Y(pts[0].y)}`;
+  for (let i = 1; i < pts.length; i++) {
+    d += `H${X(pts[i].x)}V${Y(pts[i].y)}`;
+  }
+  if (extendTo != null && extendTo > pts[pts.length - 1].x) d += `H${X(extendTo)}`;
+  return d;
+}
+
+function drawChart(svgId, opts) {
+  const svg = $(svgId);
+  const w = svg.clientWidth || 480;
+  const h = CH;
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  svg.setAttribute("height", h);
+  const X = (ms) => PAD.l + ((ms - T0) / (T1 - T0)) * (w - PAD.l - PAD.r);
+  const Y = (v) => h - PAD.b - (v / opts.yMax) * (h - PAD.t - PAD.b);
+  let g = "";
+
+  // gridlines + y ticks
+  opts.yTicks.forEach((v) => {
+    g += `<line x1="${PAD.l}" x2="${w - PAD.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--grid)" stroke-width="1"/>`;
+    g += `<text x="${PAD.l - 8}" y="${Y(v) + 3.5}" text-anchor="end" font-size="10" fill="var(--muted)"
+            style="font-variant-numeric:tabular-nums">${opts.yFmt(v)}</text>`;
+  });
+  // day ticks (Pacific midnight)
+  for (const d of dayTicks(T0, T1)) {
+    g += `<line x1="${X(d)}" x2="${X(d)}" y1="${PAD.t}" y2="${h - PAD.b}" stroke="var(--grid)" stroke-width="1"/>`;
+    g += `<text x="${X(d)}" y="${h - PAD.b + 13}" text-anchor="middle" font-size="10" fill="var(--muted)">${fmtDay.format(new Date(d))}</text>`;
+  }
+  g += `<line x1="${PAD.l}" x2="${w - PAD.r}" y1="${h - PAD.b}" y2="${h - PAD.b}" stroke="var(--axis)" stroke-width="1"/>`;
+
+  // category boundaries get a labelled hairline so the thresholds are readable
+  // without putting words on top of the data
+  (opts.yThresholds || []).forEach((v) => {
+    g += `<line x1="${PAD.l}" x2="${w - PAD.r}" y1="${Y(v)}" y2="${Y(v)}"
+            stroke="var(--axis)" stroke-width="1"/>`;
+    g += `<text x="${PAD.l - 8}" y="${Y(v) + 3.5}" text-anchor="end" font-size="9"
+            fill="var(--muted)" style="font-variant-numeric:tabular-nums">${v}</text>`;
+  });
+
+  // air-quality category bands, drawn behind the data as a severity backdrop
+  if (opts.bands) {
+    let lo = 0;
+    for (const band of opts.bands) {
+      const hi = Math.min(band.to, opts.yMax);
+      if (hi <= lo) break;
+      g += `<rect x="${PAD.l}" y="${Y(hi)}" width="${w - PAD.l - PAD.r}"
+              height="${Math.max(0, Y(lo) - Y(hi))}" fill="${band.color}" opacity="0.11"/>`;
+      lo = band.to;
+      if (lo >= opts.yMax) break;
+    }
+  }
+
+  // the window with no official data at all
+  if (!opts.noGap) {
+    const gapEnd = S.series[0].as_of_ms;
+    g += `<rect x="${X(T0)}" y="${PAD.t}" width="${X(gapEnd) - X(T0)}" height="${h - PAD.t - PAD.b}"
+            fill="#ffffff" opacity="0.055"/>`;
+    g += `<text x="${(X(T0) + X(gapEnd)) / 2}" y="${PAD.t + 11}" text-anchor="middle" font-size="9.5"
+            fill="var(--muted)">no official figures yet</text>`;
+  }
+
+  // series
+  const placedLabels = [];
+  opts.lines.forEach((ln) => {
+    if (!ln.pts.length) return;
+    const d = ln.smooth
+      ? ln.pts.map((p, i) => `${i ? "L" : "M"}${X(p.x)},${Y(p.y)}`).join("")
+      : stepPath(ln.pts, X, Y, T1);
+    g += `<path d="${d}" fill="none" stroke="${ln.color}"
+            stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+    // A dot per point only where points are sparse enough to mean something.
+    if (!ln.smooth) {
+      ln.pts.forEach((p) => {
+        g += `<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="4" fill="${ln.color}"
+                stroke="var(--surface-1)" stroke-width="2"/>`;
+      });
+    }
+    // A held figure's line runs to the right edge; an hourly measurement stops
+    // where the readings stop, so the label follows the line's actual end.
+    const last = ln.pts[ln.pts.length - 1];
+    const lx = (ln.smooth ? X(last.x) : X(T1)) + 7;
+    const ly = Y(last.y) + 3.5;
+    if (!placedLabels.some((q) => Math.abs(q.y - ly) < 12 && Math.abs(q.x - lx) < 60)) {
+      placedLabels.push({ x: lx, y: ly });
+      g += `<text x="${lx}" y="${ly}" font-size="10.5" fill="var(--ink-2)"
+              style="font-variant-numeric:tabular-nums">${ln.label(last.y)}</text>`;
+    }
+  });
+  if (opts.extra) g += opts.extra({ X, Y, w, h });
+
+  // time cursor (follows the timeline; follows the pointer while hovering)
+  const cx = X(hoverT ?? t);
+  g += `<line x1="${cx}" x2="${cx}" y1="${PAD.t}" y2="${h - PAD.b}" stroke="#fff" stroke-width="1"
+          opacity="${hoverT == null ? 0.5 : 0.85}"/>`;
+  opts.lines.forEach((ln) => {
+    const v = ln.at(hoverT ?? t);
+    if (v != null) g += `<circle cx="${cx}" cy="${Y(v)}" r="4.5" fill="${ln.color}"
+      stroke="var(--surface-1)" stroke-width="2"/>`;
+  });
+  svg.innerHTML = g;
+  svg.style.cursor = "crosshair";
+}
+
+// Listeners live on the <svg> itself, not on generated children, so redrawing
+// innerHTML every frame doesn't tear the handler out from under the pointer.
+function bindChart(svgId, opts) {
+  const svg = $(svgId);
+  if (svg.dataset.bound) return;
+  svg.dataset.bound = "1";
+  const tip = $(opts.tipId);
+  const timeAt = (e) => {
+    const r = svg.getBoundingClientRect();
+    const frac = (e.clientX - r.left - PAD.l) / (r.width - PAD.l - PAD.r);
+    return T0 + Math.max(0, Math.min(1, frac)) * (T1 - T0);
+  };
+  svg.addEventListener("mousemove", (e) => {
+    hoverT = timeAt(e);
+    const cfg = chartConfig()[svgId];
+    const r = svg.getBoundingClientRect();
+    const rows = cfg.lines
+      .map((ln) => [ln, ln.at(hoverT)])
+      .filter(([, v]) => v != null)
+      .map(([ln, v]) =>
+        `<div class="r"><span class="swatch" style="background:${ln.color}"></span>${ln.name}: ${ln.label(v)}</div>`);
+    const src = cfg.noGap ? "" : (heldAt(hoverT)?.source ?? "");
+    tip.style.opacity = 1;
+    tip.style.left = Math.max(90, Math.min(r.width - 90, e.clientX - r.left)) + "px";
+    tip.style.top = PAD.t + "px";
+    tip.innerHTML = `<div class="t">${pt(hoverT)}</div>` +
+      (rows.length ? rows.join("") : `<div class="r">no reading</div>`) +
+      (src ? `<div class="t" style="margin:3px 0 0">${src}</div>` : "");
+    drawCharts();
+  });
+  svg.addEventListener("mouseleave", () => {
+    hoverT = null; tip.style.opacity = 0; drawCharts();
+  });
+  svg.addEventListener("click", (e) => { pause(); setT(timeAt(e)); });
+}
+
+let CHART_CFG = null, PM_MAX = 60, PM_TICKS = [0, 25, 50];
+function chartConfig() {
+  if (CHART_CFG) return CHART_CFG;
+  const disc = { x: S.incident.discovery_ms, y: S.incident.discovery_acres };
+  const peak = Math.max(10, ...PM_SITES.flatMap((st) => pm[st.id].map((p) => p.y)));
+  PM_MAX = Math.ceil((peak * 1.12) / 25) * 25;
+  PM_TICKS = [PM_MAX];
+  CHART_CFG = {
+  "c-acres": {
+    tipId: "tip-acres",
+    yMax: 13000,
+    yTicks: [0, 4000, 8000, 12000],
+    yFmt: (v) => v ? (v / 1000) + "k" : "0",
+    lines: [
+      { name: "Reported", color: "var(--reported)", pts: series("reported_acres"),
+        at: (ms) => heldAt(ms)?.reported_acres_held, label: (v) => fmtInt(v) + " ac" },
+      { name: "Mapped", color: "var(--mapped)", pts: series("mapped_acres"),
+        at: (ms) => heldAt(ms)?.mapped_acres_held, label: (v) => fmtInt(v) + " ac" },
+    ],
+    extra: ({ X, Y }) => {
+      const p0 = series("reported_acres")[0];
+      // discovery -> first report: the fire grew across this span but nobody
+      // published a number, so the connector is dashed, not a solid line.
+      return `<line x1="${X(disc.x)}" y1="${Y(0)}" x2="${X(p0.x)}" y2="${Y(p0.y)}"
+                stroke="var(--reported)" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.55"/>
+              <circle cx="${X(disc.x)}" cy="${Y(0)}" r="3.5" fill="var(--reported)"
+                stroke="var(--surface-1)" stroke-width="2"/>
+              <text x="${X(disc.x) + 6}" y="${Y(0) - 7}" font-size="9.5" fill="var(--muted)">
+                ${disc.y} acre at discovery</text>`;
+    },
+  },
+  "c-pm": {
+    tipId: "tip-pm",
+    yMax: PM_MAX,
+    yTicks: PM_TICKS,
+    yFmt: (v) => String(v),
+    yThresholds: [9, 35.4, 55.4].filter((v) => v < PM_MAX),
+    bands: AQI_BANDS,
+    noGap: true,     // monitors were reporting from the first hour; no blank window
+    lines: PM_SITES.map((st, k) => ({
+      name: `${shortName(st.name)} (${st.miles} mi ${st.bearing})`,
+      color: `var(--series-${k + 1})`,
+      pts: pm[st.id],
+      smooth: true,  // hourly measurements, not a figure that holds until revised
+      at: (ms) => pmAt(st.id, ms),
+      label: (v) => `${v}`,
+    })),
+  },
+  "c-cont": {
+    tipId: "tip-cont",
+    yMax: 100,
+    yTicks: [0, 25, 50, 75, 100],
+    yFmt: (v) => v + "%",
+    lines: [
+      { name: "Contained", color: "var(--contained)", pts: series("pct_contained"),
+        at: (ms) => heldAt(ms)?.pct_contained_held, label: (v) => v + "%" },
+    ],
+  },
+  };
+  return CHART_CFG;
+}
+
+function drawCharts() {
+  const cfg = chartConfig();
+  for (const id of Object.keys(cfg)) { drawChart(id, cfg[id]); bindChart(id, cfg[id]); }
+}
+
+// ------------------------------------------------------------ table + notes
+// Share of timeline hours that have at least one mapped plume.
+function smokeCoveragePct() {
+  const hours = new Set(
+    SMOKE.features.flatMap((f) => {
+      const out = [];
+      for (let h = Math.floor(f.properties.start_ms / HOUR); h < Math.ceil(f.properties.end_ms / HOUR); h++) out.push(h);
+      return out;
+    }));
+  let inRange = 0;
+  for (let ms = T0; ms < T1; ms += HOUR) if (hours.has(Math.floor(ms / HOUR))) inRange++;
+  return Math.round((inRange / ((T1 - T0) / HOUR)) * 100);
+}
+
+function buildPmLegend() {
+  $("pm-legend").innerHTML = PM_SITES.map((st, k) =>
+    `<span><span class="swatch" style="background:var(--series-${k + 1})"></span>` +
+    `${shortName(st.name)} · ${st.miles} mi ${st.bearing}</span>`).join("");
+  let lo = 0;
+  $("pm-bands").innerHTML = AQI_BANDS.filter((b) => lo < PM_MAX && (lo = b.to) > -1)
+    .map((b, i, arr) => {
+      const from = i === 0 ? 0 : arr[i - 1].to;
+      const range = b.to >= PM_MAX ? `${from}+` : `${from}–${b.to}`;
+      return `<span><span class="swatch" style="background:${b.color};opacity:.75"></span>${b.name.replace("Unhealthy for sensitive groups", "Unhealthy for sensitive")} ${range}</span>`;
+    }).join("");
+}
+
+function buildTable() {
+  const rows = S.series.map((r) => `<tr>
+      <td class="l">${pt(r.as_of_ms)}</td>
+      <td>${r.reported_acres == null ? "—" : fmtInt(r.reported_acres)}</td>
+      <td>${r.mapped_acres == null ? "—" : fmtInt(r.mapped_acres)}</td>
+      <td>${r.mapped_acres_delta == null ? "—" : (r.mapped_acres_delta > 0 ? "+" : "") + fmtInt(r.mapped_acres_delta)}</td>
+      <td>${r.pct_contained == null ? "—" : r.pct_contained + "%"}</td>
+      <td class="l">${r.map_method ?? "—"}</td>
+      <td class="l">${r.source}</td>
+    </tr>`).join("");
+  const airRows = AIR.sites.map((st) => `<tr>
+      <td class="l">${st.name}</td>
+      <td>${st.miles}</td>
+      <td class="l">${st.bearing}</td>
+      <td>${st.pm25_readings || "—"}</td>
+      <td>${st.pm25_peak == null ? "—" : st.pm25_peak}</td>
+      <td class="l">${st.pm25_peak == null ? "PM10 only (Owens Lake dust network)" : aqiBand(st.pm25_peak).name}</td>
+      <td class="l">${st.agency ?? "—"}</td>
+    </tr>`).join("");
+  $("tbl-air").innerHTML = `<thead><tr>
+      <th class="l" colspan="7" style="padding-top:18px;font-size:12px;text-transform:none;letter-spacing:0;color:var(--ink)">
+        Air monitors within ${Math.max(...AIR.sites.map((x) => x.miles))} miles of the fire</th></tr><tr>
+      <th class="l">Monitor</th><th>Miles</th><th class="l">Direction</th>
+      <th>Hourly PM2.5 readings</th><th>Peak µg/m³</th><th class="l">Peak category</th><th class="l">Operator</th>
+    </tr></thead><tbody>${airRows}</tbody>`;
+
+  $("tbl").innerHTML = `<thead><tr>
+      <th class="l">As of (Pacific)</th><th>Reported acres</th><th>Mapped acres</th>
+      <th>Change</th><th>Contained</th><th class="l">Mapping method</th><th class="l">Source</th>
+    </tr></thead><tbody>${rows}</tbody>`;
+}
+
+function buildNotes() {
+  const first = S.series[0];
+  const gapH = ((first.as_of_ms - S.incident.discovery_ms) / HOUR).toFixed(0);
+  let dip = null;
+  for (let i = 1; i < S.series.length; i++) {
+    const a = S.series[i - 1].reported_acres, b = S.series[i].reported_acres;
+    if (a != null && b != null && b < a) { dip = { row: S.series[i], from: a, to: b }; break; }
+  }
+  const notes = [
+    `<span class="caveat">The first ${gapH} hours have no official perimeter.</span> The fire was
+     found at ${S.incident.discovery_acres} acre on ${pt(S.incident.discovery_ms)}, but the first
+     perimeter map was not published until ${pt(first.as_of_ms)} — by which point it was already
+     ${fmtInt(first.mapped_acres)} acres. Everything you see moving before that line is satellite
+     heat detection, not a mapped edge.`,
+    `<b>A heat detection is not a flame.</b> Each yellow dot is one 375-metre satellite pixel
+     (about 1,230 feet across) that was radiating heat when the satellite passed over. Three
+     satellites pass a few times a day, so the dots are snapshots hours apart, not a continuous
+     record. Dot size is fire radiative power — how much energy that pixel was giving off,
+     from under 1 megawatt to ${fmtInt(Math.max(...HOTS.features.map((f) => f.properties.frp)))} MW.`,
+    `<b>Two acreage numbers, and they disagree.</b> The blue line is the figure the incident
+     command reported; the orange line is the area of the perimeter polygon they published.
+     They drift apart by a few hundred acres because the reported number is rounded, updated
+     on a briefing cycle, and sometimes revised.`,
+    dip ? `<span class="caveat">The reported acreage went down once.</span> It fell from
+     ${fmtInt(dip.from)} to ${fmtInt(dip.to)} acres at ${pt(dip.row.as_of_ms)} — a drop of
+     ${fmtInt(dip.from - dip.to)}. Fires don't shrink: infrared mapping corrected an earlier
+     estimate. A growth curve that only ever rises has usually had this smoothed out of it.` : "",
+    `<b>Not every dot belongs to this fire.</b> The search box is a rectangle around the incident,
+     so anything else burning inside it shows up too — news reports describe lightning-ignited
+     fires on the north end near Red Mountain on July 25. Detections well outside the perimeter
+     should be read as "something was hot here", not as Rock Fire spread. Use
+     "Zoom out to all detections" to see the full box.`,
+    `<b>Containment is a percentage of edge, not of area.</b> ${S.current.pct_contained}% contained
+     means crews consider that share of the fire's boundary secured enough that it should not
+     spread past it. It says nothing about how much of the interior is still burning.`,
+    S.air?.peak_pm25 ? `<span class="caveat">The smoke got worse than the fire's own growth suggests.</span>
+     Fine-particle pollution peaked at <b>${S.air.peak_pm25.value} µg/m³</b> at
+     ${shortName(S.air.peak_pm25.site)}, ${S.air.peak_pm25.miles} miles
+     ${S.air.peak_pm25.bearing} of the fire, on ${pt(S.air.peak_pm25.at_ms)} — well into the
+     "${aqiBand(S.air.peak_pm25.value).name.toLowerCase()}" range — on a day the fire itself
+     added almost no acreage. Where smoke goes is a wind story, not an acreage story.` : "",
+    `<b>Grey plumes are drawn by a human, in daylight only.</b> NOAA analysts trace smoke by eye
+     from geostationary satellite images and grade it light, medium or heavy. Two consequences:
+     the ${S.smoke ? S.smoke.plume_count : 0} mapped plumes cover only about
+     ${smokeCoveragePct()}% of the hours here — there is no analysis at night, because visible
+     imagery shows nothing then — and they include <b>every</b> fire burning, not just this one.
+     The timeline shows "not analysed" rather than holding a stale plume on screen.`,
+    S.smoke?.continental_count ? `<b>${S.smoke.continental_count} continental smoke layers were
+     set aside.</b> Alongside fire-scale plumes, NOAA draws vast "light" sheets of smoke aloft —
+     some 100 to 150 degrees of longitude wide, blown in from fires thousands of miles away.
+     They sit over this fire almost every daylight hour and would tint the whole screen while
+     telling you nothing about it, so the map only draws plumes narrower than 20 degrees. They
+     are still counted here so their absence isn't silent.` : "",
+    `<b>PM2.5 is the smoke number; PM10 here mostly isn't.</b> Only
+     ${S.air ? S.air.reporting_pm25 : 0} of the ${S.air ? S.air.monitor_count : 0} monitors within
+     70 miles measure fine particles. Most of the rest are Owens Lake dust monitors that report
+     PM10, which in this valley is dominated by windblown alkali dust off the dry lake bed — a
+     poor proxy for smoke. They are listed in the table but kept off the chart.`,
+    `<b>The category bands grade 24-hour averages, not single hours.</b> EPA's air quality
+     categories are defined on daily averages, so an hourly reading landing in the "unhealthy"
+     band indicates conditions that hour rather than a published AQI for the day. The chart
+     plots the raw concentration for that reason.`,
+    `<b>The satellite feed is a rolling 7-day window.</b> Re-running <code>fetch.py</code> updates
+     everything, but detections older than a week are no longer available from that endpoint,
+     so the early days can only be re-fetched from NASA's archive service.`,
+  ].filter(Boolean);
+  $("notes").innerHTML = notes.map((n) => `<li>${n}</li>`).join("");
+
+  $("footer").innerHTML =
+    `Data fetched ${pt(Date.parse(S.meta.fetched_at))}. Sources: ` +
+    S.meta.sources.map((s) => `<a href="${s.url}">${s.name}</a>`).join(" · ") +
+    `. Incident page: <a href="${S.incident.calfire_url}">CAL FIRE</a>. ` +
+    `IRWIN id ${S.incident.irwin_id}. Built with MapLibre GL JS (BSD-3).`;
+}
+
+load().catch((e) => {
+  $("subtitle").innerHTML =
+    `<b style="color:#e66767">Could not load data:</b> ${e.message}. ` +
+    `Run <code>python3 fetch.py</code>, then serve this folder over http ` +
+    `(<code>python3 -m http.server 8000</code>) — opening the file directly blocks the data files.`;
+});
+</script>
+</body>
+</html>

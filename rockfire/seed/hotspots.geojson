@@ -1,0 +1,7133 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26273,
+     36.99172
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784625600000,
+    "at": "2026-07-21T02:20:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 10.7,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.25826,
+     36.99127
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784625600000,
+    "at": "2026-07-21T02:20:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 10.7,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26334,
+     36.98764
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784625600000,
+    "at": "2026-07-21T02:20:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 10.7,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27139,
+     36.96358
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784625600000,
+    "at": "2026-07-21T02:20:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 3.64,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27624,
+     36.95992
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784625600000,
+    "at": "2026-07-21T02:20:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 2.98,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27197,
+     36.95949
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784625600000,
+    "at": "2026-07-21T02:20:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 2.98,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27684,
+     36.95583
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784625600000,
+    "at": "2026-07-21T02:20:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 2.98,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27741,
+     36.95174
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784625600000,
+    "at": "2026-07-21T02:20:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 3.42,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27794,
+     36.94765
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784625600000,
+    "at": "2026-07-21T02:20:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 3.42,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28221,
+     36.94807
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784625600000,
+    "at": "2026-07-21T02:20:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 4.27,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.24324,
+     36.94008
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784625600000,
+    "at": "2026-07-21T02:20:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 1.3,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.24384,
+     36.936
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784625600000,
+    "at": "2026-07-21T02:20:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 1.3,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26519,
+     36.99249
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784627640000,
+    "at": "2026-07-21T02:54:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 5.13,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26092,
+     36.99181
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784627640000,
+    "at": "2026-07-21T02:54:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 5.81,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26598,
+     36.9892
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784627640000,
+    "at": "2026-07-21T02:54:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 18.68,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26172,
+     36.98853
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784627640000,
+    "at": "2026-07-21T02:54:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 5.83,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27243,
+     36.96292
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784627640000,
+    "at": "2026-07-21T02:54:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 2.77,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.2775,
+     36.96031
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784627640000,
+    "at": "2026-07-21T02:54:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 2.77,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27324,
+     36.95964
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784627640000,
+    "at": "2026-07-21T02:54:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 2.77,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27644,
+     36.95693
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784627640000,
+    "at": "2026-07-21T02:54:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.78,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27724,
+     36.95364
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784627640000,
+    "at": "2026-07-21T02:54:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.78,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.2815,
+     36.95432
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784627640000,
+    "at": "2026-07-21T02:54:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 2.6,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27803,
+     36.95036
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784627640000,
+    "at": "2026-07-21T02:54:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.67,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.2823,
+     36.95103
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784627640000,
+    "at": "2026-07-21T02:54:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.41,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28311,
+     36.94775
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784627640000,
+    "at": "2026-07-21T02:54:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.41,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27884,
+     36.94707
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784627640000,
+    "at": "2026-07-21T02:54:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.67,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.24548,
+     36.93839
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784627640000,
+    "at": "2026-07-21T02:54:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 0.83,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.24119,
+     36.93772
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784627640000,
+    "at": "2026-07-21T02:54:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 0.83,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.242,
+     36.93444
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784627640000,
+    "at": "2026-07-21T02:54:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 0.83,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26077,
+     36.99168
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784628780000,
+    "at": "2026-07-21T03:13:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 4.91,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26509,
+     36.9926
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784628780000,
+    "at": "2026-07-21T03:13:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 2.75,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.2664,
+     36.9887
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784628780000,
+    "at": "2026-07-21T03:13:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 8.7,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26206,
+     36.98779
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784628780000,
+    "at": "2026-07-21T03:13:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 15.4,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27447,
+     36.96536
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784628780000,
+    "at": "2026-07-21T03:13:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 2.16,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27001,
+     36.96441
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784628780000,
+    "at": "2026-07-21T03:13:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.25,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27587,
+     36.96148
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784628780000,
+    "at": "2026-07-21T03:13:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 2.16,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27138,
+     36.96052
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784628780000,
+    "at": "2026-07-21T03:13:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.25,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27724,
+     36.95759
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784628780000,
+    "at": "2026-07-21T03:13:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 2.97,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.2786,
+     36.95371
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784628780000,
+    "at": "2026-07-21T03:13:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 2.97,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28002,
+     36.94983
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784628780000,
+    "at": "2026-07-21T03:13:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 2.05,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28145,
+     36.94596
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784628780000,
+    "at": "2026-07-21T03:13:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 2.05,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.24209,
+     36.9375
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784628780000,
+    "at": "2026-07-21T03:13:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.07,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28387,
+     36.95767
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 47.03,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29944,
+     36.95303
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 88.68,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27852,
+     36.95926
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 47.03,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28909,
+     36.95611
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 65.33,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29427,
+     36.95457
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 65.33,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30459,
+     36.9515
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 88.68,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28098,
+     36.9655
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 47.03,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28619,
+     36.96395
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 47.03,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29659,
+     36.96086
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 65.33,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30179,
+     36.95931
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 88.68,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29139,
+     36.96241
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 65.33,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29429,
+     36.95591
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 79.33,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29944,
+     36.95435
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 79.33,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30457,
+     36.95279
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 133.67,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27858,
+     36.96067
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 38.06,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28389,
+     36.95906
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 77.7,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28911,
+     36.95748
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 77.7,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28624,
+     36.96534
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 77.7,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29659,
+     36.9622
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 79.33,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30177,
+     36.96063
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 79.33,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.2914,
+     36.96378
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 77.7,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30691,
+     36.95908
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 133.67,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29889,
+     36.9685
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 379.8,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30409,
+     36.96692
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 379.8,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30929,
+     36.96535
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 494.99,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.31693,
+     36.97003
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 494.99,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30656,
+     36.97317
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 379.8,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.31174,
+     36.9716
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784663580000,
+    "at": "2026-07-21T12:53:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 494.99,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28735,
+     36.96316
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 9.6,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.31031,
+     36.95901
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 15.25,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28829,
+     36.9666
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 9.91,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29287,
+     36.96577
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 11.71,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29745,
+     36.96494
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 11.71,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30665,
+     36.96328
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 2.98,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.31124,
+     36.96245
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 16.99,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.31582,
+     36.96162
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 16.99,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28922,
+     36.97004
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 9.91,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29379,
+     36.96921
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 11.71,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29839,
+     36.96838
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 11.71,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30297,
+     36.96755
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 2.98,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30758,
+     36.96672
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 2.98,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.31218,
+     36.96589
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 16.99,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.31676,
+     36.96507
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 16.99,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29932,
+     36.97182
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 7.26,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30392,
+     36.971
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 11.84,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30852,
+     36.97017
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 11.84,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.31311,
+     36.96933
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 30.08,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.31771,
+     36.9685
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 30.08,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30487,
+     36.97444
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 11.84,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30946,
+     36.9736
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 11.84,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.31866,
+     36.97194
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 30.08,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.31406,
+     36.97278
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 30.08,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30583,
+     36.97787
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 23.75,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.31041,
+     36.97705
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 23.75,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.3196,
+     36.97539
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 34.6,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.31499,
+     36.97622
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 34.6,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.32417,
+     36.97456
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 243.97,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.31135,
+     36.98049
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 23.75,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.31595,
+     36.97966
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 34.6,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.32053,
+     36.97883
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 34.6,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.32509,
+     36.97801
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784666400000,
+    "at": "2026-07-21T13:40:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 243.97,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28798,
+     36.98912
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 2.15,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28427,
+     36.98889
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 1.65,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28054,
+     36.98867
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 1.65,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27676,
+     36.98845
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 1.41,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26556,
+     36.98241
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 5.92,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28828,
+     36.98375
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 1.85,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.2846,
+     36.98354
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 1.47,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28093,
+     36.98332
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 1.47,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26951,
+     36.98264
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 5.92,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26153,
+     36.98217
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 5.31,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26208,
+     36.97683
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 5.31,
+    "confidence": "high",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.25799,
+     36.97659
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 5.31,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35606,
+     36.96614
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 1.71,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35356,
+     36.966
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 1.71,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35106,
+     36.96586
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 1.97,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34976,
+     36.95499
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 3.5,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34693,
+     36.95483
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 2.4,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35213,
+     36.94973
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 3.5,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.3549,
+     36.9499
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 4.55,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34905,
+     36.94957
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 3.5,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35092,
+     36.94428
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 4.48,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35092,
+     36.95189
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 2.41,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34796,
+     36.95171
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 2.41,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35298,
+     36.94662
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 11.01,
+    "confidence": "high",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35002,
+     36.94644
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784710800000,
+    "at": "2026-07-22T02:00:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 7.26,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28831,
+     36.99031
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.11,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28291,
+     36.98969
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.09,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27747,
+     36.98907
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.09,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26643,
+     36.98781
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 0.69,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28381,
+     36.98993
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 2.13,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27839,
+     36.98929
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.14,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28983,
+     36.9868
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 2.04,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28444,
+     36.98616
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 2.04,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27905,
+     36.98553
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 2.14,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26807,
+     36.98422
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 4.17,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26253,
+     36.98356
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 4.17,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26321,
+     36.9798
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 4.17,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.25762,
+     36.97914
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.01,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35435,
+     36.96746
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 2.75,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35098,
+     36.96321
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.84,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35218,
+     36.95566
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.53,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34741,
+     36.9551
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.24,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35253,
+     36.95185
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.53,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34764,
+     36.95128
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.24,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35282,
+     36.94804
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 6.83,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34772,
+     36.94744
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 0.83,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35282,
+     36.94419
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784712840000,
+    "at": "2026-07-22T02:34:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 6.83,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26507,
+     36.98571
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 3.25,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28713,
+     36.98951
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.16,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.2827,
+     36.98874
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.25,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27827,
+     36.98798
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.25,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26946,
+     36.98647
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.31,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26156,
+     36.98166
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 3.25,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28802,
+     36.98621
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.16,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28359,
+     36.98544
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.25,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26243,
+     36.97835
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.07,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.25806,
+     36.9776
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 0.76,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35311,
+     36.96688
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 3.54,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35102,
+     36.95622
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.1,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34643,
+     36.95544
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.34,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35199,
+     36.95294
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 3.08,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34743,
+     36.95216
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.11,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.353,
+     36.94967
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 3.08,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34849,
+     36.9489
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.11,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35403,
+     36.94641
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 3.29,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34953,
+     36.94564
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784714160000,
+    "at": "2026-07-22T02:56:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.01,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.26522,
+     36.97815
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784716860000,
+    "at": "2026-07-22T03:41:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 0.99,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.33704,
+     36.94904
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784751660000,
+    "at": "2026-07-22T13:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 90.67,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34935,
+     36.94629
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784751660000,
+    "at": "2026-07-22T13:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 104.46,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34106,
+     36.94814
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784751660000,
+    "at": "2026-07-22T13:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 152.33,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34703,
+     36.96515
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784751660000,
+    "at": "2026-07-22T13:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 39.68,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35479,
+     36.96341
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784751660000,
+    "at": "2026-07-22T13:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 12.14,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34737,
+     36.96965
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784751660000,
+    "at": "2026-07-22T13:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 39.68,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35102,
+     36.96884
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784751660000,
+    "at": "2026-07-22T13:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 39.68,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35474,
+     36.96801
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784751660000,
+    "at": "2026-07-22T13:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 12.14,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34554,
+     36.96663
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784751660000,
+    "at": "2026-07-22T13:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 40.69,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34933,
+     36.96577
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784751660000,
+    "at": "2026-07-22T13:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 40.69,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35318,
+     36.9649
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784751660000,
+    "at": "2026-07-22T13:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 20.35,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35711,
+     36.964
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784751660000,
+    "at": "2026-07-22T13:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 20.35,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34957,
+     36.97031
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784751660000,
+    "at": "2026-07-22T13:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 40.69,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35051,
+     36.94271
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784753700000,
+    "at": "2026-07-22T13:55:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 21.13,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.33891,
+     36.94811
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784753700000,
+    "at": "2026-07-22T13:55:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 52.53,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34309,
+     36.94741
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784753700000,
+    "at": "2026-07-22T13:55:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 14.43,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35562,
+     36.94532
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784753700000,
+    "at": "2026-07-22T13:55:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 21.13,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.33571,
+     36.95211
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784753700000,
+    "at": "2026-07-22T13:55:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 31.15,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34686,
+     36.9655
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784753700000,
+    "at": "2026-07-22T13:55:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 20.06,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34753,
+     36.96885
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784753700000,
+    "at": "2026-07-22T13:55:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 80.01,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35277,
+     36.96988
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784796060000,
+    "at": "2026-07-23T01:41:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 2.09,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35284,
+     36.96947
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784796060000,
+    "at": "2026-07-23T01:41:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 8.05,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35966,
+     36.96273
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784796060000,
+    "at": "2026-07-23T01:41:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 19.81,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35546,
+     36.96265
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784796060000,
+    "at": "2026-07-23T01:41:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 8.05,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.36048,
+     36.95586
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784796060000,
+    "at": "2026-07-23T01:41:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 18.6,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.356,
+     36.95578
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784796060000,
+    "at": "2026-07-23T01:41:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 15.92,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35168,
+     36.9557
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784796060000,
+    "at": "2026-07-23T01:41:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 15.92,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35175,
+     36.96925
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 2.31,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35783,
+     36.96476
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 23.06,
+    "confidence": "high",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35338,
+     36.96442
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 2.31,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35439,
+     36.95955
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 5.83,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35918,
+     36.9599
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 9.48,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34972,
+     36.9592
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 5.83,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34499,
+     36.95885
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.73,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35966,
+     36.95499
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 9.48,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35474,
+     36.95462
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 5.83,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34994,
+     36.95427
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 5.83,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35585,
+     36.96804
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 3.86,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35773,
+     36.96325
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 9.82,
+    "confidence": "high",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35323,
+     36.96289
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 9.82,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35382,
+     36.95799
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 9.82,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35861,
+     36.95837
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 9.82,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34912,
+     36.95762
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 4.51,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35889,
+     36.95344
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 8.69,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35403,
+     36.95306
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784798100000,
+    "at": "2026-07-23T02:15:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 8.69,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35565,
+     36.96815
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.82,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35156,
+     36.96761
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.82,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35671,
+     36.96468
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 8.09,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35255,
+     36.96414
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 8.09,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35761,
+     36.9612
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 8.09,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35334,
+     36.96064
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 8.09,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34907,
+     36.96009
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.45,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34473,
+     36.95953
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.45,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35761,
+     36.96447
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 13.58,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35342,
+     36.96393
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 4.59,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35423,
+     36.96045
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 4.59,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35852,
+     36.961
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 13.58,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34994,
+     36.95989
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 4.59,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34563,
+     36.95932
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.9,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.3592,
+     36.9575
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 5.73,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35486,
+     36.95693
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 6.8,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35054,
+     36.95637
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 6.8,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.3598,
+     36.95398
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 5.73,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.3554,
+     36.95341
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 6.8,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35182,
+     36.94575
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784799420000,
+    "at": "2026-07-23T02:37:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 2.33,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35241,
+     36.96279
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784802060000,
+    "at": "2026-07-23T03:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 6.1,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.36433,
+     36.96559
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784802060000,
+    "at": "2026-07-23T03:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 6.1,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.36402,
+     36.96061
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784802060000,
+    "at": "2026-07-23T03:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 9.48,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35474,
+     36.95841
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784802060000,
+    "at": "2026-07-23T03:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 9.48,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.3576,
+     36.95417
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784802060000,
+    "at": "2026-07-23T03:21:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 9.48,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.38558,
+     36.96363
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784804280000,
+    "at": "2026-07-23T03:58:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 3.67,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35986,
+     36.95576
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784804280000,
+    "at": "2026-07-23T03:58:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 3.67,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.38194,
+     36.96271
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784804280000,
+    "at": "2026-07-23T03:58:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 5.32,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35648,
+     36.95512
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784804280000,
+    "at": "2026-07-23T03:58:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 5.5,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.34199,
+     36.94584
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784836920000,
+    "at": "2026-07-23T13:02:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 6.56,
+    "confidence": "low",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.3542,
+     36.94855
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784836920000,
+    "at": "2026-07-23T13:02:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 8.73,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35669,
+     36.95387
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784836920000,
+    "at": "2026-07-23T13:02:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 34.3,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35374,
+     36.95465
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784836920000,
+    "at": "2026-07-23T13:02:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 19.99,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35956,
+     36.95309
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784836920000,
+    "at": "2026-07-23T13:02:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 34.3,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35526,
+     36.96024
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784836920000,
+    "at": "2026-07-23T13:02:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 19.99,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35229,
+     36.96103
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784836920000,
+    "at": "2026-07-23T13:02:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 19.99,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35826,
+     36.95943
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784836920000,
+    "at": "2026-07-23T13:02:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 34.3,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.36131,
+     36.95862
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784836920000,
+    "at": "2026-07-23T13:02:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 34.3,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35323,
+     36.94726
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784836920000,
+    "at": "2026-07-23T13:02:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 8.48,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35579,
+     36.95256
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784836920000,
+    "at": "2026-07-23T13:02:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 8.48,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35853,
+     36.95181
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784836920000,
+    "at": "2026-07-23T13:02:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 8.48,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.3546,
+     36.95888
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784836920000,
+    "at": "2026-07-23T13:02:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 30.59,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35759,
+     36.95807
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784836920000,
+    "at": "2026-07-23T13:02:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 79.04,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35516,
+     36.96473
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784836920000,
+    "at": "2026-07-23T13:02:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 30.59,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35825,
+     36.96388
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784836920000,
+    "at": "2026-07-23T13:02:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 79.04,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.3522,
+     36.9446
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784839080000,
+    "at": "2026-07-23T13:38:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 5.77,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35519,
+     36.95233
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784839080000,
+    "at": "2026-07-23T13:38:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 35.33,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35849,
+     36.95163
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784839080000,
+    "at": "2026-07-23T13:38:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 35.33,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35303,
+     36.95695
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784839080000,
+    "at": "2026-07-23T13:38:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 13.01,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35643,
+     36.95624
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784839080000,
+    "at": "2026-07-23T13:38:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 35.33,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35742,
+     36.96021
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784839080000,
+    "at": "2026-07-23T13:38:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 24.89,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35403,
+     36.96092
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784839080000,
+    "at": "2026-07-23T13:38:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 35.52,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35799,
+     36.96427
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784839080000,
+    "at": "2026-07-23T13:38:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 24.89,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35453,
+     36.96499
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784839080000,
+    "at": "2026-07-23T13:38:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 35.52,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35465,
+     36.96914
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784839080000,
+    "at": "2026-07-23T13:38:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 10.32,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.358,
+     36.96844
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784839080000,
+    "at": "2026-07-23T13:38:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 16.48,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35184,
+     36.94609
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784840100000,
+    "at": "2026-07-23T13:55:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 7.31,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35764,
+     36.95198
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784840100000,
+    "at": "2026-07-23T13:55:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 12.39,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35415,
+     36.9559
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784840100000,
+    "at": "2026-07-23T13:55:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 12.39,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35842,
+     36.95525
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784840100000,
+    "at": "2026-07-23T13:55:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 12.39,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35571,
+     36.96243
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784840100000,
+    "at": "2026-07-23T13:55:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 71.98,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35648,
+     36.9657
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784840100000,
+    "at": "2026-07-23T13:55:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 95.58,
+    "confidence": "high",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35222,
+     36.96635
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784840100000,
+    "at": "2026-07-23T13:55:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 25.2,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.3633,
+     36.97139
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784883480000,
+    "at": "2026-07-24T01:58:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 0.92,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.36312,
+     36.965
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784883480000,
+    "at": "2026-07-24T01:58:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 3.27,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35953,
+     36.96488
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784883480000,
+    "at": "2026-07-24T01:58:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.87,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.36129,
+     36.95856
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784883480000,
+    "at": "2026-07-24T01:58:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.87,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35742,
+     36.95843
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784883480000,
+    "at": "2026-07-24T01:58:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 1.87,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.36042,
+     36.96279
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784883480000,
+    "at": "2026-07-24T01:58:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 2.56,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.36134,
+     36.95645
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784883480000,
+    "at": "2026-07-24T01:58:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 2.56,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35747,
+     36.9563
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784883480000,
+    "at": "2026-07-24T01:58:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 3.73,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.36256,
+     36.96885
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784884620000,
+    "at": "2026-07-24T02:17:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.33,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35883,
+     36.96852
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784884620000,
+    "at": "2026-07-24T02:17:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.33,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.36189,
+     36.95974
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784884620000,
+    "at": "2026-07-24T02:17:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 2.93,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35771,
+     36.95938
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784884620000,
+    "at": "2026-07-24T02:17:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 3.45,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35947,
+     36.97023
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784884620000,
+    "at": "2026-07-24T02:17:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.55,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.3612,
+     36.96588
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784884620000,
+    "at": "2026-07-24T02:17:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.89,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35733,
+     36.96553
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784884620000,
+    "at": "2026-07-24T02:17:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.89,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35934,
+     36.95668
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784884620000,
+    "at": "2026-07-24T02:17:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 5.12,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35516,
+     36.9563
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784884620000,
+    "at": "2026-07-24T02:17:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 2.42,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35897,
+     36.96791
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784887440000,
+    "at": "2026-07-24T03:04:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 1.72,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35932,
+     36.96418
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784887440000,
+    "at": "2026-07-24T03:04:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 2.92,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.36759,
+     36.95816
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784887440000,
+    "at": "2026-07-24T03:04:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 2.45,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.36134,
+     36.95695
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784887440000,
+    "at": "2026-07-24T03:04:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 2.32,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.355,
+     36.95573
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784887440000,
+    "at": "2026-07-24T03:04:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 2.32,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.36148,
+     36.96645
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784889480000,
+    "at": "2026-07-24T03:38:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 0.93,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.3633,
+     36.95598
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784889480000,
+    "at": "2026-07-24T03:38:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 0.98,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.3574,
+     36.95444
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784889480000,
+    "at": "2026-07-24T03:38:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 0.98,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.37154,
+     36.96166
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784889480000,
+    "at": "2026-07-24T03:38:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 2.59,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.36275,
+     36.95399
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784889480000,
+    "at": "2026-07-24T03:38:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 2.17,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.35979,
+     36.95564
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784924340000,
+    "at": "2026-07-24T13:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 8.77,
+    "confidence": "nominal",
+    "daynight": "D"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28545,
+     37.02748
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.97,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28123,
+     37.02728
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 1.91,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27921,
+     37.00968
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 3.52,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.2979,
+     37.00471
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 5.86,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30235,
+     37.00492
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 5.86,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29343,
+     37.00451
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 5.04,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27978,
+     37.00387
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 3.52,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27515,
+     37.00365
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 3.16,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.2983,
+     36.9989
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 15.9,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29386,
+     36.99869
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 10.18,
+    "confidence": "high",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28935,
+     36.99849
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 10.18,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.2803,
+     36.99807
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 19.15,
+    "confidence": "high",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27572,
+     36.99785
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 13.02,
+    "confidence": "high",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28484,
+     36.99828
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 19.15,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27105,
+     36.99763
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 13.02,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.2853,
+     36.99246
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 19.15,
+    "confidence": "high",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28082,
+     36.99225
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 19.15,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28978,
+     36.99267
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 10.18,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27627,
+     36.99205
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 13.02,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27998,
+     37.00996
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 2.69,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29861,
+     37.0051
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 6.57,
+    "confidence": "high",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29414,
+     37.00487
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 6.57,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28053,
+     37.00415
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 2.69,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27592,
+     37.00392
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 2.69,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29899,
+     36.99928
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 12.62,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29456,
+     36.99905
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 12.62,
+    "confidence": "high",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29008,
+     36.99882
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 12.25,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28104,
+     36.99835
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 23.97,
+    "confidence": "high",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27646,
+     36.99811
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 23.97,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27181,
+     36.99787
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 16.72,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28557,
+     36.99858
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 12.25,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.286,
+     36.99277
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 12.25,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28152,
+     36.99254
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 23.97,
+    "confidence": "high",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27699,
+     36.99231
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784969880000,
+    "at": "2026-07-25T01:58:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 23.97,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28237,
+     37.02431
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 1.78,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27948,
+     37.00932
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 4.01,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27523,
+     37.00866
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 3.37,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27602,
+     37.0054
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 3.37,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29803,
+     37.0054
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 11.86,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27679,
+     37.00214
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 4.82,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29881,
+     37.00214
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 11.86,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29456,
+     37.00148
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 7.67,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27332,
+     36.99821
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 4.82,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27757,
+     36.99887
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 4.82,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29958,
+     36.99887
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 6.93,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29534,
+     36.99822
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 11.64,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29109,
+     36.99757
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 11.64,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27836,
+     36.99561
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 9.67,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27411,
+     36.99495
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 9.67,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28684,
+     36.99691
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 5.48,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28259,
+     36.99626
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 5.48,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29189,
+     36.9943
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 11.64,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28764,
+     36.99365
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 5.48,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28339,
+     36.993
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 5.48,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27914,
+     36.99234
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784972580000,
+    "at": "2026-07-25T02:43:00-07:00",
+    "satellite": "NOAA-21",
+    "frp": 9.67,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28314,
+     37.02464
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 0.91,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27344,
+     37.00996
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 6.71,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27921,
+     37.007
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 6.71,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27474,
+     37.00604
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 6.71,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27606,
+     37.00212
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 3.43,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29987,
+     37.00306
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 8.77,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29535,
+     37.00208
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 8.77,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27295,
+     36.99725
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 9.43,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.2774,
+     36.99821
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 3.43,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29673,
+     36.99818
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 13.2,
+    "confidence": "high",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29222,
+     36.99721
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 6.92,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27872,
+     36.9943
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 8.65,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30131,
+     36.99916
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 13.2,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28773,
+     36.99624
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 6.92,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28322,
+     36.99526
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 8.65,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27428,
+     36.99333
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 3.86,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28461,
+     36.99136
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 8.65,
+    "confidence": "high",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28009,
+     36.99038
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 8.65,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29363,
+     36.99331
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 6.92,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28914,
+     36.99234
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784974740000,
+    "at": "2026-07-25T03:19:00-07:00",
+    "satellite": "Suomi NPP",
+    "frp": 6.92,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27772,
+     37.01089
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784975880000,
+    "at": "2026-07-25T03:38:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 3.83,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27283,
+     37.00955
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784975880000,
+    "at": "2026-07-25T03:38:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 3.01,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27511,
+     37.01102
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784975880000,
+    "at": "2026-07-25T03:38:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 2.46,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27747,
+     37.00571
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784975880000,
+    "at": "2026-07-25T03:38:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 6.52,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.30009,
+     37.00587
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784975880000,
+    "at": "2026-07-25T03:38:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 4.83,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27493,
+     36.99908
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784975880000,
+    "at": "2026-07-25T03:38:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 5.9,
+    "confidence": "high",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29495,
+     37.00449
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784975880000,
+    "at": "2026-07-25T03:38:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 4.58,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27007,
+     36.99777
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784975880000,
+    "at": "2026-07-25T03:38:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 5.9,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29759,
+     36.99926
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784975880000,
+    "at": "2026-07-25T03:38:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 9.95,
+    "confidence": "high",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.29247,
+     36.99788
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784975880000,
+    "at": "2026-07-25T03:38:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 9.95,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28741,
+     36.99651
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784975880000,
+    "at": "2026-07-25T03:38:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 8.52,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28235,
+     36.99514
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784975880000,
+    "at": "2026-07-25T03:38:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 8.52,
+    "confidence": "high",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.27735,
+     36.99379
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784975880000,
+    "at": "2026-07-25T03:38:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 12.86,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.3028,
+     37.00066
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784975880000,
+    "at": "2026-07-25T03:38:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 5.93,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.28494,
+     36.98989
+    ]
+   },
+   "properties": {
+    "ts_ms": 1784975880000,
+    "at": "2026-07-25T03:38:00-07:00",
+    "satellite": "NOAA-20",
+    "frp": 8.52,
+    "confidence": "nominal",
+    "daynight": "N"
+   }
+  }
+ ]
+}

@@ -1,0 +1,139 @@
+name: Rock Fire tracker (/rockfire)
+
+# Refreshes the Rock Fire page's data every hour and publishes it to S3.
+#
+# The fetch is stateful on purpose. NASA FIRMS only serves the last seven days
+# of satellite detections, and AirNow serves one ~1 MB file per hour, so the
+# job pulls the previous run's hotspots.geojson and airquality.json down from
+# S3 first. fetch.py merges into them: detections accumulate rather than aging
+# out, and only the newly available AirNow hours get downloaded.
+
+on:
+  schedule:
+    # :17 past the hour — off the top-of-hour rush, when GitHub delays runs most.
+    - cron: "17 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [master, main]
+    paths:
+      - "rockfire/**"
+      - ".github/workflows/rockfire.yml"
+
+concurrency:
+  # Overlapping runs would race on the same S3 objects and could lose merged
+  # history, so let an in-flight run finish rather than cancelling it.
+  group: rockfire-publish
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: us-west-1
+  S3_BUCKET: rick-portfolio-2025
+  CLOUDFRONT_DISTRIBUTION_ID: E3HT67NT39EUN4
+  PREFIX: rockfire
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Restore accumulated state
+        run: |
+          mkdir -p rockfire/data
+          for f in hotspots.geojson airquality.json; do
+            if aws s3 cp "s3://$S3_BUCKET/$PREFIX/data/$f" "rockfire/data/$f" 2>/dev/null; then
+              echo "restored $f from S3"
+            elif [ -f "rockfire/seed/$f" ]; then
+              cp "rockfire/seed/$f" "rockfire/data/$f"
+              echo "no published $f yet — bootstrapped from seed/"
+            else
+              echo "no $f anywhere; fetch will build it from scratch"
+            fi
+          done
+
+      - name: Fetch data
+        run: python3 rockfire/fetch.py
+
+      - name: Sanity-check what we're about to publish
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, sys
+          d = pathlib.Path("rockfire/data")
+          stats = json.loads((d / "stats.json").read_text())
+          perims = json.loads((d / "perimeters.geojson").read_text())
+          hots = json.loads((d / "hotspots.geojson").read_text())
+          # Refuse to publish a page that would render empty or wrong. Failing
+          # here leaves the previous hour's data live, which is the safe state.
+          problems = []
+          if not perims["features"]:
+              problems.append("no perimeter polygons")
+          if not hots["features"]:
+              problems.append("no satellite detections")
+          if not stats.get("series"):
+              problems.append("empty acreage/containment series")
+          if stats["timeline"]["end_ms"] <= stats["timeline"]["start_ms"]:
+              problems.append("timeline start is not before end")
+          if problems:
+              sys.exit("refusing to publish: " + "; ".join(problems))
+          print(f"{len(perims['features'])} perimeters, {len(hots['features'])} detections, "
+                f"{len(stats['series'])} stat rows, "
+                f"{stats['current']['acres']} acres, {stats['current']['pct_contained']}% contained")
+          air = stats.get("air") or {}
+          peak = air.get("peak_pm25")
+          if peak:
+              print(f"peak PM2.5 {peak['value']} ug/m3 at {peak['site']}")
+          PY
+
+      - name: Publish data
+        run: |
+          # Short TTL: the data changes hourly and is small.
+          aws s3 sync rockfire/data/ "s3://$S3_BUCKET/$PREFIX/data/" \
+            --delete \
+            --cache-control "public, max-age=120" \
+            --content-type "application/json"
+
+      - name: Publish page assets
+        run: |
+          aws s3 cp rockfire/index.html "s3://$S3_BUCKET/$PREFIX/index.html" \
+            --content-type "text/html" --cache-control "public, max-age=300"
+          # The extensionless key answers /rockfire (no trailing slash) with a
+          # redirect stub rather than the page itself: index.html uses relative
+          # asset paths, which only resolve from /rockfire/.
+          aws s3 cp rockfire/redirect.html "s3://$S3_BUCKET/$PREFIX" \
+            --content-type "text/html" --cache-control "public, max-age=3600"
+          aws s3 cp rockfire/vendor/maplibre-gl.js "s3://$S3_BUCKET/$PREFIX/vendor/maplibre-gl.js" \
+            --content-type "application/javascript" --cache-control "public, max-age=604800"
+          aws s3 cp rockfire/vendor/maplibre-gl.css "s3://$S3_BUCKET/$PREFIX/vendor/maplibre-gl.css" \
+            --content-type "text/css" --cache-control "public, max-age=604800"
+
+      - name: Invalidate CloudFront
+        run: |
+          # One wildcard path per run keeps this inside the free invalidation
+          # tier. Assets carry long TTLs, so only clear them on a real change.
+          PATHS="/$PREFIX/data/*"
+          if [ "${{ github.event_name }}" != "schedule" ]; then
+            PATHS="$PATHS /$PREFIX /$PREFIX/index.html /$PREFIX/vendor/*"
+          fi
+          aws cloudfront create-invalidation \
+            --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
+            --paths $PATHS
+
+      - name: Summary
+        run: |
+          {
+            echo "### Rock Fire tracker published"
+            echo ""
+            echo "<https://rickrothbart.com/rockfire>"
+            echo ""
+            echo '```'
+            ls -la rockfire/data/
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

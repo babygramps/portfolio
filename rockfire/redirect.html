@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!--
+  Published to the extensionless S3 key "rockfire", so https://rickrothbart.com/rockfire
+  lands here and bounces to the trailing-slash URL. The page itself uses relative
+  asset paths, which only resolve correctly from /rockfire/ — and this stub keeps
+  index.html byte-identical to the source repo, with no build-time path rewriting
+  and no <base> tag racing the browser's preload scanner.
+-->
+<title>Rock Fire — how it spread</title>
+<link rel="canonical" href="https://rickrothbart.com/rockfire/">
+<meta http-equiv="refresh" content="0; url=/rockfire/">
+<script>location.replace("/rockfire/" + location.search + location.hash);</script>
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center;
+         background: #0d0d0d; color: #c3c2b7;
+         font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  a { color: #3987e5; }
+</style>
+</head>
+<body>
+  <p>Taking you to <a href="/rockfire/">the Rock Fire tracker</a>&hellip;</p>
+</body>
+</html>
