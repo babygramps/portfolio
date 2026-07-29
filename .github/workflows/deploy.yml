@@ -144,6 +144,24 @@ jobs:
           echo "No makeitrain/ directory found, skipping"
         fi
 
+    - name: Deploy Fieldhouse restroom-booking app to /toilet/
+      run: |
+        if [ -d toilet ]; then
+          # Single self-contained index.html built from toilet-src/ by
+          # `npm run build` and committed — CI does not build it. Because the CSS
+          # and JS are inlined there are no separate asset URLs for Cloudflare to
+          # cache independently of the page.
+          aws s3 sync toilet/ s3://${{ env.S3_BUCKET }}/toilet/ --delete
+
+          # Also serve the app at the extensionless /toilet key so the path
+          # resolves whether or not the origin handles directory indexes
+          aws s3 cp toilet/index.html s3://${{ env.S3_BUCKET }}/toilet --content-type "text/html"
+
+          echo "✅ Fieldhouse app deployed to /toilet/"
+        else
+          echo "No toilet/ directory found, skipping"
+        fi
+
     - name: Deploy BBQ shared-board backend (Lambda + DynamoDB)
       run: |
         if [ ! -d board-lambda ]; then echo "No board-lambda/, skipping"; exit 0; fi
