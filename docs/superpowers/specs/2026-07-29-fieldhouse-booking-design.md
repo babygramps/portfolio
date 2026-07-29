@@ -116,8 +116,17 @@ Two deliberate consequences:
    invalidation cannot reach it; a raced deploy left it serving HTML under asset
    URLs with `max-age=14400`. With no separate asset URLs, that failure mode does
    not exist here.
-2. **Total bundle target under 400 KB.** Enforced by having no photography (see
-   §2.4) and no charting or map library.
+2. **Bundle budget: no binary assets, and no third-party library beyond React.**
+   Stated originally as "under 400 KB", which was a proxy for "no photography".
+   The built page is **425 KB raw / 117 KB gzip**: React and ReactDOM are an
+   immovable 137 KB, the stylesheet 47 KB, and the remaining ~240 KB is almost
+   entirely page prose — the published rate card, the off-grid FAQ answers and the
+   per-zone coverage statements, all of which §6 requires and which are the
+   product. Measured: build-flag tuning recovers about 1 KB, so the only lever is
+   deleting copy. The budget is therefore expressed as the rule it was always
+   standing in for: zero image bytes, zero fonts, no map or charting library, and
+   nothing fetched at runtime. `build.mjs` still prints the KB size on every build
+   so a regression is visible.
 
 ### Deploy
 

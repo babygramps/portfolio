@@ -58,3 +58,8 @@ start-local.ps1
 # via the node_modules/ rule).
 !colorku-src/package.json
 !colorku-src/package-lock.json
+
+# Same for the Fieldhouse (/toilet) build tooling. toilet/index.html is the
+# committed artifact, so package.json must be tracked or it can't be rebuilt.
+!toilet-src/package.json
+!toilet-src/package-lock.json
