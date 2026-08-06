@@ -1,27 +1,20 @@
-name: Rock Fire tracker (/rockfire)
+name: Rock Fire tracker teardown (/rockfire)
 
-# Refreshes the Rock Fire page's data every hour and publishes it to S3.
-#
-# The fetch is stateful on purpose. NASA FIRMS only serves the last seven days
-# of satellite detections, and AirNow serves one ~1 MB file per hour, so the
-# job pulls the previous run's hotspots.geojson and airquality.json down from
-# S3 first. fetch.py merges into them: detections accumulate rather than aging
-# out, and only the newly available AirNow hours get downloaded.
+# One-shot removal of the retired Rock Fire tracker. Runs from Actions because
+# local AWS credentials cannot write to this bucket. The accumulated data files
+# were backed up to the rock-fire-viz repo (data/s3-final/) before this ran.
+# Delete this workflow file once the run has succeeded.
 
 on:
-  schedule:
-    # :17 past the hour — off the top-of-hour rush, when GitHub delays runs most.
-    - cron: "17 * * * *"
   workflow_dispatch:
   push:
     branches: [master, main]
     paths:
-      - "rockfire/**"
       - ".github/workflows/rockfire.yml"
 
 concurrency:
-  # Overlapping runs would race on the same S3 objects and could lose merged
-  # history, so let an in-flight run finish rather than cancelling it.
+  # Same group as the old hourly publish job so a straggling scheduled run
+  # can't re-upload data after the teardown deletes it.
   group: rockfire-publish
   cancel-in-progress: false
 
@@ -32,12 +25,10 @@ env:
   PREFIX: rockfire
 
 jobs:
-  publish:
+  teardown:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -45,150 +36,34 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Restore accumulated state
+      - name: Delete /rockfire from S3
         run: |
-          mkdir -p rockfire/data
-          for f in hotspots.geojson airquality.json; do
-            if aws s3 cp "s3://$S3_BUCKET/$PREFIX/data/$f" "rockfire/data/$f" 2>/dev/null; then
-              echo "restored $f from S3"
-            elif [ -f "rockfire/seed/$f" ]; then
-              cp "rockfire/seed/$f" "rockfire/data/$f"
-              echo "no published $f yet — bootstrapped from seed/"
-            else
-              echo "no $f anywhere; fetch will build it from scratch"
-            fi
-          done
-
-      - name: Fetch data
-        run: python3 rockfire/fetch.py
-
-      - name: Sanity-check what we're about to publish
-        run: |
-          python3 - <<'PY'
-          import json, pathlib, sys
-          d = pathlib.Path("rockfire/data")
-          stats = json.loads((d / "stats.json").read_text())
-          perims = json.loads((d / "perimeters.geojson").read_text())
-          hots = json.loads((d / "hotspots.geojson").read_text())
-          # Refuse to publish a page that would render empty or wrong. Failing
-          # here leaves the previous hour's data live, which is the safe state.
-          problems = []
-          if not perims["features"]:
-              problems.append("no perimeter polygons")
-          if not hots["features"]:
-              problems.append("no satellite detections")
-          if not stats.get("series"):
-              problems.append("empty acreage/containment series")
-          if stats["timeline"]["end_ms"] <= stats["timeline"]["start_ms"]:
-              problems.append("timeline start is not before end")
-          if problems:
-              sys.exit("refusing to publish: " + "; ".join(problems))
-          print(f"{len(perims['features'])} perimeters, {len(hots['features'])} detections, "
-                f"{len(stats['series'])} stat rows, "
-                f"{stats['current']['acres']} acres, {stats['current']['pct_contained']}% contained")
-          air = stats.get("air") or {}
-          peak = air.get("peak_pm25")
-          if peak:
-              print(f"peak PM2.5 {peak['value']} ug/m3 at {peak['site']}")
-          PY
-
-      - name: Publish data
-        run: |
-          # Short TTL: the data changes hourly and is small.
-          aws s3 sync rockfire/data/ "s3://$S3_BUCKET/$PREFIX/data/" \
-            --delete \
-            --cache-control "public, max-age=120" \
-            --content-type "application/json"
-
-      - name: Publish page assets
-        # Vendor files go up BEFORE index.html. The page is useless without
-        # them, and this origin answers a missing key with the site homepage at
-        # status 200 -- so a half-finished upload would publish a page that
-        # silently loads HTML where its map library should be.
-        #
-        # Explicit CLI timeouts: an earlier run stalled here for ten minutes on
-        # a one-megabyte PUT. Better to fail fast and retry than to hold the
-        # job open.
-        env:
-          AWS_RETRY_MODE: standard
-          AWS_MAX_ATTEMPTS: "5"
-        run: |
-          cp() {
-            aws --cli-connect-timeout 15 --cli-read-timeout 120 \
-              s3 cp "$1" "s3://$S3_BUCKET/$2" --only-show-errors \
-              --content-type "$3" --cache-control "$4"
-            echo "  uploaded $2"
-          }
-          # Version-stamped and immutable: Cloudflare fronts this site and caches
-          # .js/.css by URL for hours, so a URL that never changes content can be
-          # cached hard, and one that does change gets a new name instead.
-          cp rockfire/vendor/maplibre-gl-5.6.0.js  "$PREFIX/vendor/maplibre-gl-5.6.0.js" \
-             "application/javascript" "public, max-age=31536000, immutable"
-          cp rockfire/vendor/maplibre-gl-5.6.0.css "$PREFIX/vendor/maplibre-gl-5.6.0.css" \
-             "text/css" "public, max-age=31536000, immutable"
-          # The extensionless key answers /rockfire (no trailing slash) with a
-          # redirect stub rather than the page itself: index.html uses relative
-          # asset paths, which only resolve from /rockfire/.
-          cp rockfire/redirect.html "$PREFIX" "text/html" "public, max-age=3600"
-          # One-time tidy-up of the pre-versioning asset keys. They are unused,
-          # and Cloudflare has HTML cached under them. Safe to delete this once
-          # no cached copy of the old index.html can still be asking for them.
-          aws s3 rm "s3://$S3_BUCKET/$PREFIX/vendor/maplibre-gl.js" --only-show-errors || true
-          aws s3 rm "s3://$S3_BUCKET/$PREFIX/vendor/maplibre-gl.css" --only-show-errors || true
-          cp rockfire/index.html "$PREFIX/index.html" "text/html" "public, max-age=300"
+          # The extensionless redirect key first, then everything under the prefix.
+          aws s3 rm "s3://$S3_BUCKET/$PREFIX" --only-show-errors || true
+          aws s3 rm "s3://$S3_BUCKET/$PREFIX/" --recursive --only-show-errors
+          echo "remaining keys under $PREFIX/ (should be none):"
+          aws s3 ls "s3://$S3_BUCKET/$PREFIX/" --recursive || true
 
       - name: Invalidate CloudFront
         run: |
-          # One wildcard path per run keeps this inside the free invalidation
-          # tier. Assets carry long TTLs, so only clear them on a real change.
-          PATHS="/$PREFIX/data/*"
-          if [ "${{ github.event_name }}" != "schedule" ]; then
-            PATHS="$PATHS /$PREFIX /$PREFIX/index.html /$PREFIX/vendor/*"
-          fi
           aws cloudfront create-invalidation \
             --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
-            --paths $PATHS
+            --paths "/$PREFIX*"
 
-      - name: Verify what visitors will actually get
+      - name: Verify removal at the S3 origin
         run: |
-          # This origin returns its homepage, at status 200, for any key that is
-          # missing -- so "HTTP 200" proves nothing. Check content types and
-          # sizes against the origin directly, bypassing the CDN.
+          # The website origin genuinely 404s on missing keys (unlike the CDN,
+          # which serves the homepage at 200), so 404 here proves deletion.
           ORIGIN="http://$S3_BUCKET.s3-website-$AWS_REGION.amazonaws.com"
           fail=0
-          check() {
-            # Pipe-delimited because content types carry "; charset=..."; parsed
-            # with cut rather than `read`, which returns non-zero at EOF and
-            # would abort this step under `bash -e`.
-            out=$(curl -sL -o /dev/null \
-              -w "%{http_code}|%{content_type}|%{size_download}" "$ORIGIN/$1")
-            code=${out%%|*}; rest=${out#*|}; type=${rest%%|*}; len=${rest##*|}
-            if [ "$code" != "200" ] || [[ "$type" != *"$2"* ]] || [ "$len" -lt "$3" ]; then
-              echo "  FAIL $1 -> $code $type ${len}B (wanted $2, >=${3}B)"
-              fail=1
+          for k in "$PREFIX" "$PREFIX/index.html" "$PREFIX/data/stats.json" \
+                   "$PREFIX/vendor/maplibre-gl-5.6.0.js"; do
+            code=$(curl -sL -o /dev/null -w "%{http_code}" "$ORIGIN/$k")
+            if [ "$code" = "404" ]; then
+              echo "  gone: $k"
             else
-              echo "  ok   $1 -> $type ${len}B"
+              echo "  STILL PRESENT ($code): $k"
+              fail=1
             fi
-          }
-          check "$PREFIX/index.html"             "text/html"  20000
-          check "$PREFIX/vendor/maplibre-gl-5.6.0.js"  "javascript" 500000
-          check "$PREFIX/vendor/maplibre-gl-5.6.0.css" "css"        20000
-          check "$PREFIX/data/stats.json"        "json"       1000
-          check "$PREFIX/data/perimeters.geojson" "json"      10000
-          check "$PREFIX/data/hotspots.geojson"  "json"       10000
-          check "$PREFIX/data/smoke.geojson"     "json"       1000
-          check "$PREFIX/data/airquality.json"   "json"       10000
-          check "$PREFIX/data/landmarks.geojson" "json"       500
-          [ "$fail" = "0" ] || { echo "::error::published tree is incomplete"; exit 1; }
-
-      - name: Summary
-        run: |
-          {
-            echo "### Rock Fire tracker published"
-            echo ""
-            echo "<https://rickrothbart.com/rockfire>"
-            echo ""
-            echo '```'
-            ls -la rockfire/data/
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
+          done
+          [ "$fail" = "0" ] || { echo "::error::rockfire keys survived teardown"; exit 1; }
