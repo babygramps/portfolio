@@ -28,14 +28,14 @@ jobs:
   teardown:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # No external actions (no checkout, no configure-aws-credentials): GitHub's
+    # action-download service failed two runs in a row this morning, and the
+    # preinstalled AWS CLI only needs these env vars.
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: us-west-1
     steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
       - name: Delete /rockfire from S3
         run: |
           # The extensionless redirect key first, then everything under the prefix.
