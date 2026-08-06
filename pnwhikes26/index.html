@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PNW Hikes '26 — Four Days Out × Smoke Watch</title>
+<meta name="description" content="Multi-day backpacking routes across the Olympic Peninsula, Vancouver Island and the Sea-to-Sky corridor, mapped over live wildfire smoke, air quality and fire activity.">
+<link rel="stylesheet" href="vendor/leaflet-1.9.4.css">
+<style>
+@font-face {
+  font-family: 'Archivo Narrow';
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url(data:font/woff2;base64,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) format('woff2');
+  unicode-range: U+0000-00FF, U+2013-2014, U+2018-201D, U+2026;
+}
+:root {
+  --water:#C6D4DA; --land:#F0EBE1; --coast:#B7B0A0; --lake:#B9CDD6; --river:#AFC6D2;
+  --ink:#26251E; --ink2:#57544A; --ink3:#8A8577;
+  --panel:#FAF7F0; --card:#FFFFFF; --edge:#E2DCCE; --edge2:#D0C9B8;
+  --hover:#F1EDE2;
+  --r-olympic:#26A0AE; --r-vi:#2E56A8; --r-s2s:#8F3268;
+  --park:#75864F; --border-line:#9A948A;
+  --smoke:125,110,92; --fire:#C63D2F; --fire-quiet:#96703F;
+  --aqi1:#3D9B44; --aqi2:#D8AC0A; --aqi3:#E87F1F; --aqi4:#D9402F; --aqi5:#8F3F97; --aqi6:#7E0023;
+  --aqi2-ink:#5C4A02;
+  --warn-bg:#F8E8D8; --warn-ink:#8A4A12; --closed-bg:#F6DFDB; --closed-ink:#9C2F1C;
+  --ok-bg:#E4EDDC; --ok-ink:#3F6428;
+  --shadow:0 1px 3px rgba(40,35,20,.14), 0 4px 14px rgba(40,35,20,.08);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --water:#10171D; --land:#20261F; --coast:#48513E; --lake:#16232B; --river:#27404D;
+    --ink:#EAE6D9; --ink2:#B4AF9F; --ink3:#807C6E;
+    --panel:#171B14; --card:#242A21; --edge:#333A2D; --edge2:#414936;
+    --hover:#2A3126;
+    --r-olympic:#00918D; --r-vi:#4569C4; --r-s2s:#D2629B;
+    --park:#8CA05F; --border-line:#6E6A5E;
+    --smoke:200,178,148; --fire:#E05A47; --fire-quiet:#B08A55;
+    --aqi1:#4CAF53; --aqi2:#E0B419; --aqi3:#F08A2B; --aqi4:#E4523F; --aqi5:#A85CB3; --aqi6:#B03A54;
+    --aqi2-ink:#3E3300;
+    --warn-bg:#3E2F1A; --warn-ink:#EFB679; --closed-bg:#43231D; --closed-ink:#F09A88;
+    --ok-bg:#26331D; --ok-ink:#A9C787;
+    --shadow:0 1px 3px rgba(0,0,0,.5), 0 4px 14px rgba(0,0,0,.35);
+  }
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--panel); color: var(--ink);
+  font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+}
+h1, h2, h3, .disp { font-family: 'Archivo Narrow', 'Arial Narrow', -apple-system, sans-serif; }
+.num { font-variant-numeric: tabular-nums; }
+
+header {
+  display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap;
+  padding: 10px 18px 9px; border-bottom: 1px solid var(--edge);
+  background: var(--panel); flex: none;
+}
+header h1 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: .01em; text-wrap: balance; }
+header h1 .x { color: var(--ink3); font-weight: 500; padding: 0 2px; }
+.subtitle { margin: 0; color: var(--ink2); font-size: 13px; }
+.asof { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.asof .src {
+  font-family: 'Archivo Narrow', sans-serif; font-size: 12px; letter-spacing: .04em;
+  color: var(--ink2); border: 1px solid var(--edge2); border-radius: 3px;
+  padding: 2px 8px; background: var(--card); white-space: nowrap;
+}
+.asof .src b { color: var(--ink); font-weight: 600; }
+.asof .live { border-color: var(--ok-ink); color: var(--ok-ink); display: inline-flex; align-items: center; gap: 5px; }
+.asof .live .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--ok-ink); }
+@media (prefers-reduced-motion: no-preference) {
+  .asof .live .pulse { animation: pulse 2.4s ease-out infinite; }
+  @keyframes pulse { 0% {box-shadow: 0 0 0 0 rgba(90,140,60,.5)} 70% {box-shadow: 0 0 0 6px rgba(90,140,60,0)} 100% {box-shadow: 0 0 0 0 rgba(90,140,60,0)} }
+}
+#envwarn {
+  display: none; padding: 6px 18px; background: var(--warn-bg); color: var(--warn-ink);
+  font-size: 12.5px; border-bottom: 1px solid var(--edge); flex: none;
+}
+
+.app { display: flex; flex: 1; min-height: 0; }
+aside {
+  width: 384px; flex: none; display: flex; flex-direction: column;
+  border-right: 1px solid var(--edge); background: var(--panel); min-height: 0;
+}
+.side-head { padding: 10px 14px 8px; border-bottom: 1px solid var(--edge); flex: none; display: grid; gap: 6px; }
+.filters { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.filters .fl {
+  font: 600 10px 'Archivo Narrow', sans-serif; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink3); width: 52px; flex: none;
+}
+.fbtn {
+  font: 600 12.5px 'Archivo Narrow', sans-serif; letter-spacing: .03em;
+  padding: 4px 10px; border: 1px solid var(--edge2); border-radius: 999px;
+  background: var(--card); color: var(--ink2); cursor: pointer;
+}
+.fbtn[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+.fbtn:focus-visible, .card:focus-visible, button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--r-vi); outline-offset: 2px;
+}
+.scroll { overflow-y: auto; flex: 1; min-height: 0; padding: 6px 10px 14px; }
+.region-h {
+  display: flex; align-items: center; gap: 8px; margin: 12px 4px 6px;
+  font: 600 12px 'Archivo Narrow', sans-serif; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink2);
+}
+.region-h .sw { width: 14px; height: 4px; border-radius: 2px; background: var(--rc); }
+.region-h .n { color: var(--ink3); font-weight: 500; letter-spacing: .02em; }
+
+.card {
+  display: block; width: 100%; text-align: left; cursor: pointer;
+  background: var(--card); border: 1px solid var(--edge); border-left: 4px solid var(--rc);
+  border-radius: 6px; padding: 8px 10px; margin: 6px 0; color: inherit; font: inherit;
+}
+.card:hover { background: var(--hover); }
+.card.active { border-color: var(--rc); box-shadow: var(--shadow); }
+.card.hidden { display: none; }
+.card h3 { margin: 0 0 2px; font-size: 15.5px; font-weight: 600; line-height: 1.25; }
+.stats { color: var(--ink2); font-size: 12.5px; }
+.stats b { color: var(--ink); font-size: 13.5px; }
+.badges { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+.badge {
+  font: 600 11px 'Archivo Narrow', sans-serif; letter-spacing: .05em;
+  padding: 2px 7px; border-radius: 3px; white-space: nowrap;
+}
+.b-flag { background: var(--ink); color: var(--panel); }
+.b-open { background: var(--ok-bg); color: var(--ok-ink); }
+.b-warn { background: var(--warn-bg); color: var(--warn-ink); }
+.b-closed { background: var(--closed-bg); color: var(--closed-ink); }
+.b-permit { background: none; border: 1px solid var(--edge2); color: var(--ink2); font-weight: 500; }
+.b-permit.reserve { border-color: var(--warn-ink); color: var(--warn-ink); font-weight: 600; }
+.b-aqi { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--edge2); color: var(--ink2); font-weight: 500; }
+.b-aqi .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.b-marker { background: none; border: 1px dashed var(--edge2); color: var(--ink3); font-weight: 500; }
+
+#detail { display: none; flex-direction: column; min-height: 0; flex: 1; }
+#detail.open { display: flex; }
+#cardswrap { display: flex; flex-direction: column; min-height: 0; flex: 1; }
+#cardswrap.hidden { display: none; }
+.d-head { padding: 10px 14px; border-bottom: 1px solid var(--edge); flex: none; }
+.backbtn {
+  font: 600 12.5px 'Archivo Narrow', sans-serif; letter-spacing: .05em; cursor: pointer;
+  background: none; border: none; color: var(--ink2); padding: 0 0 6px; display: inline-flex; gap: 6px;
+}
+.backbtn:hover { color: var(--ink); }
+.d-head h2 { margin: 0; font-size: 19px; line-height: 1.2; font-weight: 700; text-wrap: balance; }
+.d-head .rg { font: 600 11.5px 'Archivo Narrow', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--rc); }
+.d-body { overflow-y: auto; padding: 10px 14px 18px; }
+.d-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 4px 0 10px; }
+.d-grid .cell { background: var(--card); border: 1px solid var(--edge); border-radius: 5px; padding: 6px 8px; }
+.d-grid .k { font: 600 10.5px 'Archivo Narrow', sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--ink3); }
+.d-grid .v { font-size: 14px; font-weight: 600; }
+.d-sec { margin: 12px 0 0; }
+.d-sec h4 { margin: 0 0 3px; font: 600 11.5px 'Archivo Narrow', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--ink2); }
+.d-sec p { margin: 0; font-size: 13px; color: var(--ink); }
+.d-sec.status-closed p, .d-sec.status-warn p { border-radius: 5px; padding: 8px 10px; }
+.d-sec.status-closed p { background: var(--closed-bg); color: var(--closed-ink); }
+.d-sec.status-warn p { background: var(--warn-bg); color: var(--warn-ink); }
+.d-permit { display: inline-block; margin-bottom: 4px; }
+.aqrow { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 13px; }
+.aqrow .dot { width: 11px; height: 11px; border-radius: 50%; flex: none; }
+.aqrow .d { color: var(--ink3); margin-left: auto; white-space: nowrap; }
+.d-sec a { color: var(--rc, var(--r-vi)); word-break: break-word; }
+.d-sec li { font-size: 13px; margin: 2px 0; }
+.d-sec ul { margin: 2px 0 0; padding-left: 18px; }
+.guide-link {
+  display: inline-block; margin-top: 4px; font: 600 13px 'Archivo Narrow', sans-serif;
+  letter-spacing: .03em; padding: 5px 11px; border-radius: 4px;
+  background: var(--rc, var(--ink)); color: #fff !important; text-decoration: none;
+}
+
+.srcnote {
+  flex: none; padding: 8px 14px; border-top: 1px solid var(--edge);
+  font-size: 11px; color: var(--ink3); line-height: 1.5;
+}
+.srcnote a { color: var(--ink2); }
+
+main { flex: 1; position: relative; min-width: 0; background: var(--water); }
+#map { position: absolute; inset: 0; background: var(--water); font: inherit; }
+#loading {
+  position: absolute; inset: 0; z-index: 900; display: grid; place-items: center;
+  background: var(--water); color: var(--ink2);
+  font: 600 14px 'Archivo Narrow', sans-serif; letter-spacing: .08em; text-transform: uppercase;
+}
+.leaflet-container { font: inherit; }
+.town-label {
+  font: 500 11px 'Archivo Narrow', sans-serif; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--ink2); text-shadow: 0 0 3px var(--land), 0 0 5px var(--land), 0 0 2px var(--land);
+  white-space: nowrap; pointer-events: none;
+}
+.fire-ico svg, .th-ico svg { display: block; overflow: visible; }
+.maptools {
+  position: absolute; top: 10px; right: 10px; z-index: 800;
+  background: var(--panel); border: 1px solid var(--edge2); border-radius: 6px;
+  box-shadow: var(--shadow); padding: 8px 10px; font-size: 12.5px; min-width: 132px;
+}
+.maptools .t { font: 600 11px 'Archivo Narrow', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 4px; }
+.lay { display: flex; flex-direction: column; gap: 2px; }
+.lay label { display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 1px 0; }
+.lay input { accent-color: var(--ink2); margin: 0; }
+.regjump { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
+.regjump button {
+  font: 600 11px 'Archivo Narrow', sans-serif; letter-spacing: .04em; cursor: pointer;
+  border: 1px solid var(--edge2); background: var(--card); color: var(--ink2);
+  border-radius: 3px; padding: 3px 7px;
+}
+.regjump button:hover { background: var(--hover); color: var(--ink); }
+.legend {
+  position: absolute; left: 10px; bottom: 10px; z-index: 800;
+  background: var(--panel); border: 1px solid var(--edge2); border-radius: 6px;
+  box-shadow: var(--shadow); font-size: 11.5px; max-width: 240px;
+}
+.legend summary {
+  cursor: pointer; padding: 6px 10px; font: 600 11px 'Archivo Narrow', sans-serif;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--ink2); list-style: none;
+}
+.legend summary::-webkit-details-marker { display: none; }
+.legend .lbody { padding: 0 10px 9px; display: grid; gap: 3px; }
+.lrow { display: flex; align-items: center; gap: 7px; color: var(--ink2); }
+.lrow .aq { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.lrow .ln { width: 16px; height: 3px; border-radius: 2px; flex: none; }
+.lrow .sq { width: 12px; height: 12px; border-radius: 2px; flex: none; }
+.lgroup { margin-top: 5px; font: 600 10px 'Archivo Narrow', sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--ink3); }
+
+.leaflet-bar { border: 1px solid var(--edge2) !important; box-shadow: var(--shadow) !important; }
+.leaflet-bar a { background: var(--panel) !important; color: var(--ink) !important; border-bottom-color: var(--edge) !important; }
+.leaflet-popup-content-wrapper, .leaflet-tooltip {
+  background: var(--panel) !important; color: var(--ink) !important;
+  border: 1px solid var(--edge2); box-shadow: var(--shadow) !important; border-radius: 6px !important;
+}
+.leaflet-popup-tip { background: var(--panel) !important; border: 1px solid var(--edge2); }
+.leaflet-tooltip { font: 600 12px 'Archivo Narrow', sans-serif; letter-spacing: .02em; padding: 3px 8px !important; }
+.leaflet-tooltip-top:before, .leaflet-tooltip-bottom:before, .leaflet-tooltip-left:before, .leaflet-tooltip-right:before { display: none; }
+.leaflet-popup-content { margin: 10px 12px !important; font: 12.5px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important; }
+.leaflet-container a.leaflet-popup-close-button { color: var(--ink3) !important; }
+.pop h5 { margin: 0 0 2px; font: 600 14px 'Archivo Narrow', sans-serif; }
+.pop .cat { display: inline-block; font: 600 11px 'Archivo Narrow', sans-serif; letter-spacing: .05em; border-radius: 3px; padding: 1px 6px; margin: 2px 0 4px; }
+.pop .meta { color: var(--ink3); font-size: 11.5px; }
+.pop .big { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.pop a { color: var(--r-vi); }
+.spark { margin-top: 6px; }
+
+@media (max-width: 880px) {
+  body { overflow: auto; height: auto; display: block; }
+  .app { flex-direction: column; display: flex; }
+  main { order: 0; height: 58vh; flex: none; }
+  aside { order: 1; width: 100%; border-right: none; border-top: 1px solid var(--edge); }
+  .scroll { max-height: none; overflow: visible; }
+  #detail .d-body { overflow: visible; }
+  .asof { margin-left: 0; }
+  .maptools { font-size: 11.5px; min-width: 0; max-width: 58vw; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .card, .fbtn, .regjump button { transition: background .12s ease, opacity .15s ease, box-shadow .12s ease; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>PNW Hikes '26 <span class="x">×</span> Smoke Watch</h1>
+    <p class="subtitle">Multi-day backpacking routes — Olympic Peninsula, Vancouver Island &amp; the Sea-to-Sky — over live wildfire smoke, air quality and fire activity</p>
+  </div>
+  <div class="asof" id="asof"><span class="src">loading live data…</span></div>
+</header>
+<div id="envwarn">Live smoke, air-quality and fire layers are unavailable right now — routes are still shown. Try a refresh in a minute.</div>
+
+<div class="app">
+  <aside>
+    <div id="cardswrap">
+      <div class="side-head">
+        <div class="filters" role="group" aria-label="Length filter">
+          <span class="fl">Length</span>
+          <button class="fbtn flen" data-f="all" aria-pressed="true">All</button>
+          <button class="fbtn flen" data-f="flag" aria-pressed="false">≈50-mile trips (40&nbsp;mi+)</button>
+        </div>
+        <div class="filters" role="group" aria-label="Permit filter">
+          <span class="fl">Permits</span>
+          <button class="fbtn fperm" data-f="all" aria-pressed="true">All</button>
+          <button class="fbtn fperm" data-f="easy" aria-pressed="false">No competitive reservation</button>
+        </div>
+      </div>
+      <div class="scroll" id="cards"></div>
+    </div>
+    <div id="detail">
+      <div class="d-head">
+        <button class="backbtn" id="backbtn">← All routes</button>
+        <div class="rg" id="d-region"></div>
+        <h2 id="d-name"></h2>
+      </div>
+      <div class="d-body" id="d-body"></div>
+    </div>
+    <footer class="srcnote" id="srcnote">
+      For planning, not navigation — verify conditions before you commit. Live sources:
+      <a href="https://fire.airnow.gov" target="_blank" rel="noopener">AirNow fire &amp; smoke map</a> ·
+      <a href="https://wildfiresituation.nrs.gov.bc.ca/map" target="_blank" rel="noopener">BC wildfire map</a> ·
+      <a href="https://www.nps.gov/olym/planyourvisit/wilderness-trail-conditions.htm" target="_blank" rel="noopener">Olympic NP conditions</a> ·
+      <a href="https://bcparks.ca/active-advisories/" target="_blank" rel="noopener">BC Parks advisories</a>.
+      Basemap: OpenStreetMap contributors (ODbL) &amp; NOAA GSHHG. Route facts as researched Aug 2026; smoke/AQI/fires refresh hourly.
+    </footer>
+  </aside>
+  <main>
+    <div id="map" role="application" aria-label="Route and smoke map"></div>
+    <div id="loading">Loading map…</div>
+    <div class="maptools">
+      <div class="t">Layers</div>
+      <div class="lay" id="layers"></div>
+      <div class="t" style="margin-top:8px">Go to</div>
+      <div class="regjump" id="regjump"></div>
+    </div>
+    <details class="legend" open>
+      <summary>Legend</summary>
+      <div class="lbody" id="legend"></div>
+    </details>
+  </main>
+</div>
+
+<script src="vendor/leaflet-1.9.4.js"></script>
+<script>
+"use strict";
+const $ = (s, el=document) => el.querySelector(s);
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const REGIONS = {
+  "olympic":          {name:"Olympic Peninsula", var:"--r-olympic", bounds:[[47.3,-124.9],[48.45,-122.9]]},
+  "vancouver-island": {name:"Vancouver Island",  var:"--r-vi",      bounds:[[48.3,-128.5],[50.95,-123.3]]},
+  "sea-to-sky":       {name:"Squamish · Whistler · Sea-to-Sky", var:"--r-s2s", bounds:[[49.3,-124.95],[50.6,-121.4]]},
+};
+const AQI_CATS = [
+  {max:50,  var:"--aqi1", name:"Good"},
+  {max:100, var:"--aqi2", name:"Moderate"},
+  {max:150, var:"--aqi3", name:"Unhealthy for sensitive groups"},
+  {max:200, var:"--aqi4", name:"Unhealthy"},
+  {max:300, var:"--aqi5", name:"Very unhealthy"},
+  {max:9999,var:"--aqi6", name:"Hazardous"},
+];
+const PERMIT = {
+  reserve: {label:"reservation — book ahead", cls:"reserve"},
+  permit:  {label:"permit required", cls:""},
+  fee:     {label:"fee / permission", cls:""},
+  none:    {label:"no permit", cls:""},
+};
+const aqiCat = v => AQI_CATS.find(c => v <= c.max) || AQI_CATS[5];
+const fmtPT = ms => new Date(ms).toLocaleString("en-US",{timeZone:"America/Los_Angeles",
+  month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " PT";
+const havMi = (a1,o1,a2,o2) => {
+  const r = Math.PI/180, p1 = a1*r, p2 = a2*r;
+  const h = Math.sin((p2-p1)/2)**2 + Math.cos(p1)*Math.cos(p2)*Math.sin((o2-o1)*r/2)**2;
+  return 2*3958.8*Math.asin(Math.sqrt(h));
+};
+
+let DATA = null, ENV = null;
+let map, layers = {}, routeLayers = {}, envGroup = null, thLayer = null;
+let selectedId = null, flagOnly = false, easyPermits = false;
+const routeColor = r => css(REGIONS[r.region].var);
+const routeVisible = r => (!flagOnly || (r.distance_mi ?? 0) >= 40) &&
+                          (!easyPermits || r.permit_level !== "reserve");
+
+// ---------- boot ----------
+async function boot() {
+  let bundle;
+  try {
+    bundle = await (await fetch("static/bundle-v1.json")).json();
+  } catch (e) {
+    $("#loading").textContent = "Could not load route data — refresh to retry.";
+    return;
+  }
+  DATA = bundle;
+  initMap();
+  drawCards();
+  restyle();
+  $("#loading").remove();
+  await refreshEnv();
+  setInterval(refreshEnv, 15 * 60 * 1000);  // data on S3 refreshes hourly
+  const wanted = (location.hash.match(/route=([\w-]+)/) || [])[1];
+  if (wanted && DATA.routes.some(r => r.id === wanted)) selectRoute(wanted);
+}
+
+async function refreshEnv() {
+  try {
+    ENV = await (await fetch("data/env.json", {cache:"no-cache"})).json();
+    $("#envwarn").style.display = "none";
+  } catch (e) {
+    if (!ENV) { $("#envwarn").style.display = "block"; drawAsof(); }
+    return;
+  }
+  for (const r of DATA.routes) {
+    r.nearest_aqi = ENV.aq.filter(s => s.aqi != null).map(s => ({
+      name: s.name, aqi: s.aqi,
+      miles: Math.round(Math.min(...r.trailheads.map(t => havMi(t.lat, t.lon, s.lat, s.lon)))),
+    })).sort((a,b) => a.miles - b.miles).slice(0,2);
+  }
+  buildEnvLayers();
+  drawAsof();
+  drawCards();
+  drawLegend();
+  if (selectedId) renderDetail(DATA.routes.find(r => r.id === selectedId));
+}
+
+function drawAsof() {
+  if (!ENV) return;
+  const sd = ENV.meta.smoke_day
+    ? `${ENV.meta.smoke_day.slice(4,6)}/${ENV.meta.smoke_day.slice(6,8)}` : "n/a";
+  $("#asof").innerHTML = `
+    <span class="src live"><span class="pulse"></span>LIVE · hourly</span>
+    <span class="src">AIR <b>AirNow · ${esc(fmtPT(ENV.meta.aq_latest_ms))}</b></span>
+    <span class="src">SMOKE <b>NOAA HMS · ${esc(sd)}</b></span>
+    <span class="src">FIRES <b>BC + NIFC · ${esc(fmtPT(Date.parse(ENV.meta.fetched)))}</b></span>`;
+}
+
+// ---------- map ----------
+function initMap() {
+  map = L.map("map", {
+    zoomControl: true, attributionControl: false,
+    minZoom: 6, maxZoom: 13,
+    maxBounds: [[45.4,-131.5],[52.6,-118.5]], maxBoundsViscosity: .7,
+  });
+  window.HOME = [[46.95,-128.9],[50.98,-121.3]];
+  map.fitBounds(HOME, {padding:[8,8]});
+  const panes = {land:210, lakes:220, rivers:230, borders:240, parks:320, smoke:340,
+                 casing:395, routes:400, hit:410, fires:430, aq:440, towns:450, ths:460};
+  for (const [k,z] of Object.entries(panes)) { map.createPane(k); map.getPane(k).style.zIndex = z; }
+  map.getPane("towns").style.pointerEvents = "none";
+
+  layers.land = L.geoJSON(DATA.basemap.land, {pane:"land", interactive:false}).addTo(map);
+  layers.lakes = L.geoJSON(DATA.basemap.lakes, {pane:"lakes", interactive:false}).addTo(map);
+  layers.rivers = L.geoJSON(DATA.basemap.rivers, {pane:"rivers", interactive:false}).addTo(map);
+  layers.borders = L.geoJSON(DATA.basemap.borders, {pane:"borders", interactive:false}).addTo(map);
+  layers.parks = L.layerGroup(Object.values(DATA.parks).map(geo =>
+    L.geoJSON({type:"Feature", geometry:geo}, {pane:"parks", interactive:false}))).addTo(map);
+
+  for (const r of DATA.routes) {
+    if (r.geometry) {
+      const casing = L.geoJSON({type:"Feature", geometry:r.geometry}, {pane:"casing", interactive:false});
+      const main = L.geoJSON({type:"Feature", geometry:r.geometry}, {pane:"routes", interactive:false});
+      const hit  = L.geoJSON({type:"Feature", geometry:r.geometry}, {pane:"hit"});
+      hit.bindTooltip(`${r.name.split("(")[0].trim()} · ${r.distance_mi ?? "?"} mi`, {sticky:true, direction:"top", opacity:1});
+      hit.on("click", () => selectRoute(r.id === selectedId ? null : r.id));
+      hit.on("mouseover", () => styleRoute(r, {hover:true}));
+      hit.on("mouseout",  () => styleRoute(r, {}));
+      casing.addTo(map); main.addTo(map); hit.addTo(map);
+      routeLayers[r.id] = {casing, main, hit, route:r};
+    } else {
+      // no drawable line — mark the trailhead; details link out to the guide
+      const t = r.trailheads[0];
+      const mk = L.marker([t.lat, t.lon], {pane:"hit", icon: diamondIcon(r)});
+      mk.bindTooltip(`${r.name.split("(")[0].trim()} · guide link`, {direction:"top", opacity:1});
+      mk.on("click", () => selectRoute(r.id === selectedId ? null : r.id));
+      mk.addTo(map);
+      routeLayers[r.id] = {marker: mk, route:r};
+    }
+  }
+  thLayer = L.layerGroup([], {pane:"ths"}).addTo(map);
+
+  layers.towns = L.layerGroup(DATA.towns.map(t =>
+    L.marker([t.lat, t.lon], {pane:"towns", interactive:false, icon:
+      L.divIcon({className:"town-label", html:esc(t.name), iconSize:null, iconAnchor:[-5,7]})})
+  )).addTo(map);
+
+  const TOGGLES = [["smoke","Smoke plumes"],["aq","Air quality"],["fires","Wildfires"],
+                   ["parks","Park boundaries"],["towns","Towns"]];
+  $("#layers").innerHTML = TOGGLES.map(([k,label]) =>
+    `<label><input type="checkbox" data-l="${k}" checked> ${label}</label>`).join("");
+  $("#layers").addEventListener("change", e => {
+    const k = e.target.dataset.l;
+    if (!layers[k]) return;
+    if (e.target.checked) map.addLayer(layers[k]); else map.removeLayer(layers[k]);
+  });
+  $("#regjump").innerHTML = Object.entries(REGIONS).map(([k, r]) =>
+    `<button data-r="${k}">${esc(r.name.split("·")[0].trim().split(" ").slice(0,2).join(" "))}</button>`).join("")
+    + `<button data-r="all">Everything</button>`;
+  $("#regjump").addEventListener("click", e => {
+    const k = e.target.dataset.r; if (!k) return;
+    map.fitBounds(k === "all" ? HOME : REGIONS[k].bounds, {padding:[14,14]});
+  });
+  if (matchMedia("(max-width: 880px)").matches) $(".legend").removeAttribute("open");
+  addEventListener("resize", () => map.invalidateSize());
+}
+
+function diamondIcon(r) {
+  const c = routeColor(r), ring = css("--panel");
+  return L.divIcon({className:"th-ico", iconSize:[16,16], iconAnchor:[8,8], html:
+    `<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+       <rect x="3.2" y="3.2" width="9.6" height="9.6" transform="rotate(45 8 8)"
+             fill="${c}" stroke="${ring}" stroke-width="1.6"/></svg>`});
+}
+
+// ---------- live env layers (rebuilt on every refresh) ----------
+function fireHa(p) { return p.size_ha != null ? p.size_ha : (p.size_acres||0) * 0.404686; }
+function fireActive(p) {
+  const s = p.status || "";
+  if (/out of control|fire of note/i.test(s)) return true;
+  const m = s.match(/^(\d+)% contained/);
+  return m ? parseInt(m[1]) < 50 : false;
+}
+function fireIcon(p) {
+  const s = Math.max(11, Math.min(30, 6 + 3.4*Math.log10(fireHa(p)+1)));
+  const col = fireActive(p) ? css("--fire") : css("--fire-quiet");
+  return L.divIcon({className:"fire-ico", iconSize:[s,s], iconAnchor:[s/2,s/2], html:
+    `<svg width="${s}" height="${s}" viewBox="0 0 20 20" aria-hidden="true">
+       <path d="M10 1.5 L18.7 17.5 L1.3 17.5 Z" fill="${col}" stroke="${css("--panel")}" stroke-width="1.6"/></svg>`});
+}
+function sparkSVG(obs) {
+  const trend = (obs||[]).filter(o => o[1] != null);
+  if (trend.length < 2) return "";
+  const w=150, h=34, vals = trend.map(t=>t[1]);
+  const mn = Math.min(...vals), mx = Math.max(...vals);
+  const t0 = trend[0][0], t1 = trend[trend.length-1][0];
+  const X = t => 3 + (w-6)*(t-t0)/Math.max(1,(t1-t0));
+  const Y = v => mx===mn ? h/2 : 3 + (h-6)*(1-(v-mn)/(mx-mn));
+  const d = trend.map((t,i)=>`${i?"L":"M"}${X(t[0]).toFixed(1)},${Y(t[1]).toFixed(1)}`).join("");
+  const last = trend[trend.length-1];
+  return `<svg class="spark" width="${w}" height="${h}" aria-label="24-hour AQI trend">
+    <path d="${d}" fill="none" stroke="${css('--ink3')}" stroke-width="1.5"/>
+    <circle cx="${X(last[0]).toFixed(1)}" cy="${Y(last[1]).toFixed(1)}" r="3" fill="${css(aqiCat(last[1]).var)}"/>
+  </svg><div class="meta num">last 24 h — range ${mn}–${mx}</div>`;
+}
+function buildEnvLayers() {
+  const vis = {};
+  for (const k of ["smoke","aq","fires"]) {
+    if (layers[k]) { vis[k] = map.hasLayer(layers[k]); map.removeLayer(layers[k]); }
+    else vis[k] = true;
+  }
+  layers.smoke = L.layerGroup(["Light","Medium","Heavy"].map(d => {
+    const feats = ENV.smoke.features.filter(f => f.properties.density === d);
+    if (!feats.length) return null;
+    const polys = feats.flatMap(f => f.geometry.type === "Polygon" ? [f.geometry.coordinates] : f.geometry.coordinates);
+    const starts = feats.map(f => f.properties.start_ms), ends = feats.map(f => f.properties.end_ms);
+    const lyr = L.geoJSON({type:"Feature", geometry:{type:"MultiPolygon", coordinates:polys}},
+                          {pane:"smoke", fillRule:"nonzero"});
+    lyr.__density = d;
+    lyr.bindPopup(`<div class="pop"><h5>${d} smoke — satellite analysis</h5>
+      <div class="meta">${feats.length} analyst-drawn plume${feats.length>1?"s":""} · NOAA Hazard Mapping System<br>
+      Scans ${esc(fmtPT(Math.min(...starts)))} – ${esc(fmtPT(Math.max(...ends)))}</div></div>`);
+    return lyr;
+  }).filter(Boolean));
+  layers.fires = L.layerGroup(ENV.fires.features.map(f => {
+    const p = f.properties, [lon,lat] = f.geometry.coordinates;
+    const m = L.marker([lat,lon], {icon: fireIcon(p), pane:"fires"});
+    const size = p.size_ha != null
+      ? `${Math.round(p.size_ha).toLocaleString()} ha (${Math.round(p.size_ha*2.471).toLocaleString()} ac)`
+      : `${Math.round(p.size_acres||0).toLocaleString()} ac`;
+    m.bindTooltip(`${esc(p.name||"Fire")} · ${size.split(" (")[0]}`, {direction:"top", opacity:1});
+    m.bindPopup(`<div class="pop"><h5>${esc(p.name||"Unnamed fire")}</h5>
+      <span class="cat" style="background:${fireActive(p)?css("--fire"):css("--fire-quiet")};color:#fff">${esc(p.status||"status unknown")}</span>
+      <div>${size}${p.where?` — ${esc(p.where)}`:""}</div>
+      <div class="meta">${esc(p.src)}${p.discovered?` · discovered ${esc(String(p.discovered).slice(0,10))}`:""}</div>
+      ${p.url?`<a href="${esc(p.url)}" target="_blank" rel="noopener">BC Wildfire incident page ↗</a>`:""}</div>`);
+    m.__props = p;
+    return m;
+  }));
+  layers.aq = L.layerGroup(ENV.aq.filter(s => s.aqi != null).map(s => {
+    const m = L.circleMarker([s.lat, s.lon], {pane:"aq", radius:6, weight:1.5});
+    m.__site = s;
+    m.bindTooltip(`${esc(s.name)} · AQI ${s.aqi}`, {direction:"top", opacity:1});
+    m.bindPopup(() => {
+      const c = aqiCat(s.aqi);
+      const txtcol = c.var === "--aqi2" ? css("--aqi2-ink") : "#fff";
+      return `<div class="pop"><h5>${esc(s.name)}</h5>
+        <span class="big num">${s.aqi}</span> <span class="meta">US AQI (PM2.5)</span><br>
+        <span class="cat" style="background:${css(c.var)};color:${txtcol}">${c.name}</span>
+        <div class="meta">PM2.5 ${s.pm25 != null ? s.pm25 + " µg/m³" : "—"} · ${esc(s.agency||"")}<br>updated ${esc(fmtPT(s.ts))}</div>
+        ${sparkSVG(s.obs)}</div>`;
+    });
+    return m;
+  }));
+  for (const k of ["smoke","aq","fires"]) if (vis[k]) layers[k].addTo(map);
+  restyleEnv();
+}
+
+// ---------- styling ----------
+function styleRoute(r, {hover=false} = {}) {
+  const L_ = routeLayers[r.id];
+  const sel = r.id === selectedId;
+  const dim = (selectedId && !sel) || (!selectedId && !routeVisible(r));
+  if (L_.marker) {
+    L_.marker.setIcon(diamondIcon(r));
+    L_.marker.setOpacity(dim ? .3 : 1);
+    return;
+  }
+  const w = sel ? 5 : hover ? 4.5 : 3;
+  L_.casing.setStyle({color: css("--panel"), weight: w + 3, opacity: dim ? .12 : .65,
+                      lineCap:"round", lineJoin:"round"});
+  L_.main.setStyle({color: routeColor(r), weight: w,
+                    opacity: dim ? .3 : sel || hover ? 1 : .92, lineCap:"round", lineJoin:"round"});
+  L_.hit.setStyle({color:"#000", opacity:0.001, weight:16});
+}
+function restyleEnv() {
+  if (!ENV) return;
+  const alpha = {Light:.13, Medium:.2, Heavy:.3};
+  layers.smoke?.eachLayer(l => l.setStyle({
+    fillColor:`rgb(${css("--smoke")})`, fillOpacity:alpha[l.__density] ?? .2,
+    color:`rgb(${css("--smoke")})`, weight:.6, opacity:.45}));
+  layers.aq?.eachLayer(m => m.setStyle({fillColor:css(aqiCat(m.__site.aqi).var), fillOpacity:.95,
+    color:css("--panel"), weight:1.5}));
+  layers.fires?.eachLayer(m => m.setIcon(fireIcon(m.__props)));
+}
+function restyle() {
+  layers.land.setStyle({fillColor:css("--land"), fillOpacity:1, color:css("--coast"), weight:.7, opacity:1});
+  layers.lakes.setStyle({fillColor:css("--lake"), fillOpacity:1, color:css("--coast"), weight:.5});
+  layers.rivers.setStyle({color:css("--river"), weight:1, opacity:.8});
+  layers.borders.setStyle({color:css("--border-line"), weight:1.2, dashArray:"5 4", opacity:.9});
+  layers.parks.eachLayer(l => l.setStyle({color:css("--park"), weight:1.4, dashArray:"3 3", opacity:.9, fill:false}));
+  restyleEnv();
+  for (const {route} of Object.values(routeLayers)) styleRoute(route, {});
+  $("#map").style.background = css("--water");
+  drawLegend();
+}
+
+// ---------- sidebar ----------
+function statusBadge(r) {
+  const s = r.status_2026 || "";
+  if (/EFFECTIVELY CLOSED|PARTIALLY CLOSED|\bCLOSED\b/.test(s)) return `<span class="badge b-closed">⚠ closure — see details</span>`;
+  if (/closed|washed out|washout|damaged|advisory/i.test(s)) return `<span class="badge b-warn">⚠ access caveat</span>`;
+  return `<span class="badge b-open">open</span>`;
+}
+function permitBadge(r) {
+  const p = PERMIT[r.permit_level] || PERMIT.none;
+  return `<span class="badge b-permit ${p.cls}">${p.label}</span>`;
+}
+function aqiBadge(r) {
+  const n = r.nearest_aqi && r.nearest_aqi[0];
+  if (!n) return "";
+  return `<span class="badge b-aqi"><span class="dot" style="background:${css(aqiCat(n.aqi).var)}"></span>
+    <span class="num">AQI ${n.aqi}</span> · ${esc(n.name.split("-")[0].split("(")[0].trim())} · ${n.miles} mi</span>`;
+}
+function cardHTML(r) {
+  const gain = r.elevation_gain_ft ? ` · +${r.elevation_gain_ft.toLocaleString()} ft` : "";
+  const dist = r.distance_mi != null ? `<b>${r.distance_mi} mi</b> · ${r.distance_km} km` : "<b>distance varies</b>";
+  return `<button class="card${routeVisible(r) ? "" : " hidden"}" data-id="${r.id}" style="--rc:${routeColor(r)}">
+    <h3>${esc(r.name)}</h3>
+    <div class="stats num">${dist} · ${esc(r.typical_days)} days${gain} · ${esc(r.route_type)}</div>
+    <div class="badges">${(r.distance_mi ?? 0) >= 40 ? '<span class="badge b-flag">≈50-mi trip</span>' : ""}${statusBadge(r)}${permitBadge(r)}${r.geometry ? "" : '<span class="badge b-marker">marker only — guide ↗</span>'}${aqiBadge(r)}</div>
+  </button>`;
+}
+function drawCards() {
+  if (!DATA) return;
+  const wrap = $("#cards");
+  wrap.innerHTML = Object.entries(REGIONS).map(([key, reg]) => {
+    const rs = DATA.routes.filter(r => r.region === key);
+    const shown = rs.filter(routeVisible).length;
+    return `<div class="region-h" style="--rc:${css(reg.var)}"><span class="sw"></span>${esc(reg.name)}
+      <span class="n">· ${shown}/${rs.length}</span></div>` + rs.map(cardHTML).join("");
+  }).join("");
+  wrap.querySelectorAll(".card").forEach(el => {
+    el.addEventListener("click", () => selectRoute(el.dataset.id));
+    el.classList.toggle("active", el.dataset.id === selectedId);
+  });
+}
+
+// ---------- detail ----------
+function linkify(urls) {
+  return `<ul>` + urls.map(u => {
+    const host = u.replace(/^https?:\/\/(www\.)?/, "").split("/")[0];
+    return `<li><a href="${esc(u)}" target="_blank" rel="noopener">${esc(host)} ↗</a></li>`;
+  }).join("") + `</ul>`;
+}
+function renderDetail(r) {
+  $("#d-region").textContent = REGIONS[r.region].name;
+  $("#d-region").style.setProperty("--rc", routeColor(r));
+  $("#d-name").textContent = r.name;
+  const closed = /EFFECTIVELY CLOSED|PARTIALLY CLOSED|\bCLOSED\b/.test(r.status_2026||"");
+  const caveat = !closed && /closed|washed out|washout|damaged|advisory/i.test(r.status_2026||"");
+  const aq = (r.nearest_aqi||[]).map(n => `<div class="aqrow">
+      <span class="dot" style="background:${css(aqiCat(n.aqi).var)}"></span>
+      <span class="num"><b>AQI ${n.aqi}</b> — ${esc(aqiCat(n.aqi).name)}</span>
+      <span>${esc(n.name)}</span><span class="d num">${n.miles} mi away</span></div>`).join("");
+  const p = PERMIT[r.permit_level] || PERMIT.none;
+  $("#d-body").innerHTML = `
+    <div class="d-grid num">
+      <div class="cell"><div class="k">Length</div><div class="v">${r.distance_mi != null ? `${r.distance_mi} mi · ${r.distance_km} km` : "varies"}</div></div>
+      <div class="cell"><div class="k">Days</div><div class="v">${esc(r.typical_days)}</div></div>
+      <div class="cell"><div class="k">Gain</div><div class="v">${r.elevation_gain_ft ? "+"+r.elevation_gain_ft.toLocaleString()+" ft" : "—"}</div></div>
+      <div class="cell"><div class="k">Type</div><div class="v">${esc(r.route_type)}</div></div>
+      <div class="cell"><div class="k">Difficulty</div><div class="v">${esc(r.difficulty||"—")}</div></div>
+      <div class="cell"><div class="k">Season</div><div class="v" style="font-size:12px">${esc(r.season||"—")}</div></div>
+    </div>
+    ${r.url ? `<a class="guide-link" style="--rc:${routeColor(r)}" href="${esc(r.url)}" target="_blank" rel="noopener">Trail guide / official page ↗</a>` : ""}
+    <div class="d-sec ${closed ? "status-closed" : caveat ? "status-warn" : ""}">
+      <h4>2026 status</h4><p>${esc(r.status_2026 || "No recent condition reports found.")}</p></div>
+    <div class="d-sec"><h4>Permits — ${esc(p.label)}</h4><p>${esc(r.permits)}</p></div>
+    <div class="d-sec"><h4>Air quality near trailheads (now)</h4>${aq || "<p>Live data unavailable.</p>"}</div>
+    <div class="d-sec"><h4>Why go</h4><p>${esc(r.highlights)}</p></div>
+    <div class="d-sec"><h4>Hazards</h4><p>${esc(r.hazards)}</p></div>
+    <div class="d-sec"><h4>Trailheads</h4><ul>${r.trailheads.map(t =>
+      `<li>${esc(t.name)} <span class="num" style="color:var(--ink3)">(${t.lat.toFixed(4)}, ${t.lon.toFixed(4)})</span></li>`).join("")}</ul></div>
+    <div class="d-sec" style="--rc:${routeColor(r)}"><h4>Sources</h4>${linkify(r.sources||[])}
+      <p style="color:var(--ink3);font-size:11.5px;margin-top:4px">${r.geometry
+        ? `Route line: OpenStreetMap trail data${r.id==="hesquiat" ? " (shoreline route traced from NOAA GSHHG coastline)" : ""}.`
+        : "No mapped line for this route — the marker shows the trailhead; use the guide link above."} Stats: sources above.</p></div>`;
+}
+function selectRoute(id) {
+  selectedId = id;
+  try { history.replaceState(null, "", id ? `#route=${id}` : location.pathname + location.search); } catch (e) {}
+  const cardswrap = $("#cardswrap"), detail = $("#detail");
+  thLayer.clearLayers();
+  if (id) {
+    const r = DATA.routes.find(x => x.id === id);
+    cardswrap.classList.add("hidden"); detail.classList.add("open");
+    renderDetail(r);
+    $("#d-body").scrollTop = 0;
+    if (r.bounds) map.fitBounds(r.bounds, {padding:[46,46], maxZoom:11});
+    else map.setView([r.trailheads[0].lat, r.trailheads[0].lon], 10);
+    r.trailheads.forEach(t => thLayer.addLayer(
+      L.circleMarker([t.lat,t.lon], {pane:"ths", radius:5, color:css("--panel"), weight:1.5,
+        fillColor:css("--ink"), fillOpacity:1})
+       .bindTooltip(`Trailhead: ${esc(t.name)}`, {direction:"top", opacity:1})));
+  } else {
+    cardswrap.classList.remove("hidden"); detail.classList.remove("open");
+    map.fitBounds(HOME, {padding:[8,8]});
+  }
+  for (const {route} of Object.values(routeLayers)) styleRoute(route, {});
+  document.querySelectorAll(".card").forEach(el => el.classList.toggle("active", el.dataset.id === id));
+}
+$("#backbtn").addEventListener("click", () => selectRoute(null));
+
+document.querySelectorAll(".flen").forEach(b => b.addEventListener("click", () => {
+  flagOnly = b.dataset.f === "flag";
+  document.querySelectorAll(".flen").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  drawCards();
+  for (const {route} of Object.values(routeLayers)) styleRoute(route, {});
+}));
+document.querySelectorAll(".fperm").forEach(b => b.addEventListener("click", () => {
+  easyPermits = b.dataset.f === "easy";
+  document.querySelectorAll(".fperm").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  drawCards();
+  for (const {route} of Object.values(routeLayers)) styleRoute(route, {});
+}));
+
+function drawLegend() {
+  const cont = ENV?.meta.continental_smoke || [];
+  $("#legend").innerHTML =
+    `<div class="lgroup">Air quality — US AQI (PM2.5)</div>` +
+    AQI_CATS.map(c => `<div class="lrow"><span class="aq" style="background:${css(c.var)}"></span>${c.name}</div>`).join("") +
+    `<div class="lgroup">Smoke (NOAA HMS analysis)</div>` +
+    ["Light","Medium","Heavy"].map((d,i) =>
+      `<div class="lrow"><span class="sq" style="background:rgba(${css("--smoke")},${[.22,.38,.55][i]})"></span>${d} plume</div>`).join("") +
+    (cont.length ? `<div class="lrow" style="font-size:10.5px;color:var(--ink3)">+ ${cont.length} continent-scale haze sheets over the whole region (not drawn)</div>` : "") +
+    `<div class="lgroup">Fires</div>
+     <div class="lrow"><svg width="13" height="12"><path d="M6.5 1 L12.4 11 L0.6 11 Z" fill="${css("--fire")}"/></svg>Active / out of control</div>
+     <div class="lrow"><svg width="13" height="12"><path d="M6.5 1 L12.4 11 L0.6 11 Z" fill="${css("--fire-quiet")}"/></svg>Held / under control — size ∝ area</div>
+     <div class="lgroup">Routes</div>` +
+    Object.entries(REGIONS).map(([k,r]) => `<div class="lrow"><span class="ln" style="background:${css(r.var)}"></span>${esc(r.name)}</div>`).join("") +
+    `<div class="lrow"><svg width="13" height="13"><rect x="3" y="3" width="7" height="7" transform="rotate(45 6.5 6.5)" fill="${css('--ink3')}"/></svg>Trailhead marker (no mapped line)</div>
+     <div class="lrow"><span class="ln" style="background:none;border-top:2px dashed ${css("--park")};height:0"></span>Park boundary</div>`;
+}
+
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", restyle);
+boot();
+</script>
+</body>
+</html>
