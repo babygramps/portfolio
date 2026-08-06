@@ -92,6 +92,8 @@ aside {
   font: 600 10px 'Archivo Narrow', sans-serif; letter-spacing: .12em; text-transform: uppercase;
   color: var(--ink3); width: 52px; flex: none;
 }
+#fcount { font: 500 11.5px 'Archivo Narrow', sans-serif; letter-spacing: .04em; color: var(--ink3); padding-top: 2px; }
+#fcount b { color: var(--ink2); }
 .fbtn {
   font: 600 12.5px 'Archivo Narrow', sans-serif; letter-spacing: .03em;
   padding: 4px 10px; border: 1px solid var(--edge2); border-radius: 999px;
@@ -275,14 +277,37 @@ main { flex: 1; position: relative; min-width: 0; background: var(--water); }
       <div class="side-head">
         <div class="filters" role="group" aria-label="Length filter">
           <span class="fl">Length</span>
-          <button class="fbtn flen" data-f="all" aria-pressed="true">All</button>
-          <button class="fbtn flen" data-f="flag" aria-pressed="false">≈50-mile trips (40&nbsp;mi+)</button>
+          <button class="fbtn" data-g="len" data-f="all" aria-pressed="true">All</button>
+          <button class="fbtn" data-g="len" data-f="flag" aria-pressed="false">≈50-mi trips (40&nbsp;mi+)</button>
+        </div>
+        <div class="filters" role="group" aria-label="Days filter">
+          <span class="fl">Days</span>
+          <button class="fbtn" data-g="days" data-f="all" aria-pressed="true">All</button>
+          <button class="fbtn" data-g="days" data-f="short" aria-pressed="false">2–3 day</button>
+          <button class="fbtn" data-g="days" data-f="long" aria-pressed="false">4+ day</button>
+        </div>
+        <div class="filters" role="group" aria-label="Access filter">
+          <span class="fl">Access</span>
+          <button class="fbtn" data-g="access" data-f="all" aria-pressed="true">All</button>
+          <button class="fbtn" data-g="access" data-f="noclosed" aria-pressed="false">Hide closures</button>
+          <button class="fbtn" data-g="access" data-f="clean" aria-pressed="false">No known issues</button>
         </div>
         <div class="filters" role="group" aria-label="Permit filter">
           <span class="fl">Permits</span>
-          <button class="fbtn fperm" data-f="all" aria-pressed="true">All</button>
-          <button class="fbtn fperm" data-f="easy" aria-pressed="false">No competitive reservation</button>
+          <button class="fbtn" data-g="perm" data-f="all" aria-pressed="true">All</button>
+          <button class="fbtn" data-g="perm" data-f="easy" aria-pressed="false">No competitive reservation</button>
         </div>
+        <div class="filters" role="group" aria-label="Logistics filter">
+          <span class="fl">Shuttle</span>
+          <button class="fbtn" data-g="shuttle" data-f="all" aria-pressed="true">All</button>
+          <button class="fbtn" data-g="shuttle" data-f="none" aria-pressed="false">No shuttle needed</button>
+        </div>
+        <div class="filters" role="group" aria-label="Air quality filter">
+          <span class="fl">Air now</span>
+          <button class="fbtn" data-g="air" data-f="all" aria-pressed="true">All</button>
+          <button class="fbtn" data-g="air" data-f="ok" aria-pressed="false">AQI ≤ 100 at trailhead</button>
+        </div>
+        <div id="fcount"></div>
       </div>
       <div class="scroll" id="cards"></div>
     </div>
@@ -355,10 +380,40 @@ const havMi = (a1,o1,a2,o2) => {
 
 let DATA = null, ENV = null;
 let map, layers = {}, routeLayers = {}, envGroup = null, thLayer = null;
-let selectedId = null, flagOnly = false, easyPermits = false;
+let selectedId = null;
+const FILTERS = {len: "all", days: "all", access: "all", perm: "all", shuttle: "all", air: "all"};
 const routeColor = r => css(REGIONS[r.region].var);
-const routeVisible = r => (!flagOnly || (r.distance_mi ?? 0) >= 40) &&
-                          (!easyPermits || r.permit_level !== "reserve");
+function statusLevel(r) {
+  const s = r.status_2026 || "";
+  // A status that leads with "Open" is open now, whatever dated closure
+  // windows it goes on to mention (e.g. Joffre's June/September closures).
+  if (!/^\s*open/i.test(s) && /EFFECTIVELY CLOSED|PARTIALLY CLOSED|\bCLOSED\b/.test(s)) return "closed";
+  if (/closed|washed out|washout|damaged|advisory|evacuation|caution/i.test(s)) return "caveat";
+  return "open";
+}
+function daysRange(r) {
+  const nums = (r.typical_days || "").match(/\d+/g);
+  if (!nums) return [null, null];
+  const a = parseInt(nums[0]), b = nums.length > 1 ? parseInt(nums[1]) : a;
+  return [Math.min(a, b), Math.max(a, b)];
+}
+function routeVisible(r) {
+  if (FILTERS.len === "flag" && (r.distance_mi ?? 0) < 40) return false;
+  if (FILTERS.days !== "all") {
+    const [mn, mx] = daysRange(r);
+    if (FILTERS.days === "short" && (mn == null || mn > 3)) return false;
+    if (FILTERS.days === "long" && (mx == null || mx < 4)) return false;
+  }
+  if (FILTERS.access === "noclosed" && statusLevel(r) === "closed") return false;
+  if (FILTERS.access === "clean" && statusLevel(r) !== "open") return false;
+  if (FILTERS.perm === "easy" && r.permit_level === "reserve") return false;
+  if (FILTERS.shuttle === "none" && r.route_type === "point-to-point") return false;
+  if (FILTERS.air === "ok") {
+    const n = r.nearest_aqi && r.nearest_aqi[0];
+    if (n && n.aqi > 100) return false;  // fails open until live data arrives
+  }
+  return true;
+}
 
 // ---------- boot ----------
 async function boot() {
@@ -613,9 +668,9 @@ function restyle() {
 
 // ---------- sidebar ----------
 function statusBadge(r) {
-  const s = r.status_2026 || "";
-  if (/EFFECTIVELY CLOSED|PARTIALLY CLOSED|\bCLOSED\b/.test(s)) return `<span class="badge b-closed">⚠ closure — see details</span>`;
-  if (/closed|washed out|washout|damaged|advisory/i.test(s)) return `<span class="badge b-warn">⚠ access caveat</span>`;
+  const lvl = statusLevel(r);
+  if (lvl === "closed") return `<span class="badge b-closed">⚠ closure — see details</span>`;
+  if (lvl === "caveat") return `<span class="badge b-warn">⚠ access caveat</span>`;
   return `<span class="badge b-open">open</span>`;
 }
 function permitBadge(r) {
@@ -650,6 +705,10 @@ function drawCards() {
     el.addEventListener("click", () => selectRoute(el.dataset.id));
     el.classList.toggle("active", el.dataset.id === selectedId);
   });
+  const total = DATA.routes.length, shown = DATA.routes.filter(routeVisible).length;
+  $("#fcount").innerHTML = shown === total
+    ? `<b>${total}</b> routes`
+    : `<b>${shown}</b> of ${total} routes match — hidden routes are dimmed on the map`;
 }
 
 // ---------- detail ----------
@@ -663,8 +722,8 @@ function renderDetail(r) {
   $("#d-region").textContent = REGIONS[r.region].name;
   $("#d-region").style.setProperty("--rc", routeColor(r));
   $("#d-name").textContent = r.name;
-  const closed = /EFFECTIVELY CLOSED|PARTIALLY CLOSED|\bCLOSED\b/.test(r.status_2026||"");
-  const caveat = !closed && /closed|washed out|washout|damaged|advisory/i.test(r.status_2026||"");
+  const lvl = statusLevel(r);
+  const closed = lvl === "closed", caveat = lvl === "caveat";
   const aq = (r.nearest_aqi||[]).map(n => `<div class="aqrow">
       <span class="dot" style="background:${css(aqiCat(n.aqi).var)}"></span>
       <span class="num"><b>AQI ${n.aqi}</b> — ${esc(aqiCat(n.aqi).name)}</span>
@@ -718,18 +777,15 @@ function selectRoute(id) {
 }
 $("#backbtn").addEventListener("click", () => selectRoute(null));
 
-document.querySelectorAll(".flen").forEach(b => b.addEventListener("click", () => {
-  flagOnly = b.dataset.f === "flag";
-  document.querySelectorAll(".flen").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+$(".side-head").addEventListener("click", e => {
+  const b = e.target.closest(".fbtn");
+  if (!b) return;
+  FILTERS[b.dataset.g] = b.dataset.f;
+  document.querySelectorAll(`.fbtn[data-g="${b.dataset.g}"]`).forEach(x =>
+    x.setAttribute("aria-pressed", String(x === b)));
   drawCards();
   for (const {route} of Object.values(routeLayers)) styleRoute(route, {});
-}));
-document.querySelectorAll(".fperm").forEach(b => b.addEventListener("click", () => {
-  easyPermits = b.dataset.f === "easy";
-  document.querySelectorAll(".fperm").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
-  drawCards();
-  for (const {route} of Object.values(routeLayers)) styleRoute(route, {});
-}));
+});
 
 function drawLegend() {
   const cont = ENV?.meta.continental_smoke || [];
