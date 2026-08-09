@@ -13,7 +13,7 @@ Sources, all keyless:
 """
 from __future__ import annotations
 
-import csv, datetime as dt, io, json, math, pathlib, struct, sys, urllib.error, urllib.parse, urllib.request, zipfile
+import csv, datetime as dt, io, json, math, pathlib, struct, sys, time, urllib.error, urllib.parse, urllib.request, zipfile
 
 OUT = pathlib.Path(__file__).parent / "data"
 OUT.mkdir(exist_ok=True)
@@ -316,7 +316,33 @@ def main():
         smoke = {**prev["smoke"], "analysis_day": prev["meta"]["smoke_day"],
                  "continental": prev["meta"].get("continental_smoke", [])}
     print("Fires...")
-    fires = bc_fires() + us_fires()
+    # The fire feeds (openmaps.gov.bc.ca especially) time out intermittently in
+    # fire season. A dead feed shouldn't kill the whole refresh: retry once,
+    # then carry that feed's previous features forward. The sanity gate in the
+    # workflow still fails the run if the air-quality data itself goes stale.
+    def try_feed(fn, label):
+        for attempt in (1, 2):
+            try:
+                return fn()
+            except Exception as e:
+                print(f"  {label}: attempt {attempt} failed ({e})")
+                if attempt == 1:
+                    time.sleep(20)
+        return None
+
+    prev_fires = prev.get("fires", {}).get("features", [])
+    stale_feeds = []
+    bc = try_feed(bc_fires, "bc wfs")
+    if bc is None:
+        bc = [f for f in prev_fires if f.get("properties", {}).get("src") == "BC Wildfire Service"]
+        stale_feeds.append("bc_fires")
+        print(f"  bc: carrying forward {len(bc)} previous fires")
+    us = try_feed(us_fires, "wfigs")
+    if us is None:
+        us = [f for f in prev_fires if f.get("properties", {}).get("src") == "NIFC WFIGS"]
+        stale_feeds.append("us_fires")
+        print(f"  wfigs: carrying forward {len(us)} previous incidents")
+    fires = bc + us
 
     env = {
         "meta": {
@@ -324,6 +350,7 @@ def main():
             "smoke_day": smoke.pop("analysis_day"),
             "continental_smoke": smoke.pop("continental"),
             "fetched": dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"),
+            "stale_feeds": stale_feeds,
         },
         "aq": aq,
         "smoke": smoke,
