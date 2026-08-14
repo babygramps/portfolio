@@ -1,0 +1,212 @@
+[
+ {
+  "id": "oak-hills",
+  "name": "Oakland hills",
+  "lat": 37.832,
+  "lon": -122.19,
+  "station": "KOAK"
+ },
+ {
+  "id": "berkeley",
+  "name": "Berkeley / Tilden",
+  "lat": 37.9,
+  "lon": -122.244,
+  "station": "KOAK"
+ },
+ {
+  "id": "lamorinda",
+  "name": "Lamorinda / Briones",
+  "lat": 37.9,
+  "lon": -122.15,
+  "station": "KCCR"
+ },
+ {
+  "id": "diablo",
+  "name": "Mount Diablo",
+  "lat": 37.881,
+  "lon": -121.919,
+  "station": "KCCR"
+ },
+ {
+  "id": "livermore",
+  "name": "Livermore / Mines Rd",
+  "lat": 37.61,
+  "lon": -121.7,
+  "station": "KLVK"
+ },
+ {
+  "id": "sunol",
+  "name": "Sunol / Calaveras",
+  "lat": 37.594,
+  "lon": -121.883,
+  "station": "KLVK"
+ },
+ {
+  "id": "alameda",
+  "name": "Alameda shoreline",
+  "lat": 37.762,
+  "lon": -122.263,
+  "station": "KOAK"
+ },
+ {
+  "id": "tam",
+  "name": "Mount Tam / Mill Valley",
+  "lat": 37.92,
+  "lon": -122.58,
+  "station": "KDVO"
+ },
+ {
+  "id": "headlands",
+  "name": "Marin Headlands",
+  "lat": 37.829,
+  "lon": -122.52,
+  "station": "KSFO"
+ },
+ {
+  "id": "ptreyes",
+  "name": "Point Reyes Station",
+  "lat": 38.072,
+  "lon": -122.81,
+  "station": "KDVO"
+ },
+ {
+  "id": "lighthouse",
+  "name": "Outer Point Reyes",
+  "lat": 37.996,
+  "lon": -123.02,
+  "station": "KDVO"
+ },
+ {
+  "id": "petaluma",
+  "name": "Petaluma / Chileno",
+  "lat": 38.23,
+  "lon": -122.75,
+  "station": "KO69"
+ },
+ {
+  "id": "sonomacoast",
+  "name": "Sonoma coast",
+  "lat": 38.41,
+  "lon": -123.01,
+  "station": "KSTS"
+ },
+ {
+  "id": "russian",
+  "name": "Russian River",
+  "lat": 38.51,
+  "lon": -122.98,
+  "station": "KSTS"
+ },
+ {
+  "id": "healdsburg",
+  "name": "Healdsburg",
+  "lat": 38.61,
+  "lon": -122.87,
+  "station": "KSTS"
+ },
+ {
+  "id": "sonomavly",
+  "name": "Sonoma Valley",
+  "lat": 38.35,
+  "lon": -122.47,
+  "station": "KAPC"
+ },
+ {
+  "id": "napa",
+  "name": "Napa Valley",
+  "lat": 38.45,
+  "lon": -122.36,
+  "station": "KAPC"
+ },
+ {
+  "id": "skyline",
+  "name": "Skyline / Woodside",
+  "lat": 37.4,
+  "lon": -122.28,
+  "station": "KSQL"
+ },
+ {
+  "id": "sanmateocoast",
+  "name": "San Mateo coast",
+  "lat": 37.3,
+  "lon": -122.4,
+  "station": "KHAF"
+ },
+ {
+  "id": "hmb",
+  "name": "Half Moon Bay",
+  "lat": 37.463,
+  "lon": -122.43,
+  "station": "KHAF"
+ },
+ {
+  "id": "sfcoast",
+  "name": "San Francisco coast",
+  "lat": 37.757,
+  "lon": -122.51,
+  "station": "KSFO"
+ },
+ {
+  "id": "hamilton",
+  "name": "Mount Hamilton",
+  "lat": 37.343,
+  "lon": -121.645,
+  "station": "KRHV"
+ },
+ {
+  "id": "southvly",
+  "name": "South Santa Clara",
+  "lat": 37.15,
+  "lon": -121.7,
+  "station": "KRHV"
+ },
+ {
+  "id": "carquinez",
+  "name": "Carquinez Strait",
+  "lat": 38.03,
+  "lon": -122.2,
+  "station": "KCCR"
+ },
+ {
+  "id": "stinson",
+  "name": "Stinson Beach",
+  "lat": 37.9,
+  "lon": -122.641,
+  "station": "KDVO"
+ },
+ {
+  "id": "bolinas",
+  "name": "Bolinas / Olema",
+  "lat": 37.98,
+  "lon": -122.72,
+  "station": "KDVO"
+ },
+ {
+  "id": "pescadero",
+  "name": "Pescadero",
+  "lat": 37.255,
+  "lon": -122.383,
+  "station": "KHAF"
+ },
+ {
+  "id": "morganhill",
+  "name": "Morgan Hill",
+  "lat": 37.13,
+  "lon": -121.653,
+  "station": "KRHV"
+ },
+ {
+  "id": "orinda",
+  "name": "Orinda / Moraga",
+  "lat": 37.86,
+  "lon": -122.17,
+  "station": "KCCR"
+ },
+ {
+  "id": "guerneville",
+  "name": "Guerneville",
+  "lat": 38.502,
+  "lon": -122.996,
+  "station": "KSTS"
+ }
+]

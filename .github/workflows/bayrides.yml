@@ -1,0 +1,152 @@
+name: Bay Area Ride Finder (/bayrides)
+
+# Refreshes riding conditions every hour and publishes them to S3. The route
+# data itself is baked into index.html and only re-uploaded when the page
+# changes, so a scheduled run touches one small JSON file.
+
+on:
+  schedule:
+    # :41 past the hour — offset from the pnwhikes26 job at :23 and away from
+    # the top of the hour, when GitHub delays scheduled runs most.
+    - cron: "41 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [master, main]
+    paths:
+      - "bayrides/**"
+      - ".github/workflows/bayrides.yml"
+
+concurrency:
+  group: bayrides-publish
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: us-west-1
+  S3_BUCKET: rick-portfolio-2025
+  CLOUDFRONT_DISTRIBUTION_ID: E3HT67NT39EUN4
+  PREFIX: bayrides
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Restore previous env.json
+        # fetch_env.py carries the rain history and the NWS gridpoint lookups
+        # forward, so starting from the last published file keeps the run small.
+        run: |
+          mkdir -p bayrides/data
+          if aws s3 cp "s3://$S3_BUCKET/$PREFIX/data/env.json" bayrides/data/env.json 2>/dev/null; then
+            echo "restored env.json from S3"
+          elif [ -f bayrides/seed/env.json ]; then
+            cp bayrides/seed/env.json bayrides/data/env.json
+            echo "no published env.json yet — bootstrapped from seed/"
+          else
+            echo "cold start; the rain window will fill in over the next few runs"
+          fi
+
+      - name: Fetch live conditions
+        run: python3 bayrides/fetch_env.py
+
+      - name: Sanity-check what we're about to publish
+        run: |
+          python3 - <<'PY'
+          import datetime, json, sys
+          env = json.load(open("bayrides/data/env.json"))
+          meta = env.get("meta", {})
+          zones = env.get("zones", [])
+          # Failing here leaves the previous hour's data live, which is the safe
+          # state: a stale forecast beats an empty one.
+          problems = []
+          if len(zones) < 20:
+              problems.append(f"only {len(zones)} zones")
+          withfc = meta.get("zones_with_forecast", 0)
+          if withfc < len(zones) * 0.6:
+              problems.append(f"only {withfc}/{len(zones)} zones have a forecast")
+          try:
+              age = (datetime.datetime.now(datetime.timezone.utc)
+                     - datetime.datetime.strptime(meta["updated"], "%Y-%m-%dT%H:%M:%SZ")
+                       .replace(tzinfo=datetime.timezone.utc)).total_seconds()
+          except Exception:
+              age = 1e9
+          if age > 3600:
+              problems.append("timestamp is more than an hour old")
+          if "features" not in env.get("smoke", {}):
+              problems.append("smoke feed missing")
+          if "features" not in env.get("fires", {}):
+              problems.append("fire feed missing")
+          if problems:
+              sys.exit("refusing to publish: " + "; ".join(problems))
+          hot = max((z["hours"][0]["temp"] for z in zones if z.get("hours")), default="?")
+          print(f"{withfc}/{len(zones)} zones, warmest right now {hot}F, "
+                f"{len(env['smoke']['features'])} plumes, {len(env['fires']['features'])} fires")
+          PY
+
+      - name: Publish conditions
+        run: |
+          # Small and hourly, so a short TTL is fine.
+          aws s3 cp bayrides/data/env.json "s3://$S3_BUCKET/$PREFIX/data/env.json" \
+            --cache-control "public, max-age=120" \
+            --content-type "application/json" --only-show-errors
+
+      - name: Publish the page
+        if: github.event_name != 'schedule'
+        # This origin answers a missing key with the site homepage at status
+        # 200, so a half-finished upload publishes a page that looks fine and
+        # is not. The page is one self-contained file, which sidesteps the
+        # Cloudflare asset-caching trap entirely — there are no versioned
+        # assets to get out of step with it.
+        env:
+          AWS_RETRY_MODE: standard
+          AWS_MAX_ATTEMPTS: "5"
+        run: |
+          put() {
+            aws --cli-connect-timeout 15 --cli-read-timeout 180 \
+              s3 cp "$1" "s3://$S3_BUCKET/$2" --only-show-errors \
+              --content-type "$3" --cache-control "$4"
+            echo "  uploaded $2"
+          }
+          # Extensionless key answers /bayrides (no trailing slash) with a
+          # redirect stub; relative paths only resolve from /bayrides/.
+          put bayrides/redirect.html "$PREFIX" "text/html" "public, max-age=3600"
+          put bayrides/index.html "$PREFIX/index.html" "text/html" "public, max-age=300"
+
+      - name: Invalidate CloudFront
+        run: |
+          PATHS="/$PREFIX/data/*"
+          if [ "${{ github.event_name }}" != "schedule" ]; then
+            PATHS="$PATHS /$PREFIX /$PREFIX/index.html"
+          fi
+          aws cloudfront create-invalidation \
+            --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
+            --paths $PATHS
+
+      - name: Verify what visitors will actually get
+        run: |
+          # A missing key returns the homepage at status 200 here, so status
+          # codes prove nothing — check content type and size at the S3 origin.
+          ORIGIN="http://$S3_BUCKET.s3-website-$AWS_REGION.amazonaws.com"
+          fail=0
+          check() {
+            out=$(curl -sL -o /dev/null \
+              -w "%{http_code}|%{content_type}|%{size_download}" "$ORIGIN/$1")
+            code=${out%%|*}; rest=${out#*|}; type=${rest%%|*}; len=${rest##*|}
+            if [ "$code" != "200" ] || [[ "$type" != *"$2"* ]] || [ "$len" -lt "$3" ]; then
+              echo "  FAIL $1 -> $code $type ${len}B (wanted $2, >= $3 B)"
+              fail=1
+            else
+              echo "  ok   $1 -> $type ${len}B"
+            fi
+          }
+          check "$PREFIX/data/env.json" "application/json" 8000
+          check "$PREFIX/index.html" "text/html" 900000
+          exit $fail
