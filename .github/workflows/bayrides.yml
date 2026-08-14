@@ -117,6 +117,13 @@ jobs:
           }
           # Extensionless key answers /bayrides (no trailing slash) with a
           # redirect stub; relative paths only resolve from /bayrides/.
+          # Photos are content-addressed by route id and only change when a
+          # route does, so they can be cached hard. They go up before the HTML
+          # that references them.
+          aws s3 sync bayrides/photos "s3://$S3_BUCKET/$PREFIX/photos" \
+            --content-type "image/webp" --cache-control "public, max-age=31536000" \
+            --size-only --only-show-errors
+          echo "  synced photos"
           put bayrides/redirect.html "$PREFIX" "text/html" "public, max-age=3600"
           put bayrides/index.html "$PREFIX/index.html" "text/html" "public, max-age=300"
 
@@ -124,7 +131,7 @@ jobs:
         run: |
           PATHS="/$PREFIX/data/*"
           if [ "${{ github.event_name }}" != "schedule" ]; then
-            PATHS="$PATHS /$PREFIX /$PREFIX/index.html"
+            PATHS="$PATHS /$PREFIX /$PREFIX/index.html /$PREFIX/photos/*"
           fi
           aws cloudfront create-invalidation \
             --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
@@ -149,4 +156,6 @@ jobs:
           }
           check "$PREFIX/data/env.json" "application/json" 8000
           check "$PREFIX/index.html" "text/html" 900000
+          first=$(ls bayrides/photos/*.webp 2>/dev/null | head -1)
+          [ -n "$first" ] && check "$PREFIX/photos/$(basename "$first")" "image/webp" 3000
           exit $fail
