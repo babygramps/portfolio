@@ -117,10 +117,12 @@ jobs:
           }
           # Extensionless key answers /bayrides (no trailing slash) with a
           # redirect stub; relative paths only resolve from /bayrides/.
-          # Photos are content-addressed by route id and only change when a
-          # route does, so they can be cached hard. They go up before the HTML
-          # that references them.
-          aws s3 sync bayrides/photos "s3://$S3_BUCKET/$PREFIX/photos" \
+          # Photos live under a version-stamped directory and are cached for a
+          # year. Cloudflare caches by URL for hours and a CloudFront
+          # invalidation cannot reach it, so any URL that was ever served an
+          # error stays broken — new content must go to a new path, never the
+          # same one. They go up before the HTML that references them.
+          aws s3 sync bayrides/photos-v1 "s3://$S3_BUCKET/$PREFIX/photos-v1" \
             --content-type "image/webp" --cache-control "public, max-age=31536000" \
             --size-only --only-show-errors
           echo "  synced photos"
@@ -131,7 +133,7 @@ jobs:
         run: |
           PATHS="/$PREFIX/data/*"
           if [ "${{ github.event_name }}" != "schedule" ]; then
-            PATHS="$PATHS /$PREFIX /$PREFIX/index.html /$PREFIX/photos/*"
+            PATHS="$PATHS /$PREFIX /$PREFIX/index.html /$PREFIX/photos-v1/*"
           fi
           aws cloudfront create-invalidation \
             --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
@@ -156,6 +158,6 @@ jobs:
           }
           check "$PREFIX/data/env.json" "application/json" 8000
           check "$PREFIX/index.html" "text/html" 900000
-          first=$(ls bayrides/photos/*.webp 2>/dev/null | head -1)
-          [ -n "$first" ] && check "$PREFIX/photos/$(basename "$first")" "image/webp" 3000
+          first=$(ls bayrides/photos-v1/*.webp 2>/dev/null | head -1)
+          [ -n "$first" ] && check "$PREFIX/photos-v1/$(basename "$first")" "image/webp" 3000
           exit $fail
