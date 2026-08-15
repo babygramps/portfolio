@@ -315,6 +315,9 @@ details.sect[open] summary{margin-bottom:7px}
   flex-wrap:wrap}
 .actions .btn{display:inline-flex; align-items:center; gap:6px}
 .actions a.btn{text-decoration:none}
+/* on desktop the map is already beside the panel; the jump only helps phones */
+#showmap{display:none}
+@media (max-width:940px){ #showmap{display:inline-flex} }
 #toast{position:fixed; left:50%; bottom:22px; transform:translateX(-50%);
   background:var(--ink); color:var(--paper); font-size:12.5px; padding:8px 13px;
   border-radius:6px; box-shadow:var(--shadow); z-index:20; opacity:0;
@@ -323,6 +326,10 @@ details.sect[open] summary{margin-bottom:7px}
 #toast.on{opacity:1}
 
 #profwrap{position:relative}
+.gkey{display:flex; gap:12px; margin-top:3px; font-family:var(--data);
+  font-size:9.5px; color:var(--ink-3)}
+.gkey i{display:inline-block; width:12px; height:3px; border-radius:2px;
+  margin-right:4px; vertical-align:middle}
 #prof{width:100%; height:112px; display:block}
 #profgrab{position:absolute; inset:0; cursor:crosshair}
 #proftip{position:absolute; z-index:2; pointer-events:none; opacity:0;
@@ -1445,8 +1452,10 @@ function select(id){
   const d = document.getElementById('detail');
   if (!id){ body.classList.remove('detail'); d.innerHTML = '';
     document.getElementById('tabdetail').hidden = true;
+    pendingFit = null;
     drawPins(null); render(); resize(); apply(); syncHash(); return; }
   const r = R.find(x => x.id === id);
+  pendingFit = r.bbox;
   body.classList.add('detail');
   d.innerHTML = detailHTML(r);
   d.scrollTop = 0;
@@ -1467,6 +1476,8 @@ function select(id){
     if (navigator.share) sh.textContent = 'Share';
     sh.onclick = () => shareRoute(r);
   }
+  const sm = document.getElementById('showmap');
+  if (sm) sm.onclick = () => pane('map');
   document.getElementById('tabdetail').hidden = false;
   drawPins(r); render(); resize(); apply(); stylePins();
   drawProfile(r);
@@ -1528,6 +1539,7 @@ function detailHTML(r){
 
   <div class="actions">
     <button class="btn" id="dlgpx" type="button">&darr; Download GPX</button>
+    <button class="btn" id="showmap" type="button">Show on map</button>
     <button class="btn" id="sharebtn" type="button">Copy link</button>
     <a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=${r.line[0][0]},${r.line[0][1]}"
        target="_blank" rel="noopener">Directions to the start</a>
@@ -1540,6 +1552,7 @@ function detailHTML(r){
     <svg id="prof" aria-label="Elevation profile"></svg>
     <div id="profgrab"></div>
     <div id="proftip"></div>
+    <div class="gkey" aria-hidden="true"><span><i style="background:var(--warn)"></i>4&ndash;7%</span><span><i style="background:var(--hard)"></i>7&ndash;10%</span><span><i style="background:var(--max)"></i>10%+</span></div>
   </div>
 
   <div class="sect">
@@ -1620,8 +1633,33 @@ function drawProfile(r){
   pts.forEach(q => { d += 'L' + X(q[0]).toFixed(1) + ' ' + Y(q[1]).toFixed(1); });
   const area = d + 'L' + X(maxX).toFixed(1) + ' ' + (h-padB) + 'L' + X(0).toFixed(1) + ' ' + (h-padB) + 'Z';
   p.appendChild(el('path', {d:area, fill:'var(--' + r.bike + ')', opacity:.16, stroke:'none'}));
-  p.appendChild(el('path', {d, fill:'none', stroke:'var(--' + r.bike + ')',
-    'stroke-width':2, 'stroke-linejoin':'round', 'stroke-linecap':'round'}));
+
+  // The line itself is coloured by climbing grade — the app's severity
+  // colours, same meaning as everywhere else. Descents stay in the bike
+  // colour: the convention (and the suffering) is about going up.
+  const grades = [];
+  for (let i = 1; i < pts.length; i++){
+    const run = (pts[i][0] - pts[i-1][0]) * 5280;
+    grades.push(run > 0 ? (pts[i][1] - pts[i-1][1]) / run * 100 : 0);
+  }
+  const gsm = grades.map((g, i) => {
+    const lo = Math.max(0, i - 1), hi2 = Math.min(grades.length - 1, i + 1);
+    let s = 0; for (let j = lo; j <= hi2; j++) s += grades[j];
+    return s / (hi2 - lo + 1);
+  });
+  const band = g => g >= 10 ? 'var(--max)' : g >= 7 ? 'var(--hard)'
+    : g >= 4 ? 'var(--warn)' : 'var(--' + r.bike + ')';
+  let runStart = 0;
+  for (let i = 1; i <= gsm.length; i++){
+    if (i === gsm.length || band(gsm[i]) !== band(gsm[runStart])){
+      let seg = 'M' + X(pts[runStart][0]).toFixed(1) + ' ' + Y(pts[runStart][1]).toFixed(1);
+      for (let j = runStart + 1; j <= i; j++)
+        seg += 'L' + X(pts[j][0]).toFixed(1) + ' ' + Y(pts[j][1]).toFixed(1);
+      p.appendChild(el('path', {d:seg, fill:'none', stroke:band(gsm[runStart]),
+        'stroke-width':2, 'stroke-linejoin':'round', 'stroke-linecap':'round'}));
+      runStart = i;
+    }
+  }
 
   // one direct label: the high point
   let hiI = 0; pts.forEach((q,i) => { if (q[1] > pts[hiI][1]) hiI = i; });
@@ -1661,7 +1699,9 @@ function drawProfile(r){
     ptip.style.opacity = 1;
     ptip.style.left = (x / w * rect.width) + 'px';
     ptip.style.top = (Y(pts[i][1]) / h * rect.height + 6) + 'px';
-    ptip.textContent = pts[i][0].toFixed(1) + ' mi · ' + fmt(pts[i][1]) + ' ft';
+    const g = gsm[Math.min(Math.max(i - 1, 0), gsm.length - 1)];
+    ptip.textContent = pts[i][0].toFixed(1) + ' mi · ' + fmt(pts[i][1]) + ' ft · ' +
+      (g > 0 ? '+' : '') + g.toFixed(0) + '%';
     showProfilePoint(maxX ? pts[i][0] / maxX : 0);
   };
   grab.onpointerleave = () => {
@@ -1671,6 +1711,9 @@ function drawProfile(r){
 
 /* ============================================================ mobile */
 let prevPane = 'map';
+// A route selected while the map pane is hidden can't be framed then — a
+// hidden map measures 0. Remember the wish and honour it when the map shows.
+let pendingFit = null;
 function pane(name){
   const b = document.getElementById('body');
   if (name === 'detail' && b.dataset.pane !== 'detail') prevPane = b.dataset.pane || 'map';
@@ -1678,13 +1721,19 @@ function pane(name){
   document.querySelectorAll('#mobtabs .btn').forEach(x =>
     x.classList.toggle('on', x.dataset.pane === name));
   if (name === 'map'){
-    requestAnimationFrame(() => {
-      // The map may never have had a size (a hidden pane measures 0), in which
-      // case the stored zoom is meaningless and we frame it from scratch.
+    // A just-revealed pane can still measure 0 until the browser lays it
+    // out; fitting from a degenerate size would set a negative zoom. Keep
+    // trying briefly, and never frame from a zero measurement.
+    let tries = 0;
+    const frame = () => {
+      if (b.dataset.pane !== 'map') return;           // switched away meanwhile
       const had = laidOut; resize();
-      if (!had) fit(S.sel ? R.find(r => r.id === S.sel).bbox : ALL_BBOX, 46);
+      if (W < 10 || H < 10){ if (++tries < 50) setTimeout(frame, 60); return; }
+      if (pendingFit){ fit(pendingFit, 46); pendingFit = null; }
+      else if (!had) fit(S.sel ? R.find(r => r.id === S.sel).bbox : ALL_BBOX, 46);
       apply();
-    });
+    };
+    requestAnimationFrame(frame); setTimeout(frame, 0);
   }
 }
 document.querySelectorAll('#mobtabs .btn').forEach(b => b.onclick = () => pane(b.dataset.pane));
