@@ -754,22 +754,61 @@ function resize(){
 }
 
 /* ---- pan / zoom ---- */
-/* Pan without pointer capture: capturing would retarget the pointer stream to
-   the <svg> and swallow clicks on the route paths underneath. Instead we track
-   the gesture on window and remember whether it actually moved, so a drag that
-   ends over a route does not also select it. */
-let drag = null, draggedAt = 0;
+/* Pan and pinch without pointer capture: capturing would retarget the pointer
+   stream to the <svg> and swallow clicks on the route paths underneath.
+   Instead we track the gesture on window and remember whether it actually
+   moved, so a drag that ends over a route does not also select it. A second
+   finger turns the pan into a pinch (touch-action:none suppresses the
+   browser's own gesture, so the maths here is all the zoom a phone gets). */
+const ptrs = new Map();
+let drag = null, pinch = null, draggedAt = 0;
+
+function midspan(){
+  const [a, b] = [...ptrs.values()];
+  return {d: Math.hypot(a.x - b.x, a.y - b.y), x: (a.x + b.x) / 2, y: (a.y + b.y) / 2};
+}
+
 svg.addEventListener('pointerdown', e => {
-  drag = {x:e.clientX, y:e.clientY, tx, ty, moved:false};
+  ptrs.set(e.pointerId, {x: e.clientX, y: e.clientY});
+  if (ptrs.size === 2){
+    const s = midspan();
+    drag = null;
+    pinch = {d0: Math.max(1, s.d), k0: k, x0: s.x, y0: s.y, tx0: tx, ty0: ty};
+    draggedAt = Date.now();
+  } else if (ptrs.size === 1){
+    drag = {x: e.clientX, y: e.clientY, tx, ty, moved: false};
+  }
   svg.classList.add('drag');
 });
 window.addEventListener('pointermove', e => {
+  if (ptrs.has(e.pointerId)) ptrs.set(e.pointerId, {x: e.clientX, y: e.clientY});
+  if (pinch && ptrs.size === 2){
+    const rect = svg.getBoundingClientRect();
+    const s = midspan();
+    const nk = Math.max(300, Math.min(600000, pinch.k0 * (s.d / pinch.d0)));
+    // keep the world point that started under the fingers' midpoint under
+    // their current midpoint, so the map scales and follows in one motion
+    tx = (s.x - rect.left) - ((pinch.x0 - rect.left) - pinch.tx0) * (nk / pinch.k0);
+    ty = (s.y - rect.top) - ((pinch.y0 - rect.top) - pinch.ty0) * (nk / pinch.k0);
+    k = nk; draggedAt = Date.now(); apply();
+    return;
+  }
   if (!drag) return;
   const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
   if (Math.abs(dx) + Math.abs(dy) > 4){ drag.moved = true; draggedAt = Date.now(); }
   tx = drag.tx + dx; ty = drag.ty + dy; apply();
 });
-function endDrag(){ svg.classList.remove('drag'); drag = null; }
+function endDrag(e){
+  if (e && e.pointerId != null) ptrs.delete(e.pointerId);
+  if (ptrs.size === 1){
+    // one finger lifted mid-pinch: carry on as a pan from where we are
+    const [p1] = [...ptrs.values()];
+    pinch = null;
+    drag = {x: p1.x, y: p1.y, tx, ty, moved: true};
+    return;
+  }
+  svg.classList.remove('drag'); drag = null; pinch = null; ptrs.clear();
+}
 window.addEventListener('pointerup', endDrag);
 window.addEventListener('pointercancel', endDrag);
 
