@@ -315,11 +315,6 @@ details.sect[open] summary{margin-bottom:7px}
   flex-wrap:wrap}
 .actions .btn{display:inline-flex; align-items:center; gap:6px}
 .actions a.btn{text-decoration:none}
-/* on desktop the map is already beside the panel; these only help phones */
-#showmap{display:none}
-#minimap{display:none; width:100%; height:150px; background:var(--land);
-  border-bottom:1px solid var(--rule-2); cursor:pointer}
-@media (max-width:940px){ #showmap{display:inline-flex} #minimap{display:block} }
 #toast{position:fixed; left:50%; bottom:22px; transform:translateX(-50%);
   background:var(--ink); color:var(--paper); font-size:12.5px; padding:8px 13px;
   border-radius:6px; box-shadow:var(--shadow); z-index:20; opacity:0;
@@ -333,7 +328,7 @@ details.sect[open] summary{margin-bottom:7px}
 .gkey i{display:inline-block; width:12px; height:3px; border-radius:2px;
   margin-right:4px; vertical-align:middle}
 #prof{width:100%; height:112px; display:block}
-#profgrab{position:absolute; inset:0; cursor:crosshair}
+#profgrab{position:absolute; inset:0; cursor:crosshair; touch-action:none}
 #proftip{position:absolute; z-index:2; pointer-events:none; opacity:0;
   background:var(--paper); border:1px solid var(--rule); border-radius:4px;
   padding:3px 6px; font-family:var(--data); font-size:11px; white-space:nowrap;
@@ -405,10 +400,19 @@ footer a{color:var(--ink-3)}
 @media (max-width:940px){
   #top .spacer{display:none}
   #body,#body.detail{grid-template-columns:1fr; grid-template-rows:minmax(0,1fr)}
-  #rail,#mapwrap,#detail{display:none}
+  /* #body.detail #detail must be repeated here: the desktop show-rule has
+     higher specificity than a bare #detail and would keep the panel visible
+     under every tab, collapsing the single grid row's other occupant to 0px */
+  #rail,#mapwrap,#detail,#body.detail #detail{display:none}
   #body[data-pane="list"] #rail{display:grid}
   #body[data-pane="map"] #mapwrap{display:block}
+  /* the Route tab mirrors desktop: the real map, pinned above the panel */
+  #body[data-pane="detail"]{grid-template-rows:230px minmax(0,1fr)}
+  #body[data-pane="detail"] #mapwrap{display:block; border-bottom:1px solid var(--rule)}
   #body[data-pane="detail"] #detail{display:block}
+  /* the legend would cover a third of the small strip; the open route's own
+     line is the only surface on show anyway */
+  #body[data-pane="detail"] #legend{display:none}
   #mobtabs{display:flex; gap:4px}
   #brand .sub{display:none}
   header#top{padding:8px 10px; gap:8px}
@@ -1467,8 +1471,9 @@ function focusStop(key, fromList){
     tx = W / 2 - o.x * k; ty = H / 2 - o.y * k;
     apply(); stylePins();
   };
-  if (fromList && window.innerWidth <= 940){ pane('map'); requestAnimationFrame(go); }
-  else go();
+  // the map is visible beside the list on desktop and above it in the mobile
+  // route pane, so a tapped stop zooms in place — no pane switch
+  go();
 }
 
 gPins.addEventListener('click', e => {
@@ -1517,57 +1522,12 @@ function select(id){
     if (navigator.share) sh.textContent = 'Share';
     sh.onclick = () => shareRoute(r);
   }
-  const sm = document.getElementById('showmap');
-  if (sm) sm.onclick = () => pane('map');
-  drawMini(r);
   document.getElementById('tabdetail').hidden = false;
   drawPins(r); render(); resize(); apply(); stylePins();
   drawProfile(r);
   syncHash();
   const note = document.getElementById('outnote');
   if (note) note.hidden = matches(r);
-}
-
-/* A small static map of the selected route inside the panel (phones only —
-   desktop has the real map alongside). Nominal viewBox units, so it needs no
-   measuring and renders correctly even while the pane is hidden. The basemap
-   is cloned from the groups the main map already built. */
-function drawMini(r){
-  const m = document.getElementById('minimap');
-  if (!m) return;
-  m.innerHTML = '';
-  const W2 = 360, H2 = 150, pad = 18;
-  m.setAttribute('viewBox', `0 0 ${W2} ${H2}`);
-  // 'meet' never crops the fitted route; the basemap overflows the viewBox
-  // and paints the letterbox bands, so the crop-free choice costs nothing.
-  m.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-  const x0 = mx(r.bbox[1]), x1 = mx(r.bbox[3]);
-  const y0 = -my(r.bbox[2]), y1 = -my(r.bbox[0]);
-  const k2 = Math.min((W2 - pad*2) / Math.max(1e-9, x1 - x0),
-                      (H2 - pad*2) / Math.max(1e-9, y1 - y0));
-  const tx2 = (W2 - (x0 + x1) * k2) / 2, ty2 = (H2 - (y0 + y1) * k2) / 2;
-  const g = el('g', {transform:`translate(${tx2} ${ty2}) scale(${k2})`});
-  [gSea, gPark, gWater, gHwy].forEach(src => g.appendChild(src.cloneNode(true)));
-  const rp = el('path', {d: routeEls.get(r.id).getAttribute('d'), fill:'none',
-    stroke:'var(--' + r.bike + ')', 'stroke-width':3,
-    'vector-effect':'non-scaling-stroke',
-    'stroke-linecap':'round', 'stroke-linejoin':'round'});
-  if (DASH[r.bike]) rp.setAttribute('stroke-dasharray', DASH[r.bike]);
-  g.appendChild(rp);
-  m.appendChild(g);
-  // start and finish sit outside the scaled group so their size is fixed
-  const px = pt => [mx(pt[1]) * k2 + tx2, -my(pt[0]) * k2 + ty2];
-  const s = r.line[0], e2 = r.line[r.line.length - 1];
-  const apart = Math.hypot(e2[0] - s[0], (e2[1] - s[1]) * 0.79) > 0.004;
-  if (apart){
-    const [ex, ey] = px(e2);
-    m.appendChild(el('rect', {x:(ex - 4).toFixed(1), y:(ey - 4).toFixed(1),
-      width:8, height:8, fill:'var(--paper)', stroke:'var(--ink)', 'stroke-width':1.5}));
-  }
-  const [sx, sy] = px(s);
-  m.appendChild(el('circle', {cx:sx.toFixed(1), cy:sy.toFixed(1), r:4.5,
-    fill:'var(--ink)', stroke:'var(--paper)', 'stroke-width':1.5}));
-  m.onclick = () => pane('map');
 }
 
 function esc(s){ return String(s == null ? '' : s)
@@ -1619,13 +1579,10 @@ function detailHTML(r){
     <div class="stat"><div class="v num">${r.grade}%</div><div class="k">steepest ½ mi</div></div>
   </div>
 
-  <svg id="minimap" role="img" aria-label="Map of this route — tap for the full map"></svg>
-
   ${photoStrip(r)}
 
   <div class="actions">
     <button class="btn" id="dlgpx" type="button">&darr; Download GPX</button>
-    <button class="btn" id="showmap" type="button">Show on map</button>
     <button class="btn" id="sharebtn" type="button">Copy link</button>
     <a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=${r.line[0][0]},${r.line[0][1]}"
        target="_blank" rel="noopener">Directions to the start</a>
@@ -1806,13 +1763,14 @@ function pane(name){
   b.dataset.pane = name;
   document.querySelectorAll('#mobtabs .btn').forEach(x =>
     x.classList.toggle('on', x.dataset.pane === name));
-  if (name === 'map'){
-    // A just-revealed pane can still measure 0 until the browser lays it
-    // out; fitting from a degenerate size would set a negative zoom. Keep
-    // trying briefly, and never frame from a zero measurement.
+  if (name === 'map' || name === 'detail'){
+    // The map shows on both these panes (full-screen, or the strip above the
+    // route panel). A just-revealed pane can still measure 0 until the
+    // browser lays it out; fitting from a degenerate size would set a
+    // negative zoom. Keep trying briefly, never frame from a zero measurement.
     let tries = 0;
     const frame = () => {
-      if (b.dataset.pane !== 'map') return;           // switched away meanwhile
+      if (b.dataset.pane !== 'map' && b.dataset.pane !== 'detail') return;
       const had = laidOut; resize();
       if (W < 10 || H < 10){ if (++tries < 50) setTimeout(frame, 60); return; }
       if (pendingFit){ fit(pendingFit, 46); pendingFit = null; }
