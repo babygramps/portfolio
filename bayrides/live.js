@@ -81,6 +81,7 @@
 
   /* Lower is better. Nothing here is a hard veto — it only reorders the list. */
   liveScore = function(r){
+    if (!LIVE) return 0;   // env.json not here (yet, or at all): behave like the stub
     const c = cond(r);
     let s = 0;
     const t = c.hs && c.hs.temp;
@@ -96,6 +97,7 @@
   };
 
   liveChip = function(r){
+    if (!LIVE) return '';
     const c = cond(r);
     if (!c.hs) return '';
     const bits = [];
@@ -110,6 +112,7 @@
   };
 
   liveSection = function(r){
+    if (!LIVE) return '';
     const c = cond(r);
     if (!c.hs) return '';
     const cell = (label, z, h) => !h ? '' :

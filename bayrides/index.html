@@ -315,9 +315,11 @@ details.sect[open] summary{margin-bottom:7px}
   flex-wrap:wrap}
 .actions .btn{display:inline-flex; align-items:center; gap:6px}
 .actions a.btn{text-decoration:none}
-/* on desktop the map is already beside the panel; the jump only helps phones */
+/* on desktop the map is already beside the panel; these only help phones */
 #showmap{display:none}
-@media (max-width:940px){ #showmap{display:inline-flex} }
+#minimap{display:none; width:100%; height:150px; background:var(--land);
+  border-bottom:1px solid var(--rule-2); cursor:pointer}
+@media (max-width:940px){ #showmap{display:inline-flex} #minimap{display:block} }
 #toast{position:fixed; left:50%; bottom:22px; transform:translateX(-50%);
   background:var(--ink); color:var(--paper); font-size:12.5px; padding:8px 13px;
   border-radius:6px; box-shadow:var(--shadow); z-index:20; opacity:0;
@@ -1517,12 +1519,55 @@ function select(id){
   }
   const sm = document.getElementById('showmap');
   if (sm) sm.onclick = () => pane('map');
+  drawMini(r);
   document.getElementById('tabdetail').hidden = false;
   drawPins(r); render(); resize(); apply(); stylePins();
   drawProfile(r);
   syncHash();
   const note = document.getElementById('outnote');
   if (note) note.hidden = matches(r);
+}
+
+/* A small static map of the selected route inside the panel (phones only —
+   desktop has the real map alongside). Nominal viewBox units, so it needs no
+   measuring and renders correctly even while the pane is hidden. The basemap
+   is cloned from the groups the main map already built. */
+function drawMini(r){
+  const m = document.getElementById('minimap');
+  if (!m) return;
+  m.innerHTML = '';
+  const W2 = 360, H2 = 150, pad = 18;
+  m.setAttribute('viewBox', `0 0 ${W2} ${H2}`);
+  // 'meet' never crops the fitted route; the basemap overflows the viewBox
+  // and paints the letterbox bands, so the crop-free choice costs nothing.
+  m.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  const x0 = mx(r.bbox[1]), x1 = mx(r.bbox[3]);
+  const y0 = -my(r.bbox[2]), y1 = -my(r.bbox[0]);
+  const k2 = Math.min((W2 - pad*2) / Math.max(1e-9, x1 - x0),
+                      (H2 - pad*2) / Math.max(1e-9, y1 - y0));
+  const tx2 = (W2 - (x0 + x1) * k2) / 2, ty2 = (H2 - (y0 + y1) * k2) / 2;
+  const g = el('g', {transform:`translate(${tx2} ${ty2}) scale(${k2})`});
+  [gSea, gPark, gWater, gHwy].forEach(src => g.appendChild(src.cloneNode(true)));
+  const rp = el('path', {d: routeEls.get(r.id).getAttribute('d'), fill:'none',
+    stroke:'var(--' + r.bike + ')', 'stroke-width':3,
+    'vector-effect':'non-scaling-stroke',
+    'stroke-linecap':'round', 'stroke-linejoin':'round'});
+  if (DASH[r.bike]) rp.setAttribute('stroke-dasharray', DASH[r.bike]);
+  g.appendChild(rp);
+  m.appendChild(g);
+  // start and finish sit outside the scaled group so their size is fixed
+  const px = pt => [mx(pt[1]) * k2 + tx2, -my(pt[0]) * k2 + ty2];
+  const s = r.line[0], e2 = r.line[r.line.length - 1];
+  const apart = Math.hypot(e2[0] - s[0], (e2[1] - s[1]) * 0.79) > 0.004;
+  if (apart){
+    const [ex, ey] = px(e2);
+    m.appendChild(el('rect', {x:(ex - 4).toFixed(1), y:(ey - 4).toFixed(1),
+      width:8, height:8, fill:'var(--paper)', stroke:'var(--ink)', 'stroke-width':1.5}));
+  }
+  const [sx, sy] = px(s);
+  m.appendChild(el('circle', {cx:sx.toFixed(1), cy:sy.toFixed(1), r:4.5,
+    fill:'var(--ink)', stroke:'var(--paper)', 'stroke-width':1.5}));
+  m.onclick = () => pane('map');
 }
 
 function esc(s){ return String(s == null ? '' : s)
@@ -1573,6 +1618,8 @@ function detailHTML(r){
     <div class="stat"><div class="v num">${fmt(r.high)}</div><div class="k">high point</div></div>
     <div class="stat"><div class="v num">${r.grade}%</div><div class="k">steepest ½ mi</div></div>
   </div>
+
+  <svg id="minimap" role="img" aria-label="Map of this route — tap for the full map"></svg>
 
   ${photoStrip(r)}
 
@@ -1881,6 +1928,7 @@ window.addEventListener('hashchange', applyHash);
 
   /* Lower is better. Nothing here is a hard veto — it only reorders the list. */
   liveScore = function(r){
+    if (!LIVE) return 0;   // env.json not here (yet, or at all): behave like the stub
     const c = cond(r);
     let s = 0;
     const t = c.hs && c.hs.temp;
@@ -1896,6 +1944,7 @@ window.addEventListener('hashchange', applyHash);
   };
 
   liveChip = function(r){
+    if (!LIVE) return '';
     const c = cond(r);
     if (!c.hs) return '';
     const bits = [];
@@ -1910,6 +1959,7 @@ window.addEventListener('hashchange', applyHash);
   };
 
   liveSection = function(r){
+    if (!LIVE) return '';
     const c = cond(r);
     if (!c.hs) return '';
     const cell = (label, z, h) => !h ? '' :
