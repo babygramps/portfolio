@@ -1430,7 +1430,12 @@ gPins.addEventListener('click', e => {
   if (!key || Date.now() - draggedAt < 250) return;
   S.stop = key; stylePins();
   const row = document.querySelector('.fitem[data-key="' + key + '"]');
-  if (row) row.scrollIntoView({block:'center', behavior:'smooth'});
+  if (row){
+    // the stop list may be folded away; a tapped pin should reveal its row
+    const det = row.closest('details');
+    if (det) det.open = true;
+    row.scrollIntoView({block:'center', behavior:'smooth'});
+  }
 });
 
 /* ============================================================ detail */
@@ -1543,14 +1548,14 @@ function detailHTML(r){
     <p><strong>${esc(r.dest.name)}.</strong> ${esc(r.dest.beauty)}</p>
   </div>
 
-  <div class="sect">
-    <h4>Food &amp; water</h4>
+  <details class="sect" id="foodsect">
+    <summary><h4>Food &amp; water</h4><span class="num" style="font-size:11px;color:var(--ink-3)">${stopsFor(r).length}${water.length ? ' + water' : ''}</span></summary>
     <ul class="foodlist">${curated}</ul>
     ${near ? '<h4 style="margin-top:12px">Also on the route</h4><ul class="foodlist">' + near + '</ul>' : ''}
     <p style="margin-top:9px;font-size:12px;color:var(--ink-3)">Tap a stop to map it.</p>
     ${water.length ? '<p style="margin-top:9px"><strong>Water:</strong> ' +
        water.length + ' public tap' + (water.length>1?'s':'') + ' on route.</p>' : ''}
-  </div>
+  </details>
 
   <details class="sect">
     <summary><h4>Start &amp; parking</h4></summary>
