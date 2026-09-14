@@ -118,6 +118,15 @@ summary:hover { color: var(--accent); }
 .project-visual { min-width: 0; }
 .visual-surface { height: 305px; display: flex; align-items: center; justify-content: center; }
 .project-visual figcaption { font-size: 11px; line-height: 1.5; color: var(--muted); padding-top: 9px; }
+.photo-visual .visual-surface { height: auto; }
+.photo-visual img { display: block; width: 100%; height: auto; }
+.miso-toggle { position: relative; overflow: hidden; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; }
+.miso-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+.miso-toggle .miso-photo { position: absolute; inset: 0; height: 100%; object-fit: cover; opacity: 0; transition: opacity 700ms ease-in-out; }
+.miso-toggle.is-showing-photo .miso-photo { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .miso-toggle .miso-photo { transition: none; }
+}
 .assembly-visual .visual-surface { background: #e3ddcf; height: 365px; }
 .assembly-visual img { display: block; width: 100%; height: 100%; object-fit: contain; padding: 15px 20px; }
 .data-visual .visual-surface { background: #dfe7e3; }
