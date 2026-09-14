@@ -66,6 +66,7 @@ summary:hover { color: var(--accent); }
 .experience dd { margin: 0; }
 .personal-projects { list-style: none; padding: 0; margin: 0; }
 .personal-projects li + li { margin-top: 26px; }
+.more-projects { margin-top: 30px; font-size: 13px; color: var(--muted); }
 .personal-projects h3 { font-size: 17px; }
 .personal-projects p { font-size: 14px; color: var(--muted); margin-top: 5px; }
 .contact { padding-bottom: 70px; }
