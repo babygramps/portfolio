@@ -25,6 +25,7 @@ rick-portfolio/
 │   └── package.json        # Lambda dependencies
 ├── rickrothbart.html       # Main HTML file
 ├── index.html              # Deployment copy (auto-generated)
+├── assets/                 # Portfolio illustrations, portrait, and licensed fonts
 ├── styles.css              # Styles
 ├── script.js               # Frontend JavaScript
 ├── *.jpg, *.png, *.svg    # Images and logos

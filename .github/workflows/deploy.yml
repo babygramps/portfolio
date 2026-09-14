@@ -63,6 +63,9 @@ jobs:
           ]
         }' || echo "Bucket policy already set"
         
+        # Publish portfolio illustrations and local fonts before the page references them.
+        aws s3 sync assets/ s3://${{ env.S3_BUCKET }}/assets/
+
         # Upload static files with proper content types
         aws s3 cp index.html s3://${{ env.S3_BUCKET }}/index.html --content-type "text/html"
         aws s3 cp styles.css s3://${{ env.S3_BUCKET }}/styles.css --content-type "text/css"

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 330" fill="none">
+  <title>A rig and its engineering record</title>
+  <desc>Illustrative connections between a pump, test section, and heat exchanger, alongside a structured record. This is not a production piping diagram.</desc>
+  <g stroke="#687b7c" stroke-width="1.6" stroke-linejoin="round">
+    <path d="M81 181V89H204V210H101"/>
+    <circle cx="81" cy="210" r="29" fill="#edf0eb"/>
+    <path d="m70 195 24 15-24 15Z" fill="#b9c9c6"/>
+    <rect x="126" y="70" width="40" height="38" fill="#edf0eb"/>
+    <path d="M134 79v20m8-20v20m8-20v20m8-20v20"/>
+    <rect x="188" y="127" width="32" height="48" fill="#edf0eb"/>
+    <path d="m193 166 22-30m-22 0 22 30"/>
+    <path d="m105 84 6 5-6 5m94 99 5 6 5-6"/>
+    <path d="M243 151h31m-6-5 6 5-6 5" stroke="#9ca9a4"/>
+    <path d="M298 69h84l23 23v163H298Z" fill="#f6f4ee"/>
+    <path d="M382 69v23h23"/>
+    <path d="M315 129h12m-12 42h12m-12 42h12" stroke="#923e29"/>
+  </g>
+  <g fill="#394e50" font-family="Arial, sans-serif" font-size="12">
+    <text x="146" y="53" text-anchor="middle">Test section</text>
+    <text x="81" y="266" text-anchor="middle">Pump</text>
+    <text x="331" y="133">Parts</text>
+    <text x="331" y="175">Connections</text>
+    <text x="331" y="217">Test data</text>
+  </g>
+</svg>

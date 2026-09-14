@@ -21,7 +21,7 @@ rick-portfolio/
 ├── rick.jpg                    # Profile photo
 ├── laney.png                   # Laney College logo
 ├── Noya Logo Vertical.png      # Noya logo
-└── orbital.svg                 # Orbital Materials logo
+└── orbital.svg                 # Orbital Industries logo
 ```
 
 ## 🗑️ Files Removed
