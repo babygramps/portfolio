@@ -8,7 +8,7 @@
   <link rel="canonical" href="https://rickrothbart.com/">
   <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
   <link rel="preload" href="assets/instrument-serif.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=20260913c">
+  <link rel="stylesheet" href="styles.css?v=20260913d">
   <script src="assets/miso.js" defer></script>
 </head>
 <body>
@@ -103,23 +103,27 @@
       </article>
       <article class="project project--visual" aria-labelledby="software-title">
         <figure class="project-visual workflow-visual">
-          <div class="visual-surface"><div class="workflow" role="img" aria-label="Meeting notes are organized into decisions, tasks, and open questions">
-            <span class="workflow-source">Meeting notes</span>
-            <span class="workflow-connector" aria-hidden="true"></span>
-            <div class="workflow-results"><span>Decisions</span><span>Tasks</span><span>Open questions</span></div>
+          <div class="visual-surface"><div class="meeting-flow" role="img" aria-label="Live meeting audio becomes a speaker-labeled transcript and is saved in CurieOS">
+            <span>Live meeting</span>
+            <i aria-hidden="true"></i>
+            <span class="meeting-flow-transcript">Speaker-labeled transcript</span>
+            <i aria-hidden="true"></i>
+            <span>CurieOS</span>
           </div></div>
-          <figcaption>From a conversation to a useful record.</figcaption>
+          <figcaption>From live conversation to a research record.</figcaption>
         </figure>
         <div class="project-body">
           <div class="project-heading">
-            <h3 id="software-title">Keeping track of research decisions</h3>
+            <h3 id="software-title">A live meeting bot for CurieOS</h3>
             <p class="project-context">Orbital Industries, 2026</p>
           </div>
-          <p>I built an AI-assisted workflow that turns meeting transcripts into summaries, decisions, and action items. It helps the team keep track of what we agreed to do and which questions still need an answer.</p>
+          <p>I built an automated bot that joins live meetings, captures the audio, and transcribes the conversation as it happens. It separates speech by speaker and uses participant information to help identify who said what.</p>
+          <p>I connected it to CurieOS so the conversation becomes a record the team can use for notes, decisions, and follow-up work.</p>
           <details>
-            <summary>More about the workflow</summary>
+            <summary>More about the bot</summary>
             <div class="detail-body">
-              <p>The work includes transcription, speaker attribution, and processing new meetings without duplicating records. I worked with the software team on making the workflow easier to use and integrating it into the wider system.</p>
+              <p>The work spans the meeting bot, live audio capture, streaming transcription, speaker attribution, and saving the result. I also worked on recording consent, reconnecting dropped streams, and preserving partial transcripts when a session is interrupted.</p>
+              <p>I’ve since been developing separate capture and transcription services, with live transcript APIs, evidence for speaker attribution, and a reliable handoff into CurieOS. That service work builds on the original bot.</p>
             </div>
           </details>
         </div>

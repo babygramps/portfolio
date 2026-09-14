@@ -160,3 +160,8 @@ summary:hover { color: var(--accent); }
   .project--visual h3 { font-size: 23px; }
   .project--visual .project-heading { margin-bottom: 17px; }
 }
+
+.meeting-flow { display: flex; flex-direction: column; align-items: center; padding: 24px 12px; gap: 14px; text-align: center; }
+.meeting-flow > span { font: 30px/1.2 Instrument, Georgia, serif; }
+.meeting-flow > .meeting-flow-transcript { font: 14px/1.4 DM, Arial, sans-serif; }
+.meeting-flow > i { display: block; width: 1px; height: 28px; background: #96a287; }
