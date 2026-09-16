@@ -85,6 +85,14 @@ jobs:
 
         echo "✅ Static files deployed to S3"
 
+    - name: Deploy couple calculator to /couple-calculator
+      run: |
+        aws s3 cp couple-calculator/style.css s3://${{ env.S3_BUCKET }}/couple-calculator/style.css --content-type "text/css" --cache-control "no-cache"
+        aws s3 cp couple-calculator/math.mjs s3://${{ env.S3_BUCKET }}/couple-calculator/math.mjs --content-type "application/javascript" --cache-control "no-cache"
+        aws s3 cp couple-calculator/app.mjs s3://${{ env.S3_BUCKET }}/couple-calculator/app.mjs --content-type "application/javascript" --cache-control "no-cache"
+        aws s3 cp couple-calculator/index.html s3://${{ env.S3_BUCKET }}/couple-calculator/index.html --content-type "text/html" --cache-control "no-cache"
+        aws s3 cp couple-calculator/index.html s3://${{ env.S3_BUCKET }}/couple-calculator --content-type "text/html" --cache-control "no-cache"
+
     - name: Deploy BBQ cook-clock app to /bbq/
       run: |
         if [ -d bbq ]; then

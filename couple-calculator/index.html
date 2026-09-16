@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Couple calculator</title>
+<meta name="description" content="Calculate upfront cash, monthly housing costs and contribution splits for two couples buying a home.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23162944'/%3E%3Cpath d='M6 22V12h8v10M18 22V12h8v10' fill='none' stroke='%238cc9ff' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/couple-calculator/style.css">
+</head>
+<body>
+<header>
+<a class="brand" href="#">Couple calculator</a>
+<button id="reset" type="button">Reset example</button>
+</header>
+<main>
+<div class="intro">
+<div>
+<h1>Buying a home together</h1>
+<p>Calculate upfront costs and monthly payments for two couples.</p>
+</div>
+<div class="note">USD · Estimates<br>
+<span>Changes reset on reload.</span>
+</div>
+</div>
+<div class="workspace">
+<form id="inputs" novalidate>
+<section>
+<fieldset class="mode">
+<legend>Start with</legend>
+<label>
+<input type="radio" name="calculationMode" value="price" checked> Purchase price</label>
+<label>
+<input type="radio" name="calculationMode" value="cash"> Available cash</label>
+</fieldset>
+<p id="mode-help" class="section-help">Enter a price to estimate costs.</p>
+<div id="available-cash" class="fields available-cash">
+</div>
+<div class="section-title">
+<h2>Purchase</h2>
+</div>
+<div class="fields" id="purchase">
+</div>
+</section>
+<section>
+<div class="section-title">
+<h2>Upfront costs</h2>
+</div>
+<p class="section-help">In addition to your down payment.</p>
+<div class="fields" id="cash">
+</div>
+</section>
+<section>
+<div class="section-title">
+<h2>Ongoing costs</h2>
+</div>
+<div class="fields" id="ongoing">
+</div>
+</section>
+<section>
+<div class="section-title">
+<h2>Contributions</h2>
+</div>
+<p class="section-help">Set separate upfront and monthly splits. These do not determine ownership.</p>
+<div class="fields" id="splits">
+</div>
+<div class="couple-inputs">
+<div>
+<h3>
+<i class="swatch a">
+</i>Couple A</h3>
+<div id="coupleA">
+</div>
+</div>
+<div>
+<h3>
+<i class="swatch b">
+</i>Couple B</h3>
+<div id="coupleB">
+</div>
+</div>
+</div>
+</section>
+<section>
+<div class="section-title">
+<h2>Stress test</h2>
+</div>
+<div class="fields" id="stress">
+</div>
+</section>
+</form>
+<aside>
+<div class="results" aria-live="polite" aria-atomic="true" id="results">
+</div>
+</aside>
+</div>
+<footer>
+<details>
+<summary>Assumptions</summary>
+<p>Upfront cash includes the down payment, closing costs, immediate work and a reserve. Monthly costs include a fixed-rate mortgage and the expenses entered above.</p>
+<p>Taxes and insurance are estimates. Personal expenses are excluded unless added. Contribution splits do not change your loan obligations or determine ownership. This calculator does not assess mortgage eligibility.</p>
+</details>
+</footer>
+</main>
+<script type="module" src="/couple-calculator/app.mjs">
+</script>
+</body>
+</html>
+
