@@ -155,6 +155,12 @@ jobs:
           echo "No makeitrain/ directory found, skipping"
         fi
 
+    - name: Deploy music data credits page to /getsong
+      run: |
+        # GetSongBPM checks this page for a backlink before issuing an API key.
+        aws s3 cp getsong/index.html s3://${{ env.S3_BUCKET }}/getsong/index.html --content-type "text/html" --cache-control "no-cache"
+        aws s3 cp getsong/index.html s3://${{ env.S3_BUCKET }}/getsong --content-type "text/html" --cache-control "no-cache"
+
     - name: Deploy Fieldhouse restroom-booking app to /toilet/
       run: |
         if [ -d toilet ]; then
