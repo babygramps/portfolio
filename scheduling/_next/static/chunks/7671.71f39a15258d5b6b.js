@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[7671],{7671:function(e){e.exports=JSON.parse('{"name":"Adatv\xe9delmi szab\xe1lyzat","translate":"Megtekint\xe9s saj\xe1t nyelven"}')}}]);

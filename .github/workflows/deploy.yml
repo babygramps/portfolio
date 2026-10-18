@@ -161,6 +161,25 @@ jobs:
         aws s3 cp getsong/index.html s3://${{ env.S3_BUCKET }}/getsong/index.html --content-type "text/html" --cache-control "no-cache"
         aws s3 cp getsong/index.html s3://${{ env.S3_BUCKET }}/getsong --content-type "text/html" --cache-control "no-cache"
 
+    - name: Deploy Crab Fit scheduling app to /scheduling/
+      run: |
+        if [ -d scheduling ]; then
+          # Static export of scheduling-src/ (Next.js, basePath /scheduling).
+          # config.json is written by the scheduling-lambda step below — never delete it.
+          aws s3 sync scheduling/ s3://${{ env.S3_BUCKET }}/scheduling/ --delete --exclude "config.json"
+
+          # Extensionless keys so /scheduling and /scheduling/event?id=… resolve
+          # whether or not the origin handles directory indexes
+          aws s3 cp scheduling/index.html s3://${{ env.S3_BUCKET }}/scheduling --content-type "text/html"
+          for page in event how-to privacy create; do
+            aws s3 cp scheduling/$page/index.html s3://${{ env.S3_BUCKET }}/scheduling/$page --content-type "text/html"
+          done
+
+          echo "✅ Scheduling app deployed to /scheduling/"
+        else
+          echo "No scheduling/ directory found, skipping"
+        fi
+
     - name: Deploy Fieldhouse restroom-booking app to /toilet/
       run: |
         if [ -d toilet ]; then
@@ -348,6 +367,98 @@ jobs:
           --content-type "application/json" --cache-control "no-cache"
 
         echo "✅ Colorku shared board deployed"
+
+    - name: Deploy Crab Fit scheduling backend (Lambda + DynamoDB)
+      run: |
+        if [ ! -d scheduling-lambda ]; then echo "No scheduling-lambda/, skipping"; exit 0; fi
+
+        TABLE_NAME=rick-scheduling
+        FN_NAME=rick-scheduling
+        ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+        ROLE_ARN="arn:aws:iam::${ACCOUNT_ID}:role/rick-portfolio-lambda-role"
+
+        # 1) DynamoDB table (idempotent)
+        aws dynamodb create-table \
+          --table-name $TABLE_NAME \
+          --attribute-definitions AttributeName=pk,AttributeType=S AttributeName=sk,AttributeType=S \
+          --key-schema AttributeName=pk,KeyType=HASH AttributeName=sk,KeyType=RANGE \
+          --billing-mode PAY_PER_REQUEST \
+          --region ${{ env.AWS_REGION }} 2>/dev/null && \
+          aws dynamodb wait table-exists --table-name $TABLE_NAME --region ${{ env.AWS_REGION }} || \
+          echo "Table already exists"
+
+        # 2) Let the existing lambda role read/write this one table
+        aws iam put-role-policy \
+          --role-name rick-portfolio-lambda-role \
+          --policy-name scheduling-dynamodb \
+          --policy-document '{
+            "Version": "2012-10-17",
+            "Statement": [{
+              "Effect": "Allow",
+              "Action": ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:Query", "dynamodb:UpdateItem"],
+              "Resource": "arn:aws:dynamodb:${{ env.AWS_REGION }}:'${ACCOUNT_ID}':table/'$TABLE_NAME'"
+            }]
+          }'
+
+        # 3) Lambda (no deps — AWS SDK v3 ships with the runtime)
+        cd scheduling-lambda
+        zip -r deployment.zip scheduling.mjs adjectives.json crabs.json
+
+        if aws lambda get-function --function-name $FN_NAME --region ${{ env.AWS_REGION }} >/dev/null 2>&1; then
+          aws lambda update-function-code --function-name $FN_NAME \
+            --zip-file fileb://deployment.zip --region ${{ env.AWS_REGION }}
+        else
+          aws lambda create-function \
+            --function-name $FN_NAME \
+            --runtime nodejs20.x \
+            --role $ROLE_ARN \
+            --handler scheduling.handler \
+            --zip-file fileb://deployment.zip \
+            --timeout 10 \
+            --memory-size 256 \
+            --region ${{ env.AWS_REGION }}
+        fi
+
+        aws lambda wait function-updated --function-name $FN_NAME --region ${{ env.AWS_REGION }}
+
+        aws lambda update-function-configuration \
+          --function-name $FN_NAME \
+          --environment "Variables={TABLE_NAME=$TABLE_NAME}" \
+          --region ${{ env.AWS_REGION }}
+        aws lambda wait function-updated --function-name $FN_NAME --region ${{ env.AWS_REGION }}
+
+        # 4) Public function URL (idempotent) + open invoke permission for it.
+        #    The app sends passwords as an Authorization header, so allow it.
+        CORS='{"AllowOrigins":["*"],"AllowMethods":["GET","POST","PATCH"],"AllowHeaders":["content-type","authorization"]}'
+        aws lambda create-function-url-config \
+          --function-name $FN_NAME \
+          --auth-type NONE \
+          --cors "$CORS" \
+          --region ${{ env.AWS_REGION }} 2>/dev/null || \
+          aws lambda update-function-url-config \
+            --function-name $FN_NAME \
+            --cors "$CORS" \
+            --region ${{ env.AWS_REGION }}
+
+        aws lambda add-permission \
+          --function-name $FN_NAME \
+          --statement-id FunctionURLAllowPublicAccess \
+          --action lambda:InvokeFunctionUrl \
+          --principal "*" \
+          --function-url-auth-type NONE \
+          --region ${{ env.AWS_REGION }} 2>/dev/null || echo "URL permission already set"
+
+        API_URL=$(aws lambda get-function-url-config \
+          --function-name $FN_NAME --region ${{ env.AWS_REGION }} \
+          --query 'FunctionUrl' --output text)
+        echo "Scheduling API URL: $API_URL"
+
+        # 5) Publish the URL where the app discovers it
+        echo "{\"apiUrl\": \"$API_URL\"}" > config.json
+        aws s3 cp config.json s3://${{ env.S3_BUCKET }}/scheduling/config.json \
+          --content-type "application/json" --cache-control "no-cache"
+
+        echo "✅ Scheduling backend deployed"
 
     - name: Build and deploy Lambda function
       run: |

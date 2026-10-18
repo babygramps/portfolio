@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[3241],{3241:function(e){e.exports=JSON.parse('{"name":"Pol\xedtica de Privacidade","translate":"Escolher idioma"}')}}]);
