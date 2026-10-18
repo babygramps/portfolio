@@ -28,11 +28,11 @@
   },
   "offline": {
     "title": "You are offline",
-    "body": "A Find a Time doesn't work offline.<br />Make sure you're connected to the internet and try again."
+    "body": "A Ricky Dicky's Schedule Time doesn't work offline.<br />Make sure you're connected to the internet and try again."
   },
   "error": {
     "title": "Event not found",
-    "body": "Check that the url you entered is correct. Note that to protect your privacy, events are deleted after 3 months of inactivity."
+    "body": "Check that the url you entered is correct."
   },
   "tabs": {
     "you": "Your availability",

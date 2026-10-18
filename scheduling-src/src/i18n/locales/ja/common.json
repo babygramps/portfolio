@@ -1,7 +1,7 @@
 {
-  "name": "Find a Time",
+  "name": "Ricky Dicky's Schedule Time",
   "tagline": "自分のイベントを作成しよう",
-  "cta": "自分の Find a Time イベントを作成しよう！",
+  "cta": "自分の Ricky Dicky's Schedule Time イベントを作成しよう！",
   "created": "{{date}}に作成",
   "options": {
     "name": "設定",

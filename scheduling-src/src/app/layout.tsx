@@ -12,14 +12,14 @@ const karla = Karla({ subsets: ['latin'] })
 export const metadata: Metadata = {
   metadataBase: new URL('https://rickrothbart.com/scheduling/'),
   title: {
-    absolute: 'Find a Time',
-    template: '%s - Find a Time',
+    absolute: "Ricky Dicky's Schedule Time",
+    template: "%s - Ricky Dicky's Schedule Time",
   },
   description: 'Enter your availability to find a time that works for everyone!',
   themeColor: '#F79E00',
   manifest: '/scheduling/manifest.json',
   openGraph: {
-    title: 'Find a Time',
+    title: "Ricky Dicky's Schedule Time",
     description: 'Enter your availability to find a time that works for everyone!',
     url: '/',
   },

@@ -12,7 +12,7 @@ to run as a static export under `/scheduling`:
 - Server-rendered text is English; client components follow the visitor's
   language setting. The stats are fetched in the browser.
 - Vercel analytics are removed. Share links point at rickrothbart.com.
-- Rebranded as "Find a Time" with its own icon. The about section, stats,
+- Rebranded as "Ricky Dicky's Schedule Time" with its own icon. The about section, stats,
   promo video, app/extension downloads, donate footer, translation prompt,
   easter egg, how-to, privacy and extension (`/create`) pages are removed.
 
