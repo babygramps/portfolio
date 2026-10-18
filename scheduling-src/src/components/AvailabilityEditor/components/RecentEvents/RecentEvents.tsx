@@ -1,9 +1,9 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Temporal } from '@js-temporal/polyfill'
+import { CalendarCheck } from 'lucide-react'
 
 import Button from '/src/components/Button/Button'
 import { useTranslation } from '/src/i18n/client'
-import CrabIcon from '/src/res/CrabIcon'
 import { useStore } from '/src/stores'
 import useRecentsStore, { RecentEvent } from '/src/stores/recentsStore'
 import { relativeTimeFormat } from '/src/utils'
@@ -45,14 +45,14 @@ const RecentEvents = ({ eventId, times, onImport }: RecentEventsProps) => {
   return <>
     {!isOpen && <Button
       onClick={() => setIsOpen(true)}
-      icon={<CrabIcon aria-hidden="true" />}
+      icon={<CalendarCheck aria-hidden="true" />}
     >
       {t('you.recent_event')}
     </Button>}
 
     {isOpen && <div className={styles.wrapper}>
       <p className={styles.title}>
-        <CrabIcon className={styles.icon} />
+        <CalendarCheck className={styles.icon} />
         <strong>{t('you.recent_event')}</strong>
         (<button
           className={styles.linkButton}

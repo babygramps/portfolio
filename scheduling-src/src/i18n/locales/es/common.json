@@ -1,13 +1,8 @@
 {
-  "name": "Crab Fit",
+  "name": "Ricky Dicky's Schedule Time",
   "tagline": "Crea tu propio",
-  "cta": "¡Crea tu propio Crab Fit!",
+  "cta": "¡Crea tu propio Ricky Dicky's Schedule Time!",
   "created": "Creado {{date}}",
-  "donate": {
-    "info": "Gracias por usar Crab Fit. Si te gusta, considera hacer una donación.",
-    "button": "Donar",
-    "title": "Cada donación cuenta :)"
-  },
   "options": {
     "name": "Opciones",
     "weekStart": {
@@ -45,11 +40,7 @@
     },
     "colormap": {
       "label": "Colores del mapa de calor",
-      "classic": "Crab Fit (clásico)"
+      "classic": "Classic"
     }
-  },
-  "video": {
-    "title": "Vídeo Promocional de Crab Fit",
-    "button": "Ver el vídeo"
   }
 }

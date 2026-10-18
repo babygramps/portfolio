@@ -42,7 +42,7 @@ const EventPage = () => {
   }, [id])
 
   useEffect(() => {
-    document.title = `${event?.name ?? (event === null ? t('event:error.title') : 'Event')} - Crab Fit`
+    document.title = `${event?.name ?? (event === null ? t('event:error.title') : 'Event')} - Ricky Dicky's Schedule Time`
   }, [event, t])
 
   if (event === undefined) return <EventLoading />

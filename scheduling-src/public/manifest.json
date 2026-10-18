@@ -1,6 +1,6 @@
 {
-  "short_name": "Crab Fit",
-  "name": "Crab Fit",
+  "short_name": "Schedule Time",
+  "name": "Ricky Dicky's Schedule Time",
   "icons": [
     {
       "src": "favicon.ico",
@@ -18,7 +18,7 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "/scheduling/",
   "display": "standalone",
   "theme_color": "#F79E00",
   "background_color": "#ffffff"

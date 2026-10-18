@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[8458],{8458:function(e){e.exports=JSON.parse('{"name":"Datenschutz-Bestimmungen","translate":"In Ihrer Sprache anzeigen"}')}}]);

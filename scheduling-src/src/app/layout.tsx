@@ -1,9 +1,7 @@
 import { Metadata } from 'next'
 import { Karla } from 'next/font/google'
 
-import Egg from '/src/components/Egg/Egg'
 import Settings from '/src/components/Settings/Settings'
-import TranslateDialog from '/src/components/TranslateDialog/TranslateDialog'
 import { fallbackLng } from '/src/i18n/options'
 import { useTranslation } from '/src/i18n/server'
 
@@ -14,15 +12,14 @@ const karla = Karla({ subsets: ['latin'] })
 export const metadata: Metadata = {
   metadataBase: new URL('https://rickrothbart.com/scheduling/'),
   title: {
-    absolute: 'Crab Fit',
-    template: '%s - Crab Fit',
+    absolute: "Ricky Dicky's Schedule Time",
+    template: "%s - Ricky Dicky's Schedule Time",
   },
-  keywords: ['crab', 'fit', 'crabfit', 'schedule', 'availability', 'availabilities', 'when2meet', 'doodle', 'meet', 'plan', 'time', 'timezone'],
   description: 'Enter your availability to find a time that works for everyone!',
   themeColor: '#F79E00',
   manifest: '/scheduling/manifest.json',
   openGraph: {
-    title: 'Crab Fit',
+    title: "Ricky Dicky's Schedule Time",
     description: 'Enter your availability to find a time that works for everyone!',
     url: '/',
   },
@@ -38,8 +35,6 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   return <html lang={resolvedLanguage ?? fallbackLng}>
     <body className={karla.className}>
       <Settings />
-      <Egg />
-      <TranslateDialog />
 
       {children}
     </body>

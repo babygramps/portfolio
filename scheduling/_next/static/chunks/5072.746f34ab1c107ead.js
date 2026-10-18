@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[5072],{5072:function(a){a.exports=JSON.parse('{"name":"Kebijakan pribadi","translate":"Lihat dalam bahasa Anda"}')}}]);
