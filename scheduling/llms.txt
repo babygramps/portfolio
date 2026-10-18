@@ -1,0 +1,90 @@
+# Ricky Dicky's Schedule Time: API for agents
+
+> A group scheduling app at https://rickrothbart.com/scheduling/. Someone creates
+> an event with candidate dates and hours, shares the link, and each person marks
+> when they are free. Everything the website does goes through the JSON API below,
+> so an agent can do all of it: create events, read who is free, and add
+> availability.
+
+## Base URL
+
+Fetch `https://rickrothbart.com/scheduling/config.json`; the API base is its
+`apiUrl` field. At the time of writing it is:
+
+    https://6v2bktmvcmgbmsy3bikb74v5eq0goxlb.lambda-url.us-west-1.on.aws/
+
+Paths below are relative to that base. Requests and responses are JSON. No API key.
+
+## Times: read this first
+
+Every time is a UTC string. The event's `timezone` is only for display; convert
+to and from it yourself.
+
+- Specific-date events: `HHmm-DDMMYYYY`, e.g. `1700-25102026` = 17:00 UTC on 25 Oct 2026.
+- Days-of-the-week events: `HHmm-d`, where `d` is 0=Sunday … 6=Saturday, e.g. `1700-3`.
+  Tell the two apart by length (13 vs 6 characters).
+- An event's `times` lists the **hour** slots on offer (minutes always `00`).
+- A person's `availability` uses **15-minute** slots: each offered hour `HH00`
+  splits into `HH00`, `HH15`, `HH30`, `HH45` (same date part).
+  Only send slots that fall inside the event's offered hours; the API doesn't check.
+
+Example: an event in America/Los_Angeles offering 10:00–12:00 local on 25 Oct 2026
+(UTC−7) has `times` `["1700-25102026", "1800-25102026"]`, and someone free
+10:00–11:00 local sends `["1700-25102026", "1715-25102026", "1730-25102026", "1745-25102026"]`.
+
+## Endpoints
+
+### POST /event: create an event
+Body: `{"name": "Team lunch", "times": ["1700-25102026", ...], "timezone": "America/Los_Angeles"}`
+(`name` optional; a random one like "Puzzled Hangout" is generated.)
+201 → `{"id": "team-lunch-123456", "name", "times", "timezone", "created_at"}`
+(`created_at` is Unix seconds.)
+Share link for people: `https://rickrothbart.com/scheduling/event/?id=<id>`
+
+### GET /event/{id}: event details
+200 → same shape as above. 404 if unknown.
+
+### GET /event/{id}/people: everyone's availability
+200 → `[{"name": "Alice", "availability": ["1700-25102026", ...], "created_at"}]`
+People who haven't marked any times yet are left out.
+
+### GET /event/{id}/people/{name}: sign in or sign up
+Names are per event and case-insensitive. The first call with a new name creates
+that person (with empty availability); later calls sign in.
+Optional password: header `Authorization: Bearer <base64 of the password>`.
+If the person was created with a password, every later call for them needs it.
+200 → person. 401 → wrong password.
+
+### PATCH /event/{id}/people/{name}: set availability
+Body: `{"availability": ["1700-25102026", ...]}`. This **replaces** the whole list.
+Same `Authorization` header as above if the person has a password.
+The person must exist first (call the GET above). 200 → person; 401; 404.
+
+URL-encode `{id}` and `{name}` (e.g. spaces as `%20`).
+
+## Recipes
+
+Find the best time: GET the event and `/people`, count how many people list each
+15-minute slot, and report the slots with the highest count, converted to the
+event's timezone, with who is free and who isn't.
+
+Add someone's availability: GET `/event/{id}/people/{name}` (creates them), then
+PATCH their full list of free 15-minute slots.
+
+Create an event for a group: POST `/event` with the hour slots converted to UTC,
+then share the link above.
+
+## Example
+
+    API=$(curl -s https://rickrothbart.com/scheduling/config.json | jq -r .apiUrl)
+    curl -s -X POST "${API}event" -H 'content-type: application/json' \
+      -d '{"name":"Team lunch","times":["1700-25102026","1800-25102026"],"timezone":"America/Los_Angeles"}'
+    curl -s "${API}event/team-lunch-123456/people/Alice"
+    curl -s -X PATCH "${API}event/team-lunch-123456/people/Alice" -H 'content-type: application/json' \
+      -d '{"availability":["1700-25102026","1715-25102026","1730-25102026","1745-25102026"]}'
+    curl -s "${API}event/team-lunch-123456/people"
+
+## Etiquette
+
+This is a small personal app for friends. Don't change someone's availability
+unless they asked you to, and don't create events in bulk.
