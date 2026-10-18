@@ -1,13 +1,8 @@
 {
-  "name": "Crab Fit",
+  "name": "Find a Time",
   "tagline": "Créez le vôtre",
-  "cta": "Créez votre propre Crab Fit !",
+  "cta": "Créez votre propre Find a Time !",
   "created": "Créé {{date}}",
-  "donate": {
-    "info": "Merci d'utiliser Crab Fit. Si vous l'aimez, pensez à faire un don.",
-    "button": "Faire un don",
-    "title": "Chaque montant compte :)"
-  },
   "options": {
     "name": "Options",
     "weekStart": {
@@ -45,11 +40,7 @@
     },
     "colormap": {
       "label": "Couleurs de la carte thermique",
-      "classic": "Crab Fit (classique)"
+      "classic": "Classic"
     }
-  },
-  "video": {
-    "title": "Vidéo promotionnelle de Crab Fit",
-    "button": "Regarder la vidéo"
   }
 }

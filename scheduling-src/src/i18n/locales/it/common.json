@@ -1,13 +1,8 @@
 {
-  "name": "Crab Fit",
+  "name": "Find a Time",
   "tagline": "Crea il tuo",
-  "cta": "Crea il tuo Crab Fit personale!",
+  "cta": "Crea il tuo Find a Time personale!",
   "created": "{{date}} creato",
-  "donate": {
-    "info": "Grazie per aver usato Crab Fit. Se ti piacesse, considera una donazione.",
-    "button": "Dona",
-    "title": "Qualsiasi importo fa la differenza :)"
-  },
   "options": {
     "name": "Opzioni",
     "weekStart": {
@@ -45,11 +40,7 @@
     },
     "colormap": {
       "label": "Colori della heatmap",
-      "classic": "Crab Fit (classico)"
+      "classic": "Classic"
     }
-  },
-  "video": {
-    "title": "Video promozionale di Crab Fit",
-    "button": "Guarda il video"
   }
 }

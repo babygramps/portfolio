@@ -34,7 +34,7 @@ const MAX_NAME = 100
 const MAX_TIMES = 5000
 
 const adjectives = JSON.parse(readFileSync(new URL('./adjectives.json', import.meta.url)))
-const crabs = JSON.parse(readFileSync(new URL('./crabs.json', import.meta.url)))
+const kinds = ['Hangout', 'Meetup', 'Get-together', 'Gathering', 'Catch-up']
 
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({}), {
   marshallOptions: { removeUndefinedValues: true },
@@ -54,7 +54,7 @@ const pick = list => list[randomInt(list.length)]
 const isStringArray = (v, max) => Array.isArray(v) && v.length <= max && v.every(x => typeof x === 'string' && x.length <= 20)
 
 // Same shape as upstream's generate_name / generate_id / encode_name
-const generateName = () => `${pick(adjectives)} ${pick(crabs)} Crab`
+const generateName = () => `${pick(adjectives)} ${pick(kinds)}`
 const encodeName = name => {
   let pc
   try { pc = punycode.encode(name.trim().toLowerCase()) } catch { pc = '' }

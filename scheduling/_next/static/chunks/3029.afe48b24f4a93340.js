@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[3029],{3029:function(e){e.exports=JSON.parse('{"name":"Politique de confidentialit\xe9","translate":"Afficher dans votre langue"}')}}]);

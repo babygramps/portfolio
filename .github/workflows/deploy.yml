@@ -171,9 +171,7 @@ jobs:
           # Extensionless keys so /scheduling and /scheduling/event?id=… resolve
           # whether or not the origin handles directory indexes
           aws s3 cp scheduling/index.html s3://${{ env.S3_BUCKET }}/scheduling --content-type "text/html"
-          for page in event how-to privacy create; do
-            aws s3 cp scheduling/$page/index.html s3://${{ env.S3_BUCKET }}/scheduling/$page --content-type "text/html"
-          done
+          aws s3 cp scheduling/event/index.html s3://${{ env.S3_BUCKET }}/scheduling/event --content-type "text/html"
 
           echo "✅ Scheduling app deployed to /scheduling/"
         else
@@ -402,7 +400,7 @@ jobs:
 
         # 3) Lambda (no deps — AWS SDK v3 ships with the runtime)
         cd scheduling-lambda
-        zip -r deployment.zip scheduling.mjs adjectives.json crabs.json
+        zip -r deployment.zip scheduling.mjs adjectives.json
 
         if aws lambda get-function --function-name $FN_NAME --region ${{ env.AWS_REGION }} >/dev/null 2>&1; then
           aws lambda update-function-code --function-name $FN_NAME \

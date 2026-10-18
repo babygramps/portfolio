@@ -1,13 +1,8 @@
 {
-  "name": "Crab Fit",
+  "name": "Find a Time",
   "tagline": "Készítsd el sajátod",
-  "cta": "Készítsd el a saját Crab Fited!",
+  "cta": "Készítsd el a saját Find a Timeed!",
   "created": "Készült {{date}}",
-  "donate": {
-    "info": "Köszönjük, hogy a Crab Fitet használtad. Ha teszett, kérek támogass minket.",
-    "button": "Támogatás",
-    "title": "Minden fillér számít :)"
-  },
   "options": {
     "name": "Beállítások",
     "weekStart": {
@@ -45,11 +40,7 @@
     },
     "colormap": {
       "label": "Hőtérkép színek",
-      "classic": "Crab Fit (klasszikus)"
+      "classic": "Classic"
     }
-  },
-  "video": {
-    "title": "Crab Fit Promóciós Videó",
-    "button": "Videó megtekintése"
   }
 }
