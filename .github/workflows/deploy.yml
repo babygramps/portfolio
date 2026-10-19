@@ -426,8 +426,9 @@ jobs:
         aws lambda wait function-updated --function-name $FN_NAME --region ${{ env.AWS_REGION }}
 
         # 4) Public function URL (idempotent) + open invoke permission for it.
-        #    The app sends passwords as an Authorization header, so allow it.
-        CORS='{"AllowOrigins":["*"],"AllowMethods":["GET","POST","PATCH"],"AllowHeaders":["content-type","authorization"]}'
+        #    The app sends passwords as an Authorization header and edit keys as
+        #    X-Edit-Key, so allow both.
+        CORS='{"AllowOrigins":["*"],"AllowMethods":["GET","POST","PATCH"],"AllowHeaders":["content-type","authorization","x-edit-key"]}'
         aws lambda create-function-url-config \
           --function-name $FN_NAME \
           --auth-type NONE \

@@ -37,9 +37,21 @@ Example: an event in America/Los_Angeles offering 10:00–12:00 local on 25 Oct 
 ### POST /event: create an event
 Body: `{"name": "Team lunch", "times": ["1700-25102026", ...], "timezone": "America/Los_Angeles"}`
 (`name` optional; a random one like "Puzzled Hangout" is generated.)
-201 → `{"id": "team-lunch-123456", "name", "times", "timezone", "created_at"}`
+201 → `{"id": "team-lunch-123456", "name", "times", "timezone", "created_at", "edit_key"}`
 (`created_at` is Unix seconds.)
+`edit_key` is returned only here and is needed to edit the event later. Keep it
+private and give it only to the person who asked you to create the event.
 Share link for people: `https://rickrothbart.com/scheduling/event/?id=<id>`
+The creator's private edit link is `https://rickrothbart.com/scheduling/event/?id=<id>&key=<edit_key>`;
+opening it in a browser lets them edit the event on the website too.
+
+### PATCH /event/{id}: edit an event (creator only)
+Header: `X-Edit-Key: <edit_key>`. Body: any of `{"name", "times", "timezone"}`;
+omitted fields are kept, and `times` replaces the whole list.
+The id and share link stay the same, and people's availability is kept (slots
+that are no longer offered just stop showing).
+200 → event. 403 → missing or wrong edit key. 404 → unknown event.
+If you only have the edit link, the key is its `key` query parameter.
 
 ### GET /event/{id}: event details
 200 → same shape as above. 404 if unknown.
@@ -72,7 +84,10 @@ Add someone's availability: GET `/event/{id}/people/{name}` (creates them), then
 PATCH their full list of free 15-minute slots.
 
 Create an event for a group: POST `/event` with the hour slots converted to UTC,
-then share the link above.
+then share the link above, and give the creator their private edit link.
+
+Change an event's dates or hours: GET the event, build the new full `times`
+list, and PATCH it with the edit key.
 
 ## Example
 

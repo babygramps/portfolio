@@ -23,7 +23,10 @@ const Month = ({ value, onChange }: MonthProps) => {
   const weekStart = useStore(useSettingsStore, state => state.weekStart) ?? 0
 
   const now = useMemo(() => Temporal.Now.plainDateISO(), [])
-  const [page, setPage] = useState<Temporal.PlainYearMonth>(now.toPlainYearMonth())
+  // Open on the earliest selected date when editing an event
+  const [page, setPage] = useState<Temporal.PlainYearMonth>(() => value.length
+    ? Temporal.PlainDate.from([...value].sort()[0]).toPlainYearMonth()
+    : now.toPlainYearMonth())
   const dates = useMemo(() => calculateMonth(page, weekStart, i18n.language), [page, weekStart, i18n.language])
 
   // Ref and state required to rerender but also access static version in callbacks
@@ -45,7 +48,8 @@ const Month = ({ value, onChange }: MonthProps) => {
 
   const handleFinishSelection = useCallback(() => {
     if (mode.current === 'add') {
-      onChange([...value, ...selectingRef.current])
+      // Dragging over dates that are already selected mustn't add them twice
+      onChange([...new Set([...value, ...selectingRef.current])])
     } else {
       onChange(value.filter(d => !selectingRef.current.includes(d)))
     }

@@ -1,0 +1,47 @@
+name: Scheduling - add edit key to an event
+
+# Events created before editing existed have no edit key. This attaches one
+# so the creator can edit the event. Pass the SHA-256 (base64) of a fresh
+# random key, never the key itself; the key goes only to the creator, as
+#   https://rickrothbart.com/scheduling/event/?id=<event_id>&key=<key>
+# It refuses to replace a key the event already has.
+
+on:
+  workflow_dispatch:
+    inputs:
+      event_id:
+        description: "Event id, e.g. team-lunch-123456"
+        required: true
+      edit_key_hash:
+        description: "base64 SHA-256 of the new edit key"
+        required: true
+
+env:
+  AWS_REGION: us-west-1
+  TABLE_NAME: rick-scheduling
+
+jobs:
+  add-key:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Attach the edit key
+        env:
+          EVENT_ID: ${{ inputs.event_id }}
+          KEY_HASH: ${{ inputs.edit_key_hash }}
+        run: |
+          KEY=$(jq -cn --arg id "event#$EVENT_ID" '{pk: {S: $id}, sk: {S: "meta"}}')
+          VALUES=$(jq -cn --arg h "$KEY_HASH" '{":h": {S: $h}}')
+          aws dynamodb update-item \
+            --table-name "$TABLE_NAME" \
+            --key "$KEY" \
+            --update-expression "SET edit_key_hash = :h" \
+            --condition-expression "attribute_exists(pk) AND attribute_not_exists(edit_key_hash)" \
+            --expression-attribute-values "$VALUES"
+          echo "✅ Edit key attached to $EVENT_ID"

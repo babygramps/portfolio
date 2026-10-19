@@ -8,11 +8,15 @@
 // GET   /event/:id/people
 // GET   /event/:id/people/:name             login, or sign up if new
 // PATCH /event/:id/people/:name             { availability }
+// PATCH /event/:id                          { name?, times?, timezone? }, creator only
+//
+// Creating an event returns an edit_key (only that once). Editing the event
+// needs it in an X-Edit-Key header; only its SHA-256 is stored.
 //
 // Items: pk=event#<id> sk=meta              the event
 //        pk=event#<id> sk=person#<name>     one person (name lowercased)
 //        pk=stats      sk=stats             event_count, person_count
-import { randomBytes, randomInt, scrypt, timingSafeEqual } from 'node:crypto'
+import { createHash, randomBytes, randomInt, scrypt, timingSafeEqual } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import punycode from 'node:punycode'
 import { promisify } from 'node:util'
@@ -80,6 +84,14 @@ const verifyPassword = async (person, raw) => {
   return timingSafeEqual(actual, Buffer.from(expected, 'base64'))
 }
 
+// Edit keys are 192 random bits, so a plain hash is enough to store them
+const hashEditKey = key => createHash('sha256').update(key).digest('base64')
+const verifyEditKey = (event, key) => {
+  if (!event.edit_key_hash || !key) return false
+  const actual = Buffer.from(hashEditKey(key), 'base64')
+  return timingSafeEqual(actual, Buffer.from(event.edit_key_hash, 'base64'))
+}
+
 // Authorization: Bearer <base64 password>
 const parsePassword = headers => {
   const auth = headers?.authorization
@@ -128,14 +140,18 @@ async function getStats() {
   return json(200, { event_count: stats?.event_count ?? 0, person_count: stats?.person_count ?? 0, version: VERSION })
 }
 
+const validTimes = times => isStringArray(times, MAX_TIMES) && times.length > 0
+const validTimezone = timezone => typeof timezone === 'string' && timezone.length > 0 && timezone.length <= 100
+
 async function createEvent(input) {
-  if (!input || !isStringArray(input.times, MAX_TIMES) || typeof input.timezone !== 'string' || input.timezone.length > 100) {
+  if (!input || !validTimes(input.times) || !validTimezone(input.timezone)) {
     return error(422, 'Invalid input provided')
   }
   if (input.name != null && typeof input.name !== 'string') return error(422, 'Invalid input provided')
 
   const name = input.name?.trim() ? input.name.trim().slice(0, MAX_NAME) : generateName()
   const now = nowSeconds()
+  const editKey = randomBytes(24).toString('base64url')
 
   // Claim a fresh id; the condition stops two creates landing on the same one
   for (;;) {
@@ -143,15 +159,42 @@ async function createEvent(input) {
     try {
       await ddb.send(new PutCommand({
         TableName: TABLE,
-        Item: { pk: `event#${event.id}`, sk: 'meta', ...event },
+        Item: { pk: `event#${event.id}`, sk: 'meta', ...event, edit_key_hash: hashEditKey(editKey) },
         ConditionExpression: 'attribute_not_exists(pk)',
       }))
       await incrementStat('event_count')
-      return json(201, eventResponse(event))
+      return json(201, { ...eventResponse(event), edit_key: editKey })
     } catch (e) {
       if (!(e instanceof ConditionalCheckFailedException)) throw e
     }
   }
+}
+
+async function updateEvent(id, editKey, input) {
+  if (!input || typeof input !== 'object') return error(422, 'Invalid input provided')
+  if (input.name != null && (typeof input.name !== 'string' || !input.name.trim())) return error(422, 'Invalid input provided')
+  if (input.times != null && !validTimes(input.times)) return error(422, 'Invalid input provided')
+  if (input.timezone != null && !validTimezone(input.timezone)) return error(422, 'Invalid input provided')
+
+  const event = await getEvent(id)
+  if (!event) return error(404, 'Not found')
+  if (!verifyEditKey(event, editKey)) return error(403, 'Only the event creator can edit it')
+
+  // The id stays the same so existing share links keep working
+  const updated = {
+    ...event,
+    ...input.name != null && { name: input.name.trim().slice(0, MAX_NAME) },
+    ...input.times != null && { times: input.times },
+    ...input.timezone != null && { timezone: input.timezone },
+  }
+  await ddb.send(new UpdateCommand({
+    TableName: TABLE,
+    Key: { pk: `event#${id}`, sk: 'meta' },
+    UpdateExpression: 'SET #n = :n, times = :t, timezone = :z',
+    ExpressionAttributeNames: { '#n': 'name' },
+    ExpressionAttributeValues: { ':n': updated.name, ':t': updated.times, ':z': updated.timezone },
+  }))
+  return json(200, eventResponse(updated))
 }
 
 async function getPerson(id, name, password) {
@@ -230,6 +273,7 @@ export async function route(method, path, headers, body) {
     }))
     return json(200, eventResponse(event))
   }
+  if (method === 'PATCH' && parts.length === 2) return updateEvent(id, headers?.['x-edit-key'], input)
   if (sub !== 'people') return error(404, 'Not found')
   if (method === 'GET' && parts.length === 3) {
     const people = await getPeople(id)
