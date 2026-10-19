@@ -36,7 +36,7 @@ const Weekdays = ({ value, onChange }: WeekdaysProps) => {
 
   const handleFinishSelection = useCallback(() => {
     if (mode.current === 'add') {
-      onChange([...value, ...selectingRef.current])
+      onChange([...new Set([...value, ...selectingRef.current])])
     } else {
       onChange(value.filter(d => !selectingRef.current.includes(d)))
     }
