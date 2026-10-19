@@ -1,0 +1,20 @@
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+}
+
+.clock {
+  display: flex;
+
+  & img {
+    // Wait a beat before showing, so quick loads don't flash the clock
+    animation: appear .3s .15s both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    & img {
+      animation: none;
+    }
+  }
+}
