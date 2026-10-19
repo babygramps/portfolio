@@ -7,7 +7,8 @@
     "dev": "next dev --port 1234",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:e2e": "e2e run"
   },
   "dependencies": {
     "@azure/msal-browser": "^2.37.1",
@@ -33,6 +34,7 @@
     "zustand": "^4.3.8"
   },
   "devDependencies": {
+    "@e2e-dev/web": "^0.15.2",
     "@types/gapi": "^0.0.44",
     "@types/gapi.calendar": "^3.0.6",
     "@types/google.accounts": "^0.0.7",
@@ -41,6 +43,7 @@
     "@types/react-dom": "^18.2.5",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
+    "e2e": "^0.21.2",
     "eslint": "^8.43.0",
     "eslint-config-next": "^13.4.6",
     "eslint-plugin-simple-import-sort": "^10.0.0",

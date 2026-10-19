@@ -54,65 +54,86 @@ const AvailabilityViewer = ({ times, people, table }: AvailabilityViewerProps) =
     setFilteredPeople(people.map(p => p.name))
   }, [people.length])
 
-  const heatmap = useMemo(() => table?.columns.map((column, x) => <Fragment key={x}>
-    {column ? <div className={styles.dateColumn}>
-      {column.header.dateLabel && <label className={styles.dateLabel}>{column.header.dateLabel}</label>}
-      <label className={styles.dayLabel}>{column.header.weekdayLabel}</label>
+  const timeLabelsContent = useMemo(() => table?.rows.map((row, i) =>
+    <div className={styles.timeSpace} key={i}>
+      {row && <label className={styles.timeLabel}>
+        {row.label}
+      </label>}
+    </div>
+  ) ?? null, [table?.rows])
 
-      <div
-        className={styles.times}
-        data-border-left={x === 0 || table.columns.at(x - 1) === null}
-        data-border-right={x === table.columns.length - 1 || table.columns.at(x + 1) === null}
-      >
-        {column.cells.map((cell, y) => {
-          if (y === column.cells.length - 1) return null
+  const heatmap = useMemo(() => {
+    let seenFirstColumn = false
+    return table?.columns.map((column, x) => {
+      const isFirstColumn = column !== null && !seenFirstColumn
+      if (column !== null) seenFirstColumn = true
+      return <Fragment key={x}>
+        {column ? <>
+          <div className={makeClass(styles.timeLabels, !isFirstColumn && styles.repeatTimeLabels)}>
+            {timeLabelsContent}
+          </div>
+          <div className={styles.dateColumn}>
+            {column.header.dateLabel && <label className={styles.dateLabel}>{column.header.dateLabel}</label>}
+            <label className={styles.dayLabel}>{column.header.weekdayLabel}</label>
 
-          if (!cell) return <div
-            className={makeClass(styles.timeSpace, styles.grey)}
-            key={y}
-            title={t('greyed_times')}
-          />
+            <div
+              className={styles.times}
+              data-border-left={x === 0 || table.columns.at(x - 1) === null}
+              data-border-right={x === table.columns.length - 1 || table.columns.at(x + 1) === null}
+            >
+              {column.cells.map((cell, y) => {
+                if (y === column.cells.length - 1) return null
 
-          let peopleHere = availabilities.find(a => a.date === cell.serialized)?.people ?? []
-          if (tempFocus) {
-            peopleHere = peopleHere.filter(p => p === tempFocus)
-          }
-          const color = palette[(tempFocus && peopleHere.length) ? Math.min(max, palette.length - 1) : Math.max(peopleHere.length - min, 0)]
+                if (!cell) return <div
+                  className={makeClass(styles.timeSpace, styles.grey)}
+                  key={y}
+                  title={t('greyed_times')}
+                />
 
-          return <div
-            key={y}
-            className={makeClass(
-              styles.time,
-              styles.nonEditable,
-              (focusCount === undefined || focusCount === peopleHere.length) && highlight && (peopleHere.length === max || tempFocus) && peopleHere.length > 0 && styles.highlight,
-            )}
-            style={{
-              backgroundColor: (focusCount === undefined || focusCount === peopleHere.length) ? color.string : 'transparent',
-              '--highlight-color': color.highlight,
-              ...cell.minute !== 0 && cell.minute !== 30 && { borderTopColor: 'transparent' },
-              ...cell.minute === 30 && { borderTopStyle: 'dotted' },
-            } as React.CSSProperties}
-            aria-label={peopleHere.join(', ')}
-            onMouseEnter={e => {
-              setTooltip({
-                anchor: e.currentTarget,
-                available: `${peopleHere.length} / ${filteredPeople.length} ${t('available')}`,
-                date: cell.label,
-                people: peopleHere,
-              })
-            }}
-            onClick={() => {
-              const clipboardMessage = `${t('group.clipboard_message', { date: cell.label })}:\n${peopleHere.join(', ')}`
-              navigator.clipboard.writeText(clipboardMessage)
-            }}
-            onMouseLeave={() => setTooltip(undefined)}
-          />
-        })}
-      </div>
-    </div> : <div className={styles.columnSpacer} />}
-  </Fragment>) ?? <Skeleton isSpecificDates={times[0]?.length === 13} />, [
+                let peopleHere = availabilities.find(a => a.date === cell.serialized)?.people ?? []
+                if (tempFocus) {
+                  peopleHere = peopleHere.filter(p => p === tempFocus)
+                }
+                const color = palette[(tempFocus && peopleHere.length) ? Math.min(max, palette.length - 1) : Math.max(peopleHere.length - min, 0)]
+
+                return <div
+                  key={y}
+                  className={makeClass(
+                    styles.time,
+                    styles.nonEditable,
+                    (focusCount === undefined || focusCount === peopleHere.length) && highlight && (peopleHere.length === max || tempFocus) && peopleHere.length > 0 && styles.highlight,
+                  )}
+                  style={{
+                    backgroundColor: (focusCount === undefined || focusCount === peopleHere.length) ? color.string : 'transparent',
+                    '--highlight-color': color.highlight,
+                    ...cell.minute !== 0 && cell.minute !== 30 && { borderTopColor: 'transparent' },
+                    ...cell.minute === 30 && { borderTopStyle: 'dotted' },
+                  } as React.CSSProperties}
+                  aria-label={peopleHere.join(', ')}
+                  onMouseEnter={e => {
+                    setTooltip({
+                      anchor: e.currentTarget,
+                      available: `${peopleHere.length} / ${filteredPeople.length} ${t('available')}`,
+                      date: cell.label,
+                      people: peopleHere,
+                    })
+                  }}
+                  onClick={() => {
+                    const clipboardMessage = `${t('group.clipboard_message', { date: cell.label })}:\n${peopleHere.join(', ')}`
+                    navigator.clipboard.writeText(clipboardMessage)
+                  }}
+                  onMouseLeave={() => setTooltip(undefined)}
+                />
+              })}
+            </div>
+          </div>
+        </> : <div className={styles.columnSpacer} />}
+      </Fragment>
+    }) ?? <Skeleton isSpecificDates={times[0]?.length === 13} />
+  }, [
     availabilities,
     table?.columns,
+    timeLabelsContent,
     highlight,
     max,
     min,
@@ -165,17 +186,7 @@ const AvailabilityViewer = ({ times, people, table }: AvailabilityViewerProps) =
 
     <div className={styles.wrapper}>
       <div>
-        <div className={styles.heatmap}>
-          {useMemo(() => <div className={styles.timeLabels}>
-            {table?.rows.map((row, i) =>
-              <div className={styles.timeSpace} key={i}>
-                {row && <label className={styles.timeLabel}>
-                  {row.label}
-                </label>}
-              </div>
-            ) ?? null}
-          </div>, [table?.rows])}
-
+        <div className={makeClass(styles.heatmap, styles.mobileStack)}>
           {heatmap}
         </div>
 
