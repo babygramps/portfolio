@@ -15,15 +15,17 @@ import useSettingsStore from '/src/stores/settingsStore'
 import { calculateAvailability, calculateTable, makeClass, relativeTimeFormat } from '/src/utils'
 
 import styles from './AvailabilityViewer.module.scss'
+import BestTimes from './components/BestTimes/BestTimes'
 import Skeleton from './components/Skeleton/Skeleton'
 
 interface AvailabilityViewerProps {
   times: string[]
   people: PersonResponse[]
   table?: ReturnType<typeof calculateTable>
+  timezone: string
 }
 
-const AvailabilityViewer = ({ times, people, table }: AvailabilityViewerProps) => {
+const AvailabilityViewer = ({ times, people, table, timezone }: AvailabilityViewerProps) => {
   const { t, i18n } = useTranslation('event')
 
   const highlight = useStore(useSettingsStore, state => state.highlight)
@@ -150,6 +152,13 @@ const AvailabilityViewer = ({ times, people, table }: AvailabilityViewerProps) =
 
   return <>
     <Content>
+      <BestTimes
+        table={table}
+        availabilities={availabilities}
+        people={filteredPeople}
+        timezone={timezone}
+      />
+
       <Legend
         min={min}
         max={max}
