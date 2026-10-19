@@ -190,8 +190,9 @@ async function updateEvent(id, editKey, input) {
   await ddb.send(new UpdateCommand({
     TableName: TABLE,
     Key: { pk: `event#${id}`, sk: 'meta' },
-    UpdateExpression: 'SET #n = :n, times = :t, timezone = :z',
-    ExpressionAttributeNames: { '#n': 'name' },
+    // name and timezone are DynamoDB reserved words, so every attribute goes through a placeholder
+    UpdateExpression: 'SET #n = :n, #t = :t, #z = :z',
+    ExpressionAttributeNames: { '#n': 'name', '#t': 'times', '#z': 'timezone' },
     ExpressionAttributeValues: { ':n': updated.name, ':t': updated.times, ':z': updated.timezone },
   }))
   return json(200, eventResponse(updated))
