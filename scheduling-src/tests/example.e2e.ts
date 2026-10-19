@@ -236,6 +236,19 @@ test('event page sums up the best times', async ({ app, browser, screen }) => {
 
   await bestTimes.scrollIntoView();
   await app.screenshot('best-times');
+
+  // The same windows are outlined in the heatmap: 4 + 4 + 2 slots
+  const outlined = await browser.evaluate(() => ({
+    slots: document.querySelectorAll('[data-best-start]').length,
+    starts: document.querySelectorAll('[data-best-start=true]').length,
+    ends: document.querySelectorAll('[data-best-end=true]').length,
+  }));
+  expect(outlined).toEqual({ slots: 10, starts: 3, ends: 3 });
+
+  await screen.getByText('Oct 26').scrollIntoView();
+  await app.screenshot('best-times-heatmap');
+  await browser.emulateMedia({ colorScheme: 'dark' });
+  await app.screenshot('best-times-heatmap-dark');
 });
 
 test('best times show a window that ends at midnight without dates', async ({ app, browser, screen }) => {

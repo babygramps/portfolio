@@ -3,29 +3,27 @@ import { useMemo } from 'react'
 import { useTranslation } from '/src/i18n/client'
 import { useStore } from '/src/stores'
 import useSettingsStore from '/src/stores/settingsStore'
-import { calculateBestTimes, calculateTable, convertTimesToDates } from '/src/utils'
+import { BestTime, convertTimesToDates } from '/src/utils'
 
 import styles from './BestTimes.module.scss'
 
 interface BestTimesProps {
-  table?: ReturnType<typeof calculateTable>
-  availabilities: { date: string, people: string[] }[]
+  bestTimes: BestTime[]
   /** Names of everyone being counted */
   people: string[]
   timezone: string
 }
 
-const BestTimes = ({ table, availabilities, people, timezone }: BestTimesProps) => {
+const BestTimes = ({ bestTimes, people, timezone }: BestTimesProps) => {
   const { t, i18n } = useTranslation('event')
   const timeFormat = useStore(useSettingsStore, state => state.timeFormat) ?? '12h'
 
-  const bestTimes = useMemo(() => {
-    if (!table) return []
-    const isSpecificDates = availabilities[0]?.date.length === 13
+  const rows = useMemo(() => {
+    const isSpecificDates = bestTimes[0]?.times[0].length === 13
     const timeRange = new Intl.DateTimeFormat(i18n.language, { hour: 'numeric', minute: '2-digit', hour12: timeFormat === '12h', timeZone: timezone })
     const names = new Intl.ListFormat(i18n.language)
 
-    return calculateBestTimes(table.columns, availabilities).map(best => {
+    return bestTimes.map(best => {
       const [start, last] = convertTimesToDates([best.times[0], best.times[best.times.length - 1]], timezone)
       const end = last.add({ minutes: 15 })
       const missing = people.filter(p => !best.people.includes(p))
@@ -49,14 +47,14 @@ const BestTimes = ({ table, availabilities, people, timezone }: BestTimesProps) 
         people: best.people,
       }
     })
-  }, [table, availabilities, people, timezone, timeFormat, i18n.language, t])
+  }, [bestTimes, people, timezone, timeFormat, i18n.language, t])
 
-  if (bestTimes.length === 0) return null
+  if (rows.length === 0) return null
 
   return <section className={styles.wrapper} aria-labelledby="best-times-heading">
     <h2 className={styles.heading} id="best-times-heading">{t('group.best_times')}</h2>
     <ol className={styles.list}>
-      {bestTimes.map(best => <li key={best.key} className={styles.item} title={best.people.join(', ')}>
+      {rows.map(best => <li key={best.key} className={styles.item} title={best.people.join(', ')}>
         <span className={styles.day}>{best.day}</span>{' '}
         <span>{best.time}</span>{' '}
         <span className={styles.who}>{best.who}</span>

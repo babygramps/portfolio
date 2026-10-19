@@ -292,3 +292,28 @@
     }
   }
 }
+
+// Outlines each window listed under Best times, inset so it doesn't read as a grid line
+.bestTime::before {
+  content: '';
+  position: absolute;
+  inset: -2px 4px 0;
+  border: 0 solid color-mix(in srgb, var(--text) 60%, transparent);
+  border-left-width: 2px;
+  border-right-width: 2px;
+  pointer-events: none;
+}
+
+.bestTime[data-best-start=true]::before {
+  top: 2px;
+  border-top-width: 2px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+.bestTime[data-best-end=true]::before {
+  bottom: 2px;
+  border-bottom-width: 2px;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
