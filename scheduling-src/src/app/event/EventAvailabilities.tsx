@@ -166,6 +166,7 @@ const EventAvailabilities = ({ event }: EventAvailabilitiesProps) => {
       times={expandedTimes}
       people={people}
       table={table}
+      timezone={timezone}
     /> : user && <AvailabilityEditor
       eventId={event?.id}
       times={expandedTimes}

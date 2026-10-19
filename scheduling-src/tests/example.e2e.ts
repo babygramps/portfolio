@@ -175,3 +175,96 @@ test('availability editor can toggle between vertical and horizontal layout on m
   }
 });
 
+
+test('event page sums up the best times', async ({ app, browser, screen }) => {
+  // Times are stored in UTC: 1700 UTC is 10:00 AM in Los Angeles on these dates
+  const event = {
+    id: 'best-times-test',
+    name: 'Best Times Test',
+    times: ['1700-25102026', '1800-25102026', '1700-26102026', '1800-26102026'],
+    timezone: 'America/Los_Angeles',
+    created_at: 1792900000,
+  };
+  const slots = (day: string, ...hhmm: string[]) => hhmm.map(t => `${t}-${day}`);
+  const people = [
+    {
+      name: 'Alice',
+      availability: [
+        ...slots('25102026', '1700', '1715', '1730', '1745', '1800', '1815', '1830', '1845'),
+        ...slots('26102026', '1700', '1715', '1730', '1745'),
+      ],
+      created_at: 1792900100,
+    },
+    {
+      name: 'Bob',
+      availability: [
+        ...slots('25102026', '1730', '1745', '1800', '1815', '1830', '1845'),
+        ...slots('26102026', '1700', '1715', '1730', '1745'),
+      ],
+      created_at: 1792900200,
+    },
+    {
+      name: 'Cara',
+      availability: [
+        ...slots('25102026', '1800', '1815', '1830', '1845'),
+        ...slots('26102026', '1800', '1815', '1830', '1845'),
+      ],
+      created_at: 1792900300,
+    },
+  ];
+  await browser.route('**/scheduling/config.json', async route => {
+    await route.fulfill({ json: { apiUrl: 'http://127.0.0.1:1234/mock-api/' } });
+  });
+  await browser.route('**/mock-api/event/best-times-test', async route => {
+    await route.fulfill({ json: event });
+  });
+  await browser.route('**/mock-api/event/best-times-test/people', async route => {
+    await route.fulfill({ json: people });
+  });
+
+  await app.open('/scheduling/event/?id=best-times-test');
+  await expect(screen.getByRole('heading', 'Best Times Test')).toBeVisible();
+  await screen.getByLabel('Your time zone').selectOption({ value: 'America/Los_Angeles' });
+
+  // Most people first, then the longest window, then the earliest
+  const bestTimes = screen.getByRole('region', 'Best times');
+  await expect(bestTimes.getByRole('listitem')).toHaveText([
+    /^Sun, Oct 25 11:00\sAM\s–\s12:00\sPM Everyone$/,
+    /^Mon, Oct 26 10:00\s–\s11:00\sAM All but Cara$/,
+    /^Sun, Oct 25 10:30\s–\s11:00\sAM All but Cara$/,
+  ]);
+
+  await bestTimes.scrollIntoView();
+  await app.screenshot('best-times');
+});
+
+test('best times show a window that ends at midnight without dates', async ({ app, browser, screen }) => {
+  // 0600 UTC on Oct 26 is 11:00 PM on Oct 25 in Los Angeles
+  const event = {
+    id: 'best-times-midnight-test',
+    name: 'Midnight Test',
+    times: ['0600-26102026'],
+    timezone: 'America/Los_Angeles',
+    created_at: 1792900000,
+  };
+  const people = [
+    { name: 'Alice', availability: ['0600-26102026', '0615-26102026', '0630-26102026', '0645-26102026'], created_at: 1792900100 },
+  ];
+  await browser.route('**/scheduling/config.json', async route => {
+    await route.fulfill({ json: { apiUrl: 'http://127.0.0.1:1234/mock-api/' } });
+  });
+  await browser.route('**/mock-api/event/best-times-midnight-test', async route => {
+    await route.fulfill({ json: event });
+  });
+  await browser.route('**/mock-api/event/best-times-midnight-test/people', async route => {
+    await route.fulfill({ json: people });
+  });
+
+  await app.open('/scheduling/event/?id=best-times-midnight-test');
+  await expect(screen.getByRole('heading', 'Midnight Test')).toBeVisible();
+  await screen.getByLabel('Your time zone').selectOption({ value: 'America/Los_Angeles' });
+
+  await expect(screen.getByRole('region', 'Best times').getByRole('listitem')).toHaveText([
+    /^Sun, Oct 25 11:00\sPM\s–\s12:00\sAM Everyone$/,
+  ]);
+});

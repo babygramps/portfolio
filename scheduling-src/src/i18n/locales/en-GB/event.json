@@ -43,7 +43,10 @@
     "legend_tooltip": "Click to highlight highest availability",
     "info1": "Hover or tap the calendar below to see who is available, and click to copy details about a time slot",
     "info2": "Click the names below to view people individually",
-    "clipboard_message": "People available on {{date}}"
+    "clipboard_message": "People available on {{date}}",
+    "best_times": "Best times",
+    "best_times_everyone": "Everyone",
+    "best_times_all_but": "All but {{names}}"
   },
   "you": {
     "info": "Click and drag the calendar below to set your availabilities",
