@@ -23,7 +23,8 @@ const CalendarField = <TValues extends FieldValues>({
 
   const { field } = useController(props)
 
-  const [type, setType] = useState<'specific' | 'week'>('specific')
+  // Weekdays are stored as `d`, specific dates as `YYYY-MM-DD`
+  const [type, setType] = useState<'specific' | 'week'>(() => field.value?.[0]?.length === 1 ? 'week' : 'specific')
 
   const [innerValue, setInnerValue] = useState({
     specific: [],

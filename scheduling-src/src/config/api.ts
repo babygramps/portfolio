@@ -21,6 +21,8 @@ const apiUrl = async (path: string) => new URL(path.replace(/^\//, ''), await ge
 
 /** Public link to an event, as shared with attendees */
 export const eventShareUrl = (eventId: string) => `https://rickrothbart.com/scheduling/event/?id=${encodeURIComponent(eventId)}`
+/** Private link that lets the creator edit an event from another device */
+export const eventEditUrl = (eventId: string, editKey: string) => `${eventShareUrl(eventId)}&key=${encodeURIComponent(editKey)}`
 /** In-app path to an event (basePath is added by next/link and the router) */
 export const eventPath = (eventId: string) => `/event/?id=${encodeURIComponent(eventId)}`
 
@@ -37,6 +39,8 @@ export const EventResponse = z.object({
   times: z.string().array(),
   timezone: z.string(),
   created_at: z.number(),
+  /** Only returned when the event is created */
+  edit_key: z.string().optional(),
 })
 export type EventResponse = z.infer<typeof EventResponse>
 
@@ -70,12 +74,13 @@ const get = async <S extends z.Schema>(url: string, schema: S, auth?: string): P
   return schema.parse(await res.json())
 }
 
-const post = async <S extends z.Schema>(url: string, schema: S, input: unknown, auth?: string, method = 'POST'): Promise<ReturnType<S['parse']>> => {
+const post = async <S extends z.Schema>(url: string, schema: S, input: unknown, auth?: string, method = 'POST', headers?: Record<string, string>): Promise<ReturnType<S['parse']>> => {
   const res = await fetch(await apiUrl(url), {
     method,
     headers: {
       'Content-Type': 'application/json',
       ...auth && { Authorization: `Bearer ${auth}` },
+      ...headers,
     },
     body: JSON.stringify(input),
   })
@@ -92,4 +97,5 @@ export const getPerson = (eventId: string, personName: string, password?: string
 
 // Post
 export const createEvent = (input: EventInput) => post('/event', EventResponse, EventInput.parse(input))
+export const updateEvent = (eventId: string, input: EventInput, editKey: string) => post(`/event/${encodeURIComponent(eventId)}`, EventResponse, EventInput.parse(input), undefined, 'PATCH', { 'X-Edit-Key': editKey })
 export const updatePerson = (eventId: string, personName: string, input: PersonInput, password?: string) => post(`/event/${encodeURIComponent(eventId)}/people/${encodeURIComponent(personName)}`, PersonResponse, PersonInput.parse(input), password && btoa(password), 'PATCH')

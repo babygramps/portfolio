@@ -59,5 +59,12 @@
       "info": "Importing will overwrite your current availability",
       "button": "Import availability"
     }
+  },
+  "edit": {
+    "button": "Edit event",
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "link_info": "Your private edit link. Bookmark it to edit this event from another device, but don't share it:",
+    "forbidden": "This browser doesn't have permission to edit this event. Open your private edit link and try again."
   }
 }
