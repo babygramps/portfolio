@@ -12,7 +12,7 @@ import { usePalette } from '/src/hooks/usePalette'
 import { useTranslation } from '/src/i18n/client'
 import { useStore } from '/src/stores'
 import useSettingsStore from '/src/stores/settingsStore'
-import { calculateAvailability, calculateTable, makeClass, relativeTimeFormat } from '/src/utils'
+import { calculateAvailability, calculateBestTimes, calculateTable, makeClass, relativeTimeFormat } from '/src/utils'
 
 import styles from './AvailabilityViewer.module.scss'
 import BestTimes from './components/BestTimes/BestTimes'
@@ -50,6 +50,12 @@ const AvailabilityViewer = ({ times, people, table, timezone }: AvailabilityView
   const { availabilities, min, max } = useMemo(() =>
     calculateAvailability(times, people.filter(p => filteredPeople.includes(p.name))),
   [times, filteredPeople, people])
+
+  // Find the best windows, and where each one starts and ends in the heatmap
+  const bestTimes = useMemo(() => table ? calculateBestTimes(table.columns, availabilities) : [], [table, availabilities])
+  const bestTimeEdges = useMemo(() => new Map(bestTimes.flatMap(best => best.times.map((time, i) =>
+    [time, { isStart: i === 0, isEnd: i === best.times.length - 1 }] as const
+  ))), [bestTimes])
 
   // Create the colour palette
   const palette = usePalette(Math.max((max - min) + 1, 2))
@@ -100,6 +106,7 @@ const AvailabilityViewer = ({ times, people, table, timezone }: AvailabilityView
                   peopleHere = peopleHere.filter(p => p === tempFocus)
                 }
                 const color = palette[(tempFocus && peopleHere.length) ? Math.min(max, palette.length - 1) : Math.max(peopleHere.length - min, 0)]
+                const bestTime = bestTimeEdges.get(cell.serialized)
 
                 return <div
                   key={y}
@@ -107,7 +114,10 @@ const AvailabilityViewer = ({ times, people, table, timezone }: AvailabilityView
                     styles.time,
                     styles.nonEditable,
                     (focusCount === undefined || focusCount === peopleHere.length) && highlight && (peopleHere.length === max || tempFocus) && peopleHere.length > 0 && styles.highlight,
+                    bestTime && styles.bestTime,
                   )}
+                  data-best-start={bestTime?.isStart}
+                  data-best-end={bestTime?.isEnd}
                   style={{
                     backgroundColor: (focusCount === undefined || focusCount === peopleHere.length) ? color.string : 'transparent',
                     '--highlight-color': color.highlight,
@@ -137,6 +147,7 @@ const AvailabilityViewer = ({ times, people, table, timezone }: AvailabilityView
     }) ?? <Skeleton isSpecificDates={times[0]?.length === 13} />
   }, [
     availabilities,
+    bestTimeEdges,
     table?.columns,
     timeLabelsContent,
     highlight,
@@ -153,8 +164,7 @@ const AvailabilityViewer = ({ times, people, table, timezone }: AvailabilityView
   return <>
     <Content>
       <BestTimes
-        table={table}
-        availabilities={availabilities}
+        bestTimes={bestTimes}
         people={filteredPeople}
         timezone={timezone}
       />
