@@ -1,19 +1,20 @@
-.skeleton {
-  opacity: .5;
-
-  & > div:last-of-type {
-    height: 382px;
-    width: 300px;
-    border: 2px solid currentColor;
-    border-radius: 3px;
-    margin-block: 2px 10px;
-    position: relative;
-  }
+.grid {
+  height: 382px;
+  width: 300px;
+  // Faded like the labels, without fading the clock inside
+  border: 2px solid color-mix(in srgb, currentColor 50%, transparent);
+  border-radius: 3px;
+  margin-block: 2px 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .dayLabels {
   display: flex;
   justify-content: space-around;
+  opacity: .5;
 
   span {
     height: .9em;

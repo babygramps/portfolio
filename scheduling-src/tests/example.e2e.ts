@@ -50,6 +50,48 @@ test('app opens home page', async ({ app, screen }) => {
   await expect(screen.getByRole('heading', "Ricky Dicky's Schedule Time")).toBeVisible();
 });
 
+test('event page shows a melting clock while the event loads', async ({ app, browser, screen }) => {
+  await mockEventApi(browser);
+  // Hold the event response so the loading state stays on screen until the clock is checked
+  let releaseEvent = () => {};
+  const eventReleased = new Promise<void>(resolve => { releaseEvent = resolve; });
+  await browser.route('**/mock-api/event/mobile-scroll-test', async route => {
+    await eventReleased;
+    await route.fulfill({ json: mockEvent });
+  });
+  await app.open('/scheduling/event/?id=mobile-scroll-test');
+
+  await expect(screen.getByRole('img', 'Loading event')).toBeVisible();
+  await screen.getByRole('img', 'Loading event').scrollIntoView();
+  await app.screenshot('event-loading');
+
+  releaseEvent();
+  await expect(screen.getByRole('heading', 'Mobile Scroll Test')).toBeVisible();
+  await expect(screen.getByRole('img', 'Loading event')).toBeHidden();
+});
+
+test('melting clock holds still when reduced motion is on', async ({ app, browser, screen }) => {
+  await mockEventApi(browser);
+  await browser.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'dark' });
+  let releaseEvent = () => {};
+  const eventReleased = new Promise<void>(resolve => { releaseEvent = resolve; });
+  await browser.route('**/mock-api/event/mobile-scroll-test', async route => {
+    await eventReleased;
+    await route.fulfill({ json: mockEvent });
+  });
+  await app.open('/scheduling/event/?id=mobile-scroll-test');
+
+  await expect(screen.getByRole('img', 'Loading event')).toBeVisible();
+  const shownSrc = await browser.evaluate(() =>
+    document.querySelector<HTMLImageElement>('img[alt="Loading event"]')?.currentSrc ?? '');
+  expect(shownSrc).toContain('melting-clock-still');
+  await screen.getByRole('img', 'Loading event').scrollIntoView();
+  await app.screenshot('event-loading-dark-reduced-motion');
+
+  releaseEvent();
+  await expect(screen.getByRole('heading', 'Mobile Scroll Test')).toBeVisible();
+});
+
 test('availability viewer stacks vertically on mobile and horizontally on desktop', async ({ app, browser, screen }) => {
   await mockEventApi(browser);
   await app.open('/scheduling/event/?id=mobile-scroll-test');
