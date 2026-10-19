@@ -4,6 +4,7 @@ import { Fragment, useEffect, useMemo, useState } from 'react'
 import { flip, offset, shift, useFloating } from '@floating-ui/react-dom'
 import { Temporal } from '@js-temporal/polyfill'
 
+import Button from '/src/components/Button/Button'
 import Content from '/src/components/Content/Content'
 import Legend from '/src/components/Legend/Legend'
 import { PersonResponse } from '/src/config/api'
@@ -26,6 +27,8 @@ const AvailabilityViewer = ({ times, people, table }: AvailabilityViewerProps) =
   const { t, i18n } = useTranslation('event')
 
   const highlight = useStore(useSettingsStore, state => state.highlight)
+  const mobileLayout = useStore(useSettingsStore, state => state.mobileLayout) ?? 'vertical'
+  const setMobileLayout = useSettingsStore(state => state.setMobileLayout)
   const [filteredPeople, setFilteredPeople] = useState(people.map(p => p.name))
   const [tempFocus, setTempFocus] = useState<string>()
   const [focusCount, setFocusCount] = useState<number>()
@@ -69,9 +72,9 @@ const AvailabilityViewer = ({ times, people, table }: AvailabilityViewerProps) =
       if (column !== null) seenFirstColumn = true
       return <Fragment key={x}>
         {column ? <>
-          <div className={makeClass(styles.timeLabels, !isFirstColumn && styles.repeatTimeLabels)}>
+          {(isFirstColumn || mobileLayout === 'vertical') && <div className={makeClass(styles.timeLabels, !isFirstColumn && styles.repeatTimeLabels)}>
             {timeLabelsContent}
-          </div>
+          </div>}
           <div className={styles.dateColumn}>
             {column.header.dateLabel && <label className={styles.dateLabel}>{column.header.dateLabel}</label>}
             <label className={styles.dayLabel}>{column.header.weekdayLabel}</label>
@@ -135,6 +138,7 @@ const AvailabilityViewer = ({ times, people, table }: AvailabilityViewerProps) =
     table?.columns,
     timeLabelsContent,
     highlight,
+    mobileLayout,
     max,
     min,
     t,
@@ -182,11 +186,24 @@ const AvailabilityViewer = ({ times, people, table }: AvailabilityViewerProps) =
           )}
         </div>
       </>}
+
+      <div className={styles.mobileLayoutToggle}>
+        <Button
+          isSmall
+          isSecondary={mobileLayout === 'vertical'}
+          onClick={() => setMobileLayout('vertical')}
+        >{t('you.layout_vertical')}</Button>
+        <Button
+          isSmall
+          isSecondary={mobileLayout === 'horizontal'}
+          onClick={() => setMobileLayout('horizontal')}
+        >{t('you.layout_horizontal')}</Button>
+      </div>
     </Content>
 
     <div className={styles.wrapper}>
       <div>
-        <div className={makeClass(styles.heatmap, styles.mobileStack)}>
+        <div className={makeClass(styles.heatmap, mobileLayout === 'vertical' && styles.mobileStack)}>
           {heatmap}
         </div>
 

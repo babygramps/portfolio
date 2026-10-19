@@ -50,6 +50,8 @@
     "select_all": "Select all",
     "select_none": "Select none",
     "select_invert": "Invert selection",
+    "layout_vertical": "Vertical layout",
+    "layout_horizontal": "Horizontal layout",
     "google_cal": "Sync with Google Calendar",
     "outlook_cal": "Sync with Outlook Calendar",
     "recent_event": "Sync with a recent event",

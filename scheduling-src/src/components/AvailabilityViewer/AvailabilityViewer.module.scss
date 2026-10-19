@@ -225,6 +225,18 @@
   border-color: var(--primary);
 }
 
+.mobileLayoutToggle {
+  display: none;
+
+  @media (max-width: 660px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+}
+
 .wrapper {
   overflow-y: visible;
   margin: 20px 0;

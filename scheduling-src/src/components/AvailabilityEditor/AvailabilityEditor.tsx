@@ -1,9 +1,11 @@
-import { Fragment, useCallback, useEffect, useRef, useState } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import Button from '/src/components/Button/Button'
 import Content from '/src/components/Content/Content'
 import { usePalette } from '/src/hooks/usePalette'
 import { useTranslation } from '/src/i18n/client'
+import { useStore } from '/src/stores'
+import useSettingsStore from '/src/stores/settingsStore'
 import { calculateTable, makeClass, parseSpecificDate } from '/src/utils'
 
 import styles from './AvailabilityEditor.module.scss'
@@ -24,6 +26,9 @@ interface AvailabilityEditorProps {
 const AvailabilityEditor = ({ eventId, times, timezone, value = [], onChange, table }: AvailabilityEditorProps) => {
   const { t } = useTranslation('event')
 
+  const mobileLayout = useStore(useSettingsStore, state => state.mobileLayout) ?? 'vertical'
+  const setMobileLayout = useSettingsStore(state => state.setMobileLayout)
+
   // Ref and state required to rerender but also access static version in callbacks
   const selectingRef = useRef<string[]>([])
   const [selecting, _setSelecting] = useState<string[]>([])
@@ -43,6 +48,14 @@ const AvailabilityEditor = ({ eventId, times, timezone, value = [], onChange, ta
   const selectNone = useCallback(() => onChange([]), [onChange])
   const selectInvert = useCallback(() => onChange(times.filter(t => !value.includes(t))), [onChange, times, value])
 
+  const timeLabelsContent = useMemo(() => table?.rows.map((row, i) =>
+    <div className={viewerStyles.timeSpace} key={i}>
+      {row && <label className={viewerStyles.timeLabel}>
+        {row.label}
+      </label>}
+    </div>
+  ) ?? null, [table?.rows])
+
   // Selection keyboard shortcuts
   useEffect(() => {
     const handleKeydown = (e: KeyboardEvent) => {
@@ -58,6 +71,8 @@ const AvailabilityEditor = ({ eventId, times, timezone, value = [], onChange, ta
     return () => document.removeEventListener('keydown', handleKeydown)
   }, [selectAll, selectNone, selectInvert])
 
+  let seenFirstColumn = false
+
   return <>
     <Content isCentered>
       <div>{t('you.info')}</div>
@@ -65,6 +80,18 @@ const AvailabilityEditor = ({ eventId, times, timezone, value = [], onChange, ta
         <Button isSmall onClick={selectAll} title="Ctrl + A (⌘ A)">{t('you.select_all')}</Button>
         <Button isSmall onClick={selectNone} title="Ctrl + Shift + A (⌘ ⇧ A)">{t('you.select_none')}</Button>
         <Button isSmall onClick={selectInvert} title="Ctrl + I (⌘ I)">{t('you.select_invert')}</Button>
+      </div>
+      <div className={styles.mobileLayoutToggle}>
+        <Button
+          isSmall
+          isSecondary={mobileLayout === 'vertical'}
+          onClick={() => setMobileLayout('vertical')}
+        >{t('you.layout_vertical')}</Button>
+        <Button
+          isSmall
+          isSecondary={mobileLayout === 'horizontal'}
+          onClick={() => setMobileLayout('horizontal')}
+        >{t('you.layout_horizontal')}</Button>
       </div>
     </Content>
     {times[0]?.length === 13 && <Content>
@@ -86,90 +113,89 @@ const AvailabilityEditor = ({ eventId, times, timezone, value = [], onChange, ta
 
     <div className={viewerStyles.wrapper}>
       <div>
-        <div className={viewerStyles.heatmap}>
-          <div className={viewerStyles.timeLabels}>
-            {table?.rows.map((row, i) =>
-              <div className={viewerStyles.timeSpace} key={i}>
-                {row && <label className={viewerStyles.timeLabel}>
-                  {row.label}
-                </label>}
-              </div>
-            ) ?? null}
-          </div>
+        <div className={makeClass(viewerStyles.heatmap, mobileLayout === 'vertical' && viewerStyles.mobileStack)}>
+          {table?.columns.map((column, x) => {
+            const isFirstColumn = column !== null && !seenFirstColumn
+            if (column !== null) seenFirstColumn = true
+            return <Fragment key={x}>
+              {column ? <>
+                {(isFirstColumn || mobileLayout === 'vertical') && <div className={makeClass(viewerStyles.timeLabels, !isFirstColumn && viewerStyles.repeatTimeLabels)}>
+                  {timeLabelsContent}
+                </div>}
+                <div className={viewerStyles.dateColumn}>
+                  {column.header.dateLabel && <label className={viewerStyles.dateLabel}>{column.header.dateLabel}</label>}
+                  <label className={viewerStyles.dayLabel}>{column.header.weekdayLabel}</label>
 
-          {table?.columns.map((column, x) => <Fragment key={x}>
-            {column ? <div className={viewerStyles.dateColumn}>
-              {column.header.dateLabel && <label className={viewerStyles.dateLabel}>{column.header.dateLabel}</label>}
-              <label className={viewerStyles.dayLabel}>{column.header.weekdayLabel}</label>
+                  <div
+                    className={viewerStyles.times}
+                    data-border-left={x === 0 || table.columns.at(x - 1) === null}
+                    data-border-right={x === table.columns.length - 1 || table.columns.at(x + 1) === null}
+                  >
+                    {column.cells.map((cell, y) => {
+                      if (y === column.cells.length - 1) return null
 
-              <div
-                className={viewerStyles.times}
-                data-border-left={x === 0 || table.columns.at(x - 1) === null}
-                data-border-right={x === table.columns.length - 1 || table.columns.at(x + 1) === null}
-              >
-                {column.cells.map((cell, y) => {
-                  if (y === column.cells.length - 1) return null
+                      if (!cell) return <div
+                        className={makeClass(viewerStyles.timeSpace, viewerStyles.grey)}
+                        key={y}
+                        title={t('greyed_times')}
+                      />
 
-                  if (!cell) return <div
-                    className={makeClass(viewerStyles.timeSpace, viewerStyles.grey)}
-                    key={y}
-                    title={t('greyed_times')}
-                  />
+                      const isSelected = (
+                        (!(mode.current === 'remove' && selecting.includes(cell.serialized)) && value.includes(cell.serialized))
+                        || (mode.current === 'add' && selecting.includes(cell.serialized))
+                      )
 
-                  const isSelected = (
-                    (!(mode.current === 'remove' && selecting.includes(cell.serialized)) && value.includes(cell.serialized))
-                    || (mode.current === 'add' && selecting.includes(cell.serialized))
-                  )
+                      return <div
+                        key={y}
+                        className={makeClass(viewerStyles.time, selecting.length === 0 && viewerStyles.editable)}
+                        style={{
+                          touchAction: 'none',
+                          backgroundColor: isSelected ? palette[1].string : palette[0].string,
+                          '--hover-color': isSelected ? palette[0].highlight : palette[1].highlight,
+                          ...cell.minute !== 0 && cell.minute !== 30 && { borderTopColor: 'transparent' },
+                          ...cell.minute === 30 && { borderTopStyle: 'dotted' },
+                        } as React.CSSProperties}
+                        onPointerDown={e => {
+                          e.preventDefault()
+                          startPos.current = { x, y }
+                          mode.current = value.includes(cell.serialized) ? 'remove' : 'add'
+                          setSelecting([cell.serialized])
+                          e.currentTarget.releasePointerCapture(e.pointerId)
 
-                  return <div
-                    key={y}
-                    className={makeClass(viewerStyles.time, selecting.length === 0 && viewerStyles.editable)}
-                    style={{
-                      touchAction: 'none',
-                      backgroundColor: isSelected ? palette[1].string : palette[0].string,
-                      '--hover-color': isSelected ? palette[0].highlight : palette[1].highlight,
-                      ...cell.minute !== 0 && cell.minute !== 30 && { borderTopColor: 'transparent' },
-                      ...cell.minute === 30 && { borderTopStyle: 'dotted' },
-                    } as React.CSSProperties}
-                    onPointerDown={e => {
-                      e.preventDefault()
-                      startPos.current = { x, y }
-                      mode.current = value.includes(cell.serialized) ? 'remove' : 'add'
-                      setSelecting([cell.serialized])
-                      e.currentTarget.releasePointerCapture(e.pointerId)
-
-                      document.addEventListener('pointerup', () => {
-                        if (mode.current === 'add') {
-                          onChange([...value, ...selectingRef.current])
-                        } else if (mode.current === 'remove') {
-                          onChange(value.filter(t => !selectingRef.current.includes(t)))
-                        }
-                        setSelecting([])
-                        mode.current = undefined
-                      }, { once: true })
-                    }}
-                    onPointerEnter={() => {
-                      if (mode.current) {
-                        const found = []
-                        for (let cy = Math.min(startPos.current.y, y); cy < Math.max(startPos.current.y, y) + 1; cy++) {
-                          for (let cx = Math.min(startPos.current.x, x); cx < Math.max(startPos.current.x, x) + 1; cx++) {
-                            found.push({ y: cy, x: cx })
+                          document.addEventListener('pointerup', () => {
+                            if (mode.current === 'add') {
+                              onChange([...value, ...selectingRef.current])
+                            } else if (mode.current === 'remove') {
+                              onChange(value.filter(t => !selectingRef.current.includes(t)))
+                            }
+                            setSelecting([])
+                            mode.current = undefined
+                          }, { once: true })
+                        }}
+                        onPointerEnter={() => {
+                          if (mode.current) {
+                            const found = []
+                            for (let cy = Math.min(startPos.current.y, y); cy < Math.max(startPos.current.y, y) + 1; cy++) {
+                              for (let cx = Math.min(startPos.current.x, x); cx < Math.max(startPos.current.x, x) + 1; cx++) {
+                                found.push({ y: cy, x: cx })
+                              }
+                            }
+                            setSelecting(found.flatMap(d => {
+                              const serialized = table.columns[d.x]?.cells[d.y]?.serialized
+                              if (serialized && times.includes(serialized)) {
+                                return [serialized]
+                              }
+                              return []
+                            }))
                           }
-                        }
-                        setSelecting(found.flatMap(d => {
-                          const serialized = table.columns[d.x]?.cells[d.y]?.serialized
-                          if (serialized && times.includes(serialized)) {
-                            return [serialized]
-                          }
-                          return []
-                        }))
-                      }
-                    }}
-                  />
-                })}
-              </div>
-            </div> : <div className={viewerStyles.columnSpacer} />}
-          </Fragment>) ?? <Skeleton isSpecificDates={times[0]?.length === 13} />}
+                        }}
+                      />
+                    })}
+                  </div>
+                </div>
+              </> : <div className={viewerStyles.columnSpacer} />}
+            </Fragment>
+          }) ?? <Skeleton isSpecificDates={times[0]?.length === 13} />}
         </div>
       </div>
     </div>

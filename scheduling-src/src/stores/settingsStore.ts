@@ -4,6 +4,7 @@ import { persist } from 'zustand/middleware'
 
 type TimeFormat = '12h' | '24h'
 type Theme = 'System' | 'Light' | 'Dark'
+type MobileLayout = 'vertical' | 'horizontal'
 
 interface SettingsStore {
   /** 0: Sunday, 1: Monday */
@@ -12,12 +13,14 @@ interface SettingsStore {
   theme: Theme
   highlight: boolean
   colormap: 'crabfit' | MapKey
+  mobileLayout: MobileLayout
 
   setWeekStart: (weekStart: 0 | 1) => void
   setTimeFormat: (timeFormat: TimeFormat) => void
   setTheme: (theme: Theme) => void
   setHighlight: (highlight: boolean) => void
   setColormap: (colormap: 'crabfit' | MapKey) => void
+  setMobileLayout: (mobileLayout: MobileLayout) => void
 }
 
 const useSettingsStore = create<SettingsStore>()(persist(
@@ -27,12 +30,14 @@ const useSettingsStore = create<SettingsStore>()(persist(
     theme: 'System',
     highlight: false,
     colormap: 'crabfit',
+    mobileLayout: 'vertical',
 
     setWeekStart: weekStart => set({ weekStart }),
     setTimeFormat: timeFormat => set({ timeFormat }),
     setTheme: theme => set({ theme }),
     setHighlight: highlight => set({ highlight }),
     setColormap: colormap => set({ colormap }),
+    setMobileLayout: mobileLayout => set({ mobileLayout }),
   }),
   { name: 'crabfit-settings' },
 ))

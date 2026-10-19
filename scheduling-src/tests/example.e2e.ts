@@ -40,6 +40,9 @@ async function mockEventApi(browser: Parameters<Parameters<typeof test>[1]>[0]['
   await browser.route('**/mock-api/event/mobile-scroll-test/people', async route => {
     await route.fulfill({ json: mockPeople });
   });
+  await browser.route('**/mock-api/event/mobile-scroll-test/people/Alice', async route => {
+    await route.fulfill({ json: mockPeople[0] });
+  });
 }
 
 test('app opens home page', async ({ app, screen }) => {
@@ -63,7 +66,7 @@ test('availability viewer stacks vertically on mobile and horizontally on deskto
   const viewportWidth = await browser.evaluate(() => window.innerWidth);
 
   if (viewportWidth <= 660) {
-    // On mobile, date columns stack vertically and the scroll container does not overflow horizontally
+    // On mobile, date columns stack vertically by default and the scroll container does not overflow horizontally
     expect(oct26Box.y).toBeGreaterThan(oct25Box.y + 40);
     expect(Math.abs(oct26Box.x - oct25Box.x)).toBeLessThan(5);
 
@@ -74,10 +77,20 @@ test('availability viewer stacks vertically on mobile and horizontally on deskto
     });
     expect(hasHorizontalOverflow).toBe(false);
 
+    // Toggle to horizontal layout on mobile
+    await screen.getByRole('button', 'Horizontal layout').click();
+    const hOct25 = (await screen.getByText('Oct 25').boundingBox())!;
+    const hOct26 = (await screen.getByText('Oct 26').boundingBox())!;
+    expect(hOct26.x).toBeGreaterThan(hOct25.x + 40);
+    expect(Math.abs(hOct26.y - hOct25.y)).toBeLessThan(5);
+
+    // Toggle back to vertical layout
+    await screen.getByRole('button', 'Vertical layout').click();
     await screen.getByText('Oct 25').scrollIntoView();
     await app.screenshot('mobile-heatmap');
   } else {
-    // On desktop, date columns sit side-by-side in a single row
+    // On desktop, date columns sit side-by-side in a single row and layout toggle is hidden
+    await expect(screen.getByRole('button', 'Vertical layout')).toBeHidden();
     expect(oct26Box.x).toBeGreaterThan(oct25Box.x + 40);
     expect(Math.abs(oct26Box.y - oct25Box.y)).toBeLessThan(5);
 
@@ -85,3 +98,38 @@ test('availability viewer stacks vertically on mobile and horizontally on deskto
     await app.screenshot('desktop-heatmap');
   }
 });
+
+test('availability editor can toggle between vertical and horizontal layout on mobile', async ({ app, browser, screen }) => {
+  await mockEventApi(browser);
+  await app.open('/scheduling/event/?id=mobile-scroll-test');
+
+  await expect(screen.getByRole('heading', 'Mobile Scroll Test')).toBeVisible();
+  await screen.getByLabel('Your name').fill('Alice');
+  await screen.getByRole('button', 'Login').click();
+
+  await expect(screen.getByText('Click and drag the calendar below to set your availabilities')).toBeVisible();
+  await expect(screen.getByText('Oct 25')).toBeVisible();
+
+  const viewportWidth = await browser.evaluate(() => window.innerWidth);
+
+  if (viewportWidth <= 660) {
+    await expect(screen.getByRole('button', 'Vertical layout')).toBeVisible();
+    await expect(screen.getByRole('button', 'Horizontal layout')).toBeVisible();
+
+    // Defaults to vertical stacking on mobile
+    const vOct25 = (await screen.getByText('Oct 25').boundingBox())!;
+    const vOct26 = (await screen.getByText('Oct 26').boundingBox())!;
+    expect(vOct26.y).toBeGreaterThan(vOct25.y + 40);
+    expect(Math.abs(vOct26.x - vOct25.x)).toBeLessThan(5);
+
+    // Switch to horizontal layout on mobile
+    await screen.getByRole('button', 'Horizontal layout').click();
+    const hOct25 = (await screen.getByText('Oct 25').boundingBox())!;
+    const hOct26 = (await screen.getByText('Oct 26').boundingBox())!;
+    expect(hOct26.x).toBeGreaterThan(hOct25.x + 40);
+    expect(Math.abs(hOct26.y - hOct25.y)).toBeLessThan(5);
+  } else {
+    await expect(screen.getByRole('button', 'Vertical layout')).toBeHidden();
+  }
+});
+
