@@ -9,6 +9,41 @@
   @media (max-width: 660px) {
     padding: 0 30px;
   }
+
+  &.mobileStack {
+    @media (max-width: 660px) {
+      display: grid;
+      grid-template-columns: max-content minmax(60px, 240px);
+      justify-content: center;
+      row-gap: 24px;
+      padding: 0 16px;
+
+      .timeLabels {
+        position: static;
+      }
+
+      .dateColumn {
+        width: auto;
+        min-width: 60px;
+        margin-bottom: 0;
+      }
+
+      .times {
+        border-left: 2px solid var(--text);
+        border-right: 2px solid var(--text);
+        border-radius: 3px;
+      }
+
+      .columnSpacer {
+        display: none;
+      }
+
+      & > :only-child {
+        grid-column: 1 / -1;
+        justify-self: center;
+      }
+    }
+  }
 }
 
 .timeLabels {
@@ -22,6 +57,14 @@
   overflow: hidden;
   padding-top: 1em;
   pointer-events: none;
+
+  &.repeatTimeLabels {
+    display: none;
+
+    @media (max-width: 660px) {
+      display: flex;
+    }
+  }
 }
 
 .timeSpace {
